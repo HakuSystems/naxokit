@@ -32,6 +32,7 @@ namespace Assets.naxokit.Editor
             await naxokitUpdater.UpdateVersionData();
 
         }
+
         private void OnGUI()
         {
             if (naxokitUpdater.ServerVersionList == null || naxokitUpdater.LatestVersion == null || naxokitUpdater.LatestBetaVersion == null)
@@ -77,9 +78,19 @@ namespace Assets.naxokit.Editor
                 CreditsOpen = FoldoutTexture.MakeTextureFoldout(creditsImage, CreditsOpen, 30f, 0, 0, 12f, 5f);
                 if (CreditsOpen)
                 {
-                    /*
-                     * indev
-                    */
+                    var teamCreditsImage = Resources.Load("TeamCredits") as Texture2D;
+                    DrawLine.DrawHorizontalLine(1);
+
+                    //Adding Scale Fit thing todoo!!
+                    var content = new GUIContent(teamCreditsImage);
+
+                    EditorGUILayout.HelpBox(content);
+
+                    DrawLine.DrawHorizontalLine(1);
+
+                    EditorGUILayout.Space(10);
+
+
                 }
                 UpdateOpen = FoldoutTexture.MakeTextureFoldout(updateImage, UpdateOpen, 30f, 0, 0, 12f, 5f);
                 if (UpdateOpen)
