@@ -152,6 +152,15 @@ namespace naxokit.Updater
             LatestVersion = await GetLatestVersion(VersionBaseINTERNDATA.ReleaseType.Avatar, VersionBaseINTERNDATA.BranchType.Release);
             LatestBetaVersion = await GetLatestVersion(VersionBaseINTERNDATA.ReleaseType.Avatar, VersionBaseINTERNDATA.BranchType.Beta);
         }
+        public static bool CompareCurrentVersionWithLatest()
+        {
+            var splittedCurrentVersion = CurrentVersion.Split(';');
+            var splittedCurrentVersionIndex = splittedCurrentVersion[0];
+            if (splittedCurrentVersionIndex == LatestVersion.Version)
+                return true;
+            else
+                return false;
+        }
         public static async Task<VersionBaseINTERNDATA> GetLatestVersion(VersionBaseINTERNDATA.ReleaseType type, VersionBaseINTERNDATA.BranchType branch)
         {
             var request = new HttpRequestMessage()
