@@ -10,6 +10,7 @@ using naxokit.Updater;
 using UnityEngine;
 using System.IO;
 using System.Collections;
+using naxokit.Screens;
 
 namespace Assets.naxokit.Editor
 {
@@ -56,125 +57,111 @@ namespace Assets.naxokit.Editor
             }
             EditorGUILayout.BeginVertical();
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+            EditorGUILayout.LabelField("naxokit", EditorStyles.boldLabel);
+            
+            var HeaderImages = new Hashtable()
             {
-                EditorGUILayout.LabelField("naxokit", EditorStyles.boldLabel);
-                
-                var HeaderImages = new Hashtable()
-                {
-                    {"Settings", Resources.Load("Settings") as Texture2D},
-                    {"Credits", Resources.Load("Credits") as Texture2D},
-                    {"About", Resources.Load("About") as Texture2D},
-                    {"Update", Resources.Load("Update") as Texture2D},
-                    {"Premium", Resources.Load("Premium") as Texture2D}
+                {"Settings", Resources.Load("Settings") as Texture2D},
+                {"Credits", Resources.Load("Credits") as Texture2D},
+                {"About", Resources.Load("About") as Texture2D},
+                {"Update", Resources.Load("Update") as Texture2D},
+                {"Premium", Resources.Load("Premium") as Texture2D}
 
-                };
-                
-                foreach (DictionaryEntry entry in HeaderImages)
+            };
+            Settings settingScreen = new Settings("Settings");
+            /*
+            foreach (DictionaryEntry entry in HeaderImages)
+            {
+                var key = entry.Key;
+                var value = entry.Value;
+                if (key.ToString() == "Settings")
                 {
-                    var key = entry.Key;
-                    var value = entry.Value;
-                    if (key.ToString() == "Settings")
+                    SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SettingsOpen, 30f, 0, 0, 12f, 5f);
+                    if (SettingsOpen)
                     {
-                        SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SettingsOpen, 30f, 0, 0, 12f, 5f);
-                        if (SettingsOpen)
+                        EditorGUILayout.BeginVertical();
                         {
-                            EditorGUILayout.BeginVertical();
-                            {
-                                EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
-                                EditorGUILayout.LabelField("Coming soon...");
-                            }
-                            EditorGUILayout.EndVertical();
+                            EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
+                            EditorGUILayout.LabelField("Coming soon...");
                         }
+                        EditorGUILayout.EndVertical();
                     }
-                    if (key.ToString() == "Credits")
+                }
+                if (key.ToString() == "Credits")
+                {
+                    CreditsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, CreditsOpen, 30f, 0, 0, 12f, 5f);
+                    if (CreditsOpen)
                     {
-                        CreditsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, CreditsOpen, 30f, 0, 0, 12f, 5f);
-                        if (CreditsOpen)
+                        EditorGUILayout.BeginVertical();
                         {
-                            EditorGUILayout.BeginVertical();
-                            {
-                                var teamCreditsImage = Resources.Load("TeamCredits") as Texture2D;
-                                DrawLine.DrawHorizontalLine(1);
-                                var content = new GUIContent(teamCreditsImage);
-                                EditorGUILayout.LabelField(content, GUILayout.Height(300));
-                                DrawLine.DrawHorizontalLine(1);
-                            }
-                            EditorGUILayout.EndVertical();
+                            var teamCreditsImage = Resources.Load("TeamCredits") as Texture2D;
+                            DrawLine.DrawHorizontalLine(1);
+                            var content = new GUIContent(teamCreditsImage);
+                            EditorGUILayout.LabelField(content, GUILayout.Height(300));
+                            DrawLine.DrawHorizontalLine(1);
                         }
+                        EditorGUILayout.EndVertical();
                     }
-                    if (key.ToString() == "About")
+                }
+                if (key.ToString() == "About")
+                {
+                    AboutOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, AboutOpen, 30f, 0, 0, 12f, 5f);
+                    if (AboutOpen)
                     {
-                        AboutOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, AboutOpen, 30f, 0, 0, 12f, 5f);
-                        if (AboutOpen)
+                        EditorGUILayout.BeginVertical();
                         {
-                            EditorGUILayout.BeginVertical();
-                            {
-                                EditorGUILayout.LabelField("About", EditorStyles.boldLabel);
-                                EditorGUILayout.LabelField("Coming soon...");
-                            }
-                            EditorGUILayout.EndVertical();
+                            EditorGUILayout.LabelField("About", EditorStyles.boldLabel);
+                            EditorGUILayout.LabelField("Coming soon...");
                         }
+                        EditorGUILayout.EndVertical();
                     }
-                    if (key.ToString() == "Update")
+                }
+                if (key.ToString() == "Update")
+                {
+                    UpdateOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, UpdateOpen, 30f, 0, 0, 12f, 5f);
+                    if (UpdateOpen)
                     {
-                        UpdateOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, UpdateOpen, 30f, 0, 0, 12f, 5f);
-                        if (UpdateOpen)
+                        EditorGUILayout.BeginVertical();
                         {
-                            EditorGUILayout.BeginVertical();
+                            DrawLine.DrawHorizontalLine(1);
+                            if (naxokitUpdater.CompareCurrentVersionWithLatest())
                             {
-                                DrawLine.DrawHorizontalLine(1);
-                                if (naxokitUpdater.CompareCurrentVersionWithLatest())
+                                //User is on Latest Build
+                                try
                                 {
-                                    //User is on Latest Build
-                                    try
+                                    if (runOnce == false)
                                     {
-                                        if (runOnce == false)
+                                        versionList = naxokitUpdater.ServerVersionList;
+                                        currentVersion = naxokitUpdater.LatestVersion.Version;
+                                        runOnce = true;
+                                    }
+                                    scrollView = EditorGUILayout.BeginScrollView(scrollView);
+                                    {
+                                        EditorGUILayout.BeginVertical();
                                         {
-                                            versionList = naxokitUpdater.ServerVersionList;
-                                            currentVersion = naxokitUpdater.LatestVersion.Version;
-                                            runOnce = true;
-                                        }
-                                        scrollView = EditorGUILayout.BeginScrollView(scrollView);
-                                        {
-                                            EditorGUILayout.BeginVertical();
+                                            var updateImageDisplay = Resources.Load("LatestUpdateHeader") as Texture2D;
+                                            var content = new GUIContent(updateImageDisplay);
+                                            EditorGUILayout.LabelField(content, GUILayout.Height(140));
+
+                                            EditorGUILayout.LabelField("Search Version", EditorStyles.boldLabel);
+                                            EditorGUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
                                             {
-                                                var updateImageDisplay = Resources.Load("LatestUpdateHeader") as Texture2D;
-                                                var content = new GUIContent(updateImageDisplay);
-                                                EditorGUILayout.LabelField(content, GUILayout.Height(140));
 
-                                                EditorGUILayout.LabelField("Search Version", EditorStyles.boldLabel);
-                                                EditorGUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
+                                                _searchString = GUILayout.TextField(_searchString, GUI.skin.FindStyle("ToolbarSeachTextField"));
+                                                if (GUILayout.Button("", GUI.skin.FindStyle("ToolbarSeachCancelButton")))
                                                 {
-
-                                                    _searchString = GUILayout.TextField(_searchString, GUI.skin.FindStyle("ToolbarSeachTextField"));
-                                                    if (GUILayout.Button("", GUI.skin.FindStyle("ToolbarSeachCancelButton")))
-                                                    {
-                                                        _searchString = "";
-                                                    }
+                                                    _searchString = "";
                                                 }
-                                                EditorGUILayout.EndHorizontal();
+                                            }
+                                            EditorGUILayout.EndHorizontal();
 
 
 
-                                                foreach (var version in versionList)
+                                            foreach (var version in versionList)
+                                            {
+                                                if (_searchString == "")
                                                 {
-                                                    if (_searchString == "")
-                                                    {
-                                                        if (version.Version != currentVersion)
-                                                        {
-                                                            EditorGUILayout.BeginHorizontal();
-                                                            {
-                                                                EditorGUILayout.LabelField(version.Version, EditorStyles.boldLabel);
-                                                                if (GUILayout.Button("Install"))
-                                                                {
-                                                                    naxokitUpdater.DeleteAndDownloadAsync(version.Version);
-                                                                }
-                                                            }
-                                                            EditorGUILayout.EndHorizontal();
-
-                                                        }
-                                                    }
-                                                    else if (version.Version.Contains(_searchString))
+                                                    if (version.Version != currentVersion)
                                                     {
                                                         EditorGUILayout.BeginHorizontal();
                                                         {
@@ -185,62 +172,75 @@ namespace Assets.naxokit.Editor
                                                             }
                                                         }
                                                         EditorGUILayout.EndHorizontal();
-                                                    }
 
+                                                    }
                                                 }
-                                                if (_searchString != "" && _searchString != "Current Version: " + versionList.Count)
+                                                else if (version.Version.Contains(_searchString))
                                                 {
-                                                    //Bug #1: even when there is a result it shows that there is "no result"
-                                                    EditorGUILayout.LabelField("No results found for: " + _searchString, EditorStyles.boldLabel);
+                                                    EditorGUILayout.BeginHorizontal();
+                                                    {
+                                                        EditorGUILayout.LabelField(version.Version, EditorStyles.boldLabel);
+                                                        if (GUILayout.Button("Install"))
+                                                        {
+                                                            naxokitUpdater.DeleteAndDownloadAsync(version.Version);
+                                                        }
+                                                    }
+                                                    EditorGUILayout.EndHorizontal();
                                                 }
 
                                             }
-                                            EditorGUILayout.EndVertical();
+                                            if (_searchString != "" && _searchString != "Current Version: " + versionList.Count)
+                                            {
+                                                //Bug #1: even when there is a result it shows that there is "no result"
+                                                EditorGUILayout.LabelField("No results found for: " + _searchString, EditorStyles.boldLabel);
+                                            }
 
                                         }
-                                        EditorGUILayout.EndScrollView();
+                                        EditorGUILayout.EndVertical();
 
                                     }
-                                    catch (Exception)
-                                    {
-                                        EditorGUILayout.LabelField("Error: Could not load version list", EditorStyles.boldLabel);
-                                        if (GUILayout.Button("Reload Window"))
-                                        {
-                                            Close();
-                                            ShowWindow();
-                                        }
+                                    EditorGUILayout.EndScrollView();
 
-                                    }
                                 }
-                                else
+                                catch (Exception)
                                 {
-                                    //User is on a Old Build
+                                    EditorGUILayout.LabelField("Error: Could not load version list", EditorStyles.boldLabel);
+                                    if (GUILayout.Button("Reload Window"))
+                                    {
+                                        Close();
+                                        ShowWindow();
+                                    }
 
-                                    var updateImageDisplay = Resources.Load("UpdateHeader") as Texture2D;
-                                    var content = new GUIContent(updateImageDisplay);
-                                    EditorGUILayout.LabelField(content, GUILayout.Height(140));
-                                    //idk yet
                                 }
-                                DrawLine.DrawHorizontalLine(1);
                             }
-                            EditorGUILayout.EndVertical();
-                        }
-                    }
-                    if (key.ToString() == "Premium")
-                    {
-                        PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, PremiumOpen, 30f, 0, 0, 12f, 5f);
-                        if (PremiumOpen)
-                        {
-                            EditorGUILayout.BeginVertical();
+                            else
                             {
-                                EditorGUILayout.LabelField("Premium", EditorStyles.boldLabel);
-                                EditorGUILayout.LabelField("Coming soon...");
+                                //User is on a Old Build
+
+                                var updateImageDisplay = Resources.Load("UpdateHeader") as Texture2D;
+                                var content = new GUIContent(updateImageDisplay);
+                                EditorGUILayout.LabelField(content, GUILayout.Height(140));
+                                //idk yet
                             }
-                            EditorGUILayout.EndVertical();
+                            DrawLine.DrawHorizontalLine(1);
                         }
+                        EditorGUILayout.EndVertical();
                     }
                 }
-            }
+                if (key.ToString() == "Premium")
+                {
+                    PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, PremiumOpen, 30f, 0, 0, 12f, 5f);
+                    if (PremiumOpen)
+                    {
+                        EditorGUILayout.BeginVertical();
+                        {
+                            EditorGUILayout.LabelField("Premium", EditorStyles.boldLabel);
+                            EditorGUILayout.LabelField("Coming soon...");
+                        }
+                        EditorGUILayout.EndVertical();
+                    }
+                }
+            }*/
             EditorGUILayout.LabelField("V" + naxokitUpdater.CurrentVersion.Replace(';', ' '), EditorStyles.centeredGreyMiniLabel);
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
