@@ -5,10 +5,6 @@ namespace naxokit.Styles
 {
     public class FoldoutTexture
     {
-        public static bool MakeTextureFoldout()
-        {
-            return true;
-        }
         public static bool MakeTextureFoldout(Texture2D texture2D, bool boolToggle, float floatHeight, float floatOffsetX, float floatOffsetY, float floatArrowOffsetY, float floatArrowOffsetX)
         {
             GUIStyle formatting = new GUIStyle("ShurikenModuleTitle");

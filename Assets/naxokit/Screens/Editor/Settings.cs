@@ -6,7 +6,7 @@ using naxokit.Styles;
 
 namespace naxokit.Screens
 {
-    public class Settings : EditorWindow
+    public class Settings
     {
         public static void HandleSettingsOpend()
         {

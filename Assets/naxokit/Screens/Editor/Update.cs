@@ -21,10 +21,6 @@ namespace naxokit.Screens
 
         public static void HandleUpdateOpend()
         {
-
-            
-
-            
             DrawLine.DrawHorizontalLine(1);
             if (naxokitUpdater.CompareCurrentVersionWithLatest())
             {
