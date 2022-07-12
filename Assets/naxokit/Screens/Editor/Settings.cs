@@ -4,14 +4,17 @@ using UnityEditor;
 using UnityEngine;
 using naxokit.Styles;
 
-public class Settings : EditorWindow
+namespace naxokit.Screens
 {
-    bool state = false;
-    Texture2D texture2d;
-    public Settings(string image)
+    public class Settings : EditorWindow
     {
-        texture2d = Resources.Load(image) as Texture2D;
-        state = FoldoutTexture.MakeTextureFoldout();
+        public static void HandleSettingsOpend()
+        {
+            EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Comming Soon...", EditorStyles.centeredGreyMiniLabel);
+        }
     }
-
 }
+
+
+
