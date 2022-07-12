@@ -11,10 +11,8 @@ using System.Collections.Generic;
 
 //Development Note
 /*
- * This code is Yet Only for
- * the old SDK
- * since we have not update the website to
- * naxokit.com
+ * We have now updated the Website, but we need to update the api someday
+ * so we wont have  "Avatar, World" anymore etc.
 */
 //End
 
@@ -27,7 +25,7 @@ namespace naxokit.Updater
         
         private static readonly HttpClient HttpClient = new HttpClient();
 
-        private const string _BASE_URL = "https://api.nanosdk.net";
+        private const string _BASE_URL = "https://api.naxokit.com";
 
         private static readonly Uri _LatestVersionUri = new Uri(_BASE_URL + $"/public/sdk/version");
         private static readonly Uri _VersionUri = new Uri(_BASE_URL + "/public/sdk/version/list");
@@ -64,7 +62,7 @@ namespace naxokit.Updater
                     NanoLog("Download failed!");
                     if (EditorUtility.DisplayDialog(scriptName, "Failed Download: " + ex.Message, "Join Discord for help", "Cancel"))
                     {
-                        Application.OpenURL("https://nanosdk.net/discord");
+                        Application.OpenURL("https://naxokit.com/discord");
                     }
                     return;
                 }
@@ -139,7 +137,7 @@ namespace naxokit.Updater
                 NanoLog("Download failed!");
                 if (EditorUtility.DisplayDialog(scriptName, "Failed Download: " + ex.Message, "Join Discord for help", "Cancel"))
                 {
-                    Application.OpenURL("https://nanosdk.net/discord");
+                    Application.OpenURL("https://naxokit.com/discord");
                 }
             }
 

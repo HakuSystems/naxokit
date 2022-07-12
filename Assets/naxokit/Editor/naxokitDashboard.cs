@@ -23,6 +23,7 @@ namespace naxokit
         bool UpdateOpen = false;
         bool PremiumOpen = false;
         private Vector2 scrollPosition;
+        private bool userIsUptoDate;
 
         [MenuItem("naxokit/Dashboard")]
         public static void ShowWindow() => GetWindow(typeof(naxokitDashboard));
@@ -34,6 +35,10 @@ namespace naxokit
 
             //Loads the latest version from the server
             await naxokitUpdater.UpdateVersionData();
+            if (naxokitUpdater.CompareCurrentVersionWithLatest())
+                userIsUptoDate = true;
+            else
+                userIsUptoDate = false;
 
         }
 
@@ -104,14 +109,17 @@ namespace naxokit
                 }
                 if (key.ToString() == "Update")
                 {
-                    UpdateOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, UpdateOpen, 30f, 0, 0, 12f, 5f);
-                    if (UpdateOpen)
+                    if (userIsUptoDate)
                     {
-                        EditorGUILayout.BeginVertical();
+                        UpdateOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, UpdateOpen, 30f, 0, 0, 12f, 5f);
+                        if (UpdateOpen)
                         {
-                            Update.HandleUpdateOpend();
+                            EditorGUILayout.BeginVertical();
+                            {
+                                Update.HandleUpdateOpend();
+                            }
+                            EditorGUILayout.EndVertical();
                         }
-                        EditorGUILayout.EndVertical();
                     }
                 }
                 if (key.ToString() == "Premium")
@@ -127,7 +135,25 @@ namespace naxokit
                     }
                 }
             }
-            EditorGUILayout.LabelField("V" + naxokitUpdater.CurrentVersion.Replace(';', ' '), EditorStyles.centeredGreyMiniLabel);
+            if (!userIsUptoDate)
+            {
+                DrawLine.DrawHorizontalLine();
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUILayout.LabelField("Update Available", EditorStyles.boldLabel);
+                    if (GUILayout.Button("Update", EditorStyles.miniButton, GUILayout.Width(100)))
+                        naxokitUpdater.DeleteAndDownloadAsync();
+                    EditorGUILayout.LabelField("V" + naxokitUpdater.LatestVersion.Version, EditorStyles.centeredGreyMiniLabel);
+
+                }
+                EditorGUILayout.EndHorizontal();
+                DrawLine.DrawHorizontalLine();
+
+            }
+            else
+            {
+                EditorGUILayout.LabelField("V" + naxokitUpdater.CurrentVersion.Replace(';', ' '), EditorStyles.centeredGreyMiniLabel);
+            }
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
         }

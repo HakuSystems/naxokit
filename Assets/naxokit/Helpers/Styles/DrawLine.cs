@@ -5,7 +5,7 @@ namespace naxokit.Styles
 {
     public class DrawLine
     {
-        public static void DrawHorizontalLine(int _height)
+        public static void DrawHorizontalLine(int _height = 1)
         {
             Rect rect = EditorGUILayout.GetControlRect(false, _height);
             rect.height = _height;

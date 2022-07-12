@@ -14,10 +14,10 @@ namespace naxokit.Screens
         public static void HandleCreditsOpend()
         {
             var teamCreditsImage = Resources.Load("TeamCredits") as Texture2D;
-            DrawLine.DrawHorizontalLine(1);
+            DrawLine.DrawHorizontalLine();
             var content = new GUIContent(teamCreditsImage);
             EditorGUILayout.LabelField(content, GUILayout.Height(300));
-            DrawLine.DrawHorizontalLine(1);
+            DrawLine.DrawHorizontalLine();
 
         }
     }

@@ -21,7 +21,7 @@ namespace naxokit.Screens
 
         public static void HandleUpdateOpend()
         {
-            DrawLine.DrawHorizontalLine(1);
+            DrawLine.DrawHorizontalLine();
             if (naxokitUpdater.CompareCurrentVersionWithLatest())
             {
                 //User is on Latest Build
@@ -111,16 +111,7 @@ namespace naxokit.Screens
 
                 }
             }
-            else
-            {
-                //User is on a Old Build
-
-                var updateImageDisplay = Resources.Load("UpdateHeader") as Texture2D;
-                var content = new GUIContent(updateImageDisplay);
-                EditorGUILayout.LabelField(content, GUILayout.Height(140));
-                //idk yet
-            }
-            DrawLine.DrawHorizontalLine(1);
+            DrawLine.DrawHorizontalLine();
         }
     }
 }
