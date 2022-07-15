@@ -23,7 +23,7 @@ namespace naxokit
         bool UpdateOpen = false;
         bool PremiumOpen = false;
         private Vector2 scrollPosition;
-        private bool userIsUptoDate;
+        private bool userIsUptoDate = false;
 
         [MenuItem("naxokit/Dashboard")]
         public static void ShowWindow() => GetWindow(typeof(naxokitDashboard));
@@ -37,8 +37,6 @@ namespace naxokit
             await naxokitUpdater.UpdateVersionData();
             if (naxokitUpdater.CompareCurrentVersionWithLatest())
                 userIsUptoDate = true;
-            else
-                userIsUptoDate = false;
 
         }
 
