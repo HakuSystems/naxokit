@@ -19,7 +19,6 @@ namespace naxokit
     {
         bool SettingsOpen = false;
         bool CreditsOpen = false;
-        bool AboutOpen = false;
         bool UpdateOpen = false;
         bool PremiumOpen = false;
         private Vector2 scrollPosition;
@@ -31,7 +30,7 @@ namespace naxokit
         private async void OnEnable()
         {
             titleContent = new GUIContent("Dashboard");
-            minSize = new Vector2(600, 400);
+            minSize = new Vector2(600, 700);
 
             //Loads the latest version from the server
             await naxokitUpdater.UpdateVersionData();
@@ -59,7 +58,6 @@ namespace naxokit
             {
                 {"Settings", Resources.Load("Settings") as Texture2D},
                 {"Credits", Resources.Load("Credits") as Texture2D},
-                {"About", Resources.Load("About") as Texture2D},
                 {"Update", Resources.Load("Update") as Texture2D},
                 {"Premium", Resources.Load("Premium") as Texture2D}
 
@@ -89,18 +87,6 @@ namespace naxokit
                         EditorGUILayout.BeginVertical();
                         {
                             Credits.HandleCreditsOpend();
-                        }
-                        EditorGUILayout.EndVertical();
-                    }
-                }
-                if (key.ToString() == "About")
-                {
-                    AboutOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, AboutOpen, 30f, 0, 0, 12f, 5f);
-                    if (AboutOpen)
-                    {
-                        EditorGUILayout.BeginVertical();
-                        {
-                            About.HandleAboutOpend();
                         }
                         EditorGUILayout.EndVertical();
                     }

@@ -21,59 +21,43 @@ namespace naxokit.Screens
 
         public static void HandleUpdateOpend()
         {
+            //User is on Latest Build
             DrawLine.DrawHorizontalLine();
-            if (naxokitUpdater.CompareCurrentVersionWithLatest())
+            try
             {
-                //User is on Latest Build
-                try
+                if (runOnce == false)
                 {
-                    if (runOnce == false)
+                    versionList = naxokitUpdater.ServerVersionList;
+                    currentVersion = naxokitUpdater.LatestVersion.Version;
+                    runOnce = true;
+                }
+                scrollView = EditorGUILayout.BeginScrollView(scrollView);
+                {
+                    EditorGUILayout.BeginVertical();
                     {
-                        versionList = naxokitUpdater.ServerVersionList;
-                        currentVersion = naxokitUpdater.LatestVersion.Version;
-                        runOnce = true;
-                    }
-                    scrollView = EditorGUILayout.BeginScrollView(scrollView);
-                    {
-                        EditorGUILayout.BeginVertical();
+                        var updateImageDisplay = Resources.Load("LatestUpdateHeader") as Texture2D;
+                        var content = new GUIContent(updateImageDisplay);
+                        EditorGUILayout.LabelField(content, GUILayout.Height(140));
+
+                        EditorGUILayout.LabelField("Search Version", EditorStyles.boldLabel);
+                        EditorGUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
                         {
-                            var updateImageDisplay = Resources.Load("LatestUpdateHeader") as Texture2D;
-                            var content = new GUIContent(updateImageDisplay);
-                            EditorGUILayout.LabelField(content, GUILayout.Height(140));
 
-                            EditorGUILayout.LabelField("Search Version", EditorStyles.boldLabel);
-                            EditorGUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
+                            _searchString = GUILayout.TextField(_searchString, GUI.skin.FindStyle("ToolbarSeachTextField"));
+                            if (GUILayout.Button("", GUI.skin.FindStyle("ToolbarSeachCancelButton")))
                             {
-
-                                _searchString = GUILayout.TextField(_searchString, GUI.skin.FindStyle("ToolbarSeachTextField"));
-                                if (GUILayout.Button("", GUI.skin.FindStyle("ToolbarSeachCancelButton")))
-                                {
-                                    _searchString = "";
-                                }
+                                _searchString = "";
                             }
-                            EditorGUILayout.EndHorizontal();
+                        }
+                        EditorGUILayout.EndHorizontal();
 
 
 
-                            foreach (var version in versionList)
+                        foreach (var version in versionList)
+                        {
+                            if (_searchString == "")
                             {
-                                if (_searchString == "")
-                                {
-                                    if (version.Version != currentVersion)
-                                    {
-                                        EditorGUILayout.BeginHorizontal();
-                                        {
-                                            EditorGUILayout.LabelField(version.Version, EditorStyles.boldLabel);
-                                            if (GUILayout.Button("Install"))
-                                            {
-                                                naxokitUpdater.DeleteAndDownloadAsync(version.Version);
-                                            }
-                                        }
-                                        EditorGUILayout.EndHorizontal();
-
-                                    }
-                                }
-                                else if (version.Version.Contains(_searchString))
+                                if (version.Version != currentVersion)
                                 {
                                     EditorGUILayout.BeginHorizontal();
                                     {
@@ -84,32 +68,45 @@ namespace naxokit.Screens
                                         }
                                     }
                                     EditorGUILayout.EndHorizontal();
-                                }
 
+                                }
                             }
-                            if (_searchString != "" && _searchString != "Current Version: " + versionList.Count)
+                            else if (version.Version.Contains(_searchString))
                             {
-                                //Bug #1: even when there is a result it shows that there is "no result"
-                                EditorGUILayout.LabelField("No results found for: " + _searchString, EditorStyles.boldLabel);
+                                EditorGUILayout.BeginHorizontal();
+                                {
+                                    EditorGUILayout.LabelField(version.Version, EditorStyles.boldLabel);
+                                    if (GUILayout.Button("Install"))
+                                    {
+                                        naxokitUpdater.DeleteAndDownloadAsync(version.Version);
+                                    }
+                                }
+                                EditorGUILayout.EndHorizontal();
                             }
 
                         }
-                        EditorGUILayout.EndVertical();
+                        if (_searchString != "" && _searchString != "Current Version: " + versionList.Count)
+                        {
+                            //Bug #1: even when there is a result it shows that there is "no result"
+                            EditorGUILayout.LabelField("No results found for: " + _searchString, EditorStyles.boldLabel);
+                        }
 
                     }
-                    EditorGUILayout.EndScrollView();
+                    EditorGUILayout.EndVertical();
 
                 }
-                catch (Exception)
+                EditorGUILayout.EndScrollView();
+
+            }
+            catch (Exception)
+            {
+                EditorGUILayout.LabelField("Error: Could not load version list", EditorStyles.boldLabel);
+                if (GUILayout.Button("Reload Window"))
                 {
-                    EditorGUILayout.LabelField("Error: Could not load version list", EditorStyles.boldLabel);
-                    if (GUILayout.Button("Reload Window"))
-                    {
-                        EditorWindow.GetWindow<naxokitDashboard>().Close();
-                        EditorWindow.GetWindow<naxokitDashboard>().Show();
-                    }
-
+                    EditorWindow.GetWindow<naxokitDashboard>().Close();
+                    EditorWindow.GetWindow<naxokitDashboard>().Show();
                 }
+
             }
             DrawLine.DrawHorizontalLine();
         }
