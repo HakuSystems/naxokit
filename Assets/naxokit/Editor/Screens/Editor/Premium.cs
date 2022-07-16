@@ -7,7 +7,7 @@ using UnityEditor;
 
 namespace naxokit.Screens
 {
-    public class Premium
+    public class Premium : EditorWindow
     {
         public static void HandlePremiumOpend()
         {

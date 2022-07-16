@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace naxokit.Screens
 {
-    public class Update
+    public class Update : EditorWindow
     {
         //Version selector
         public static List<VersionBaseINTERNDATA> versionList;

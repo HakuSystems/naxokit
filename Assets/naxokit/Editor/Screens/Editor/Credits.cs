@@ -9,7 +9,7 @@ using naxokit.Styles;
 
 namespace naxokit.Screens
 {
-    public class Credits
+    public class Credits : EditorWindow
     {
         public static void HandleCreditsOpend()
         {

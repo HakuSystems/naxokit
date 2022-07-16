@@ -74,6 +74,10 @@ namespace naxokit
                     {
                         EditorGUILayout.BeginVertical();
                         {
+                            if (Settings.DiscordRichPresence())
+                                DiscordController.RunDiscordRichPresence();
+                            else
+                                NaxoLog("");
                             Settings.HandleSettingsOpend();
                         }
                         EditorGUILayout.EndVertical();
