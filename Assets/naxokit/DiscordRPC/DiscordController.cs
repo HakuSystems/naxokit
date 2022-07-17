@@ -5,7 +5,8 @@ using naxokit.Updater;
 using System;
 using System.IO;
 using naxokit.Helpers.Configs;
-
+//Bug Somehow it created more instances of discords rich presence and doesnt overwrite the old one nor then clears the old one
+//and creates a new one
 [InitializeOnLoad]
 public class DiscordController
 {
