@@ -7,13 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using naxokit.Helpers.Models;
 
 namespace naxokit.Screens
 {
     public class Update : EditorWindow
     {
         //Version selector
-        public static List<VersionBaseINTERNDATA> versionList;
+        public static List<VersionData> versionList;
         public static string currentVersion;
         private static Vector2 scrollView;
         private static bool runOnce;

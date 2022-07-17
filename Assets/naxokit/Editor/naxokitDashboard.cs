@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor;
-using naxokit;
+﻿using UnityEditor;
 using naxokit.Styles;
 using naxokit.Updater;
 using UnityEngine;
-using System.IO;
 using System.Collections;
 using naxokit.Screens;
 
@@ -37,6 +30,11 @@ namespace naxokit
             if (naxokitUpdater.CompareCurrentVersionWithLatest())
                 userIsUptoDate = true;
 
+        }
+        private void OnDestroy()
+        {
+            Settings.UpdateConfigs();
+            AssetDatabase.Refresh();
         }
 
         private void OnGUI()
@@ -74,10 +72,6 @@ namespace naxokit
                     {
                         EditorGUILayout.BeginVertical();
                         {
-                            if (Settings.DiscordRichPresence())
-                                DiscordController.RunDiscordRichPresence();
-                            else
-                                NaxoLog("");
                             Settings.HandleSettingsOpend();
                         }
                         EditorGUILayout.EndVertical();

@@ -8,6 +8,7 @@ using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using naxokit.Helpers.Models;
 
 //Development Note
 /*
@@ -31,9 +32,9 @@ namespace naxokit.Updater
         private static readonly Uri _VersionUri = new Uri(_BASE_URL + "/public/sdk/version/list");
 
         public static string CurrentVersion { get; } = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}naxokit{Path.DirectorySeparatorChar}version.txt").Replace("\n", "");
-        public static List<VersionBaseINTERNDATA> ServerVersionList;
-        public static VersionBaseINTERNDATA LatestVersion { set; get; }
-        public static VersionBaseINTERNDATA LatestBetaVersion { set; get; }
+        public static List<VersionData> ServerVersionList;
+        public static VersionData LatestVersion { set; get; }
+        public static VersionData LatestBetaVersion { set; get; }
 
 
         //select where to be imported
@@ -147,8 +148,8 @@ namespace naxokit.Updater
         public static async Task UpdateVersionData()
         {
             ServerVersionList = await GetVersionList();
-            LatestVersion = await GetLatestVersion(VersionBaseINTERNDATA.ReleaseType.Avatar, VersionBaseINTERNDATA.BranchType.Release);
-            LatestBetaVersion = await GetLatestVersion(VersionBaseINTERNDATA.ReleaseType.Avatar, VersionBaseINTERNDATA.BranchType.Beta);
+            LatestVersion = await GetLatestVersion(VersionData.ReleaseType.Avatar, VersionData.BranchType.Release);
+            LatestBetaVersion = await GetLatestVersion(VersionData.ReleaseType.Avatar, VersionData.BranchType.Beta);
         }
         public static bool CompareCurrentVersionWithLatest()
         {
@@ -159,7 +160,7 @@ namespace naxokit.Updater
             else
                 return false;
         }
-        public static async Task<VersionBaseINTERNDATA> GetLatestVersion(VersionBaseINTERNDATA.ReleaseType type, VersionBaseINTERNDATA.BranchType branch)
+        public static async Task<VersionData> GetLatestVersion(VersionData.ReleaseType type, VersionData.BranchType branch)
         {
             var request = new HttpRequestMessage()
             {
@@ -171,14 +172,14 @@ namespace naxokit.Updater
                 if (response.IsSuccessStatusCode)
                 {
                     var data = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<VersionBaseINTERN<VersionBaseINTERNDATA>>(data).Data;
+                    return JsonConvert.DeserializeObject<VersionBase<VersionData>>(data).Data;
 
                 }
                 NanoLog("Failed to get latest version");
                 return null;
             }
         }
-        public static async Task<List<VersionBaseINTERNDATA>> GetVersionList()
+        public static async Task<List<VersionData>> GetVersionList()
         {
 
             var request = new HttpRequestMessage()
@@ -190,14 +191,14 @@ namespace naxokit.Updater
             using (var response = await HttpClient.SendAsync(request))
             {
                 string result = await response.Content.ReadAsStringAsync();
-                var SERVERCHECKproperties = JsonConvert.DeserializeObject<VersionBaseINTERN<List<VersionBaseINTERNDATA>>>(result);
-                return removeEntries(SERVERCHECKproperties.Data, VersionBaseINTERNDATA.ReleaseType.World);
+                var SERVERCHECKproperties = JsonConvert.DeserializeObject<VersionBase<List<VersionData>>>(result);
+                return removeEntries(SERVERCHECKproperties.Data, VersionData.ReleaseType.World);
             }
 
         }
-        private static List<VersionBaseINTERNDATA> removeEntries(List<VersionBaseINTERNDATA> list, VersionBaseINTERNDATA.ReleaseType release)
+        private static List<VersionData> removeEntries(List<VersionData> list, VersionData.ReleaseType release)
         {
-            List<VersionBaseINTERNDATA> newList = new List<VersionBaseINTERNDATA>();
+            List<VersionData> newList = new List<VersionData>();
             for (int i = 0; i < list.Count; i++)
             {
                 if (list[i].Type == release) continue;
@@ -232,32 +233,5 @@ namespace naxokit.Updater
             message = "<color=magenta>" + message + "</color>";
             Debug.Log(scriptName+": " + message);
         }
-    }
-
-    public class VersionBaseINTERNDATA
-    {
-        public string Url { get; set; }
-        public string Version { get; set; }
-        public ReleaseType Type { get; set; }
-
-        public BranchType Branch { get; set; }
-
-        public enum ReleaseType
-        {
-            Avatar = 0,
-            World = 1
-        }
-
-        public enum BranchType
-        {
-            Release = 0,
-            Beta = 1
-        }
-    }
-
-    public class VersionBaseINTERN<T>
-    {
-        public string Message { get; set; }
-        public T Data { get; set; }
     }
 }

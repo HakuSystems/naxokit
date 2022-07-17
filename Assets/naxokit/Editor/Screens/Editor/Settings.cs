@@ -1,28 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using naxokit.Styles;
-using Discord;
+using naxokit.Helpers;
+using naxokit.Helpers.Configs;
 
 namespace naxokit.Screens
 {
     public class Settings : EditorWindow
     {
-        public static bool enableDiscord = true;
-        public Settings()
-        {
-        }
+        private static bool runOnce = false;
+
+        public static bool isDiscordEnabled;
         public static void HandleSettingsOpend()
         {
+            DrawLine.DrawHorizontalLine();
+            //Handling PlayerPrefs
+            GetCurrentPlayerPrefs();
+            EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
+                     
+            isDiscordEnabled = EditorGUILayout.Toggle("Discord RichPresence", isDiscordEnabled);
 
-            //checkbox enableDiscord
-            enableDiscord = EditorGUILayout.Toggle("Enable Discord Rich Presence", enableDiscord);
-            if (!enableDiscord)
-                enableDiscord = false;
+            DrawLine.DrawHorizontalLine();
 
         }
-        public static bool DiscordRichPresence() { return enableDiscord; }
+
+        private static void GetCurrentPlayerPrefs()
+        {
+            if (!runOnce)
+            {
+                isDiscordEnabled = Converters.intToBool(PlayerPrefs.GetInt("rich_discord"));
+
+
+                runOnce = true;
+            }
+        }
+
+        public static void UpdateConfigs()
+        {
+            //currently only this config
+            discord_rich.UpdateDiscordRichConfig(isDiscordEnabled);
+        }
     }
 }
 
