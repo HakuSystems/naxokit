@@ -4,7 +4,7 @@ using naxokit.Updater;
 using UnityEngine;
 using System.Collections;
 using naxokit.Screens;
-
+using naxokit.Helpers.Logger;
 
 namespace naxokit
 {
@@ -24,6 +24,7 @@ namespace naxokit
         {
             titleContent = new GUIContent("Dashboard");
             minSize = new Vector2(600, 700);
+
 
             //Loads the latest version from the server
             await naxokitUpdater.UpdateVersionData();
@@ -139,10 +140,6 @@ namespace naxokit
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
         }
-        private void NaxoLog(string message)
-        {
-            Debug.Log("<color=magenta>" + message + "</color>");
-            Debug.Log("[naxokit]" + message);
-        }
+        
     }
 }

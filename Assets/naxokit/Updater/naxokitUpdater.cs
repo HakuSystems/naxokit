@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using naxokit.Helpers.Models;
+using naxokit.Helpers.Logger;
 
 //Development Note
 /*
@@ -60,7 +61,7 @@ namespace naxokit.Updater
                 }
                 catch (Exception ex)
                 {
-                    NanoLog("Download failed!");
+                    naxoLog.LogError("Updater","Download failed!");
                     if (EditorUtility.DisplayDialog(scriptName, "Failed Download: " + ex.Message, "Join Discord for help", "Cancel"))
                     {
                         Application.OpenURL("https://naxokit.com/discord");
@@ -68,14 +69,14 @@ namespace naxokit.Updater
                     return;
                 }
             }
-            NanoLog("Download Complete");
+            naxoLog.Log("Updater","Download Complete");
 
             try
             {
 
                 if (EditorUtility.DisplayDialog(scriptName, "The Old Version will Be Deleted and the New one Will be imported!", "Okay", "Cancel"))
                 {
-                    NanoLog("Getting Files..");
+                    naxoLog.Log("Updater", "Getting Files..");
                     string[] naxoDir = Directory.GetFiles(naxoPath, "*.*", SearchOption.AllDirectories);
 
 
@@ -90,7 +91,7 @@ namespace naxokit.Updater
                             {
                                 if (!IsDLLFile(f))
                                 {
-                                    NanoLog($"{f} - Deleted");
+                                    naxoLog.Log("Updater", $"{f} - Deleted");
                                     File.Delete(f);
                                 }
                             }
@@ -100,7 +101,7 @@ namespace naxokit.Updater
                         {
                             try
                             {
-                                NanoLog($"{f} - Deleted");
+                                naxoLog.Log("Updater", $"{f} - Deleted");
                                 File.Delete(f);
                             }
                             catch (Exception) { }
@@ -109,9 +110,9 @@ namespace naxokit.Updater
                 }
                 else
                 {
-                    NanoLog("User declined update");
+                    naxoLog.Log("Updater", "User declined update");
 
-                    NanoLog("Deleting downloaded file");
+                    naxoLog.Log("Updater", "Deleting downloaded file");
                     File.Delete(Path.GetTempPath() + Path.DirectorySeparatorChar + $"{version}.{assetName}");
                     return;
 
@@ -135,7 +136,7 @@ namespace naxokit.Updater
             catch (Exception ex)
             {
 
-                NanoLog("Download failed!");
+                naxoLog.LogWarning("Updater", "Download failed!");
                 if (EditorUtility.DisplayDialog(scriptName, "Failed Download: " + ex.Message, "Join Discord for help", "Cancel"))
                 {
                     Application.OpenURL("https://naxokit.com/discord");
@@ -175,7 +176,7 @@ namespace naxokit.Updater
                     return JsonConvert.DeserializeObject<VersionBase<VersionData>>(data).Data;
 
                 }
-                NanoLog("Failed to get latest version");
+                naxoLog.LogWarning("Updater", "Failed to get latest version");
                 return null;
             }
         }
@@ -228,10 +229,6 @@ namespace naxokit.Updater
             if (path.Substring(path.Length - 3).Equals("dll")) return true;
             return false;
         }
-        private static void NanoLog(string message)
-        {
-            message = "<color=magenta>" + message + "</color>";
-            Debug.Log(scriptName+": " + message);
-        }
+        
     }
 }

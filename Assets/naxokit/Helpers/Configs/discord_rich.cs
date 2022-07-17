@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using naxokit.Helpers.Logger;
 
 namespace naxokit.Helpers.Configs
 {
@@ -37,7 +38,7 @@ namespace naxokit.Helpers.Configs
                 File.WriteAllText(configPath, JsonConvert.SerializeObject(config, Formatting.Indented));
                 discord_richBool = config.Enabled;
             }
-            Debug.Log("Updated Discord Settings");
+            naxoLog.Log("discord_Config", "Updated Settings");
         }
         public static bool GetCurrentDiscordBool() { return Converters.intToBool(PlayerPrefs.GetInt("rich_discord")); }
     }

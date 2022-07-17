@@ -5,6 +5,7 @@ using naxokit.Updater;
 using System;
 using System.IO;
 using naxokit.Helpers.Configs;
+using naxokit.Helpers.Logger;
 //Bug Somehow it created more instances of discords rich presence and doesnt overwrite the old one nor then clears the old one
 //and creates a new one
 [InitializeOnLoad]
@@ -36,9 +37,9 @@ public class DiscordController
             };
             acitivityManager.UpdateActivity(acitivity, (Discord.Result result) => {
                 if (result == Discord.Result.Ok)
-                    Debug.Log("Discord Activity updated");
+                    naxoLog.Log("DiscordController", "Discord Activity updated");
                 else
-                    Debug.Log("Discord Activity update failed");
+                    naxoLog.Log("DiscordController", "Discord Activity update faile");
             });
             var callback = new Thread(() =>
             {
