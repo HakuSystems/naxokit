@@ -1,8 +1,9 @@
-﻿using UnityEditor;
-using UnityEngine;
-using naxokit.Styles;
+﻿using naxokit.DISCORDRPC;
 using naxokit.Helpers;
 using naxokit.Helpers.Configs;
+using naxokit.Styles;
+using UnityEditor;
+using UnityEngine;
 
 namespace naxokit.Screens
 {
@@ -17,9 +18,15 @@ namespace naxokit.Screens
             //Handling PlayerPrefs
             GetCurrentPlayerPrefs();
             EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
-                     
-            isDiscordEnabled = EditorGUILayout.Toggle("Discord RichPresence", isDiscordEnabled);
+            EditorGUILayout.BeginHorizontal();
+            {
 
+                isDiscordEnabled = EditorGUILayout.Toggle("Discord RichPresence", isDiscordEnabled);
+                if (GUILayout.Button("Hide Username"))
+                    naxokitRPC.ChangeStateRPC();
+
+            }
+            EditorGUILayout.EndHorizontal();
             DrawLine.DrawHorizontalLine();
 
         }

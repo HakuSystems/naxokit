@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace naxokit.Helpers.Logger
 {
@@ -11,8 +6,8 @@ namespace naxokit.Helpers.Logger
     {
         public static void Log(string title, string message)
         {
-            
-            Debug.Log($"[{title}]: "+ "<color=green>"+message+"</color>");
+
+            Debug.Log($"[{title}]: " + "<color=green>" + message + "</color>");
         }
         public static void LogError(string title, string message)
         {

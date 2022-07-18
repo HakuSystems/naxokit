@@ -1,10 +1,9 @@
-﻿using UnityEditor;
+﻿using naxokit.Screens;
 using naxokit.Styles;
 using naxokit.Updater;
-using UnityEngine;
 using System.Collections;
-using naxokit.Screens;
-using naxokit.Helpers.Logger;
+using UnityEditor;
+using UnityEngine;
 
 namespace naxokit
 {
@@ -52,7 +51,7 @@ namespace naxokit
             EditorGUILayout.BeginVertical();
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             EditorGUILayout.LabelField("naxokit", EditorStyles.boldLabel);
-            
+
             var HeaderImages = new Hashtable()
             {
                 {"Settings", Resources.Load("Settings") as Texture2D},
@@ -61,7 +60,7 @@ namespace naxokit
                 {"Premium", Resources.Load("Premium") as Texture2D}
 
             };
-            
+
             foreach (DictionaryEntry entry in HeaderImages)
             {
                 var key = entry.Key;
@@ -71,11 +70,7 @@ namespace naxokit
                     SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SettingsOpen, 30f, 0, 0, 12f, 5f);
                     if (SettingsOpen)
                     {
-                        EditorGUILayout.BeginVertical();
-                        {
-                            Settings.HandleSettingsOpend();
-                        }
-                        EditorGUILayout.EndVertical();
+                        Settings.HandleSettingsOpend();
                     }
                 }
                 if (key.ToString() == "Credits")
@@ -140,6 +135,6 @@ namespace naxokit
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
         }
-        
+
     }
 }
