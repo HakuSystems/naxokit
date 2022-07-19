@@ -23,6 +23,7 @@ namespace naxokit.Screens.Auth
         private static bool running = false;
         private const string AppJson = "application/json";
 
+        private static string newStrongPassword = "";
         public static bool IsLoggedInAndVerified() => IsUserLoggedIn() && User.IsVerified;
 
         public static bool IsUserLoggedIn()
