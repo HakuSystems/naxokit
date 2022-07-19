@@ -161,7 +161,13 @@ namespace naxokit.Screens.Auth
 
         public static string ApiGenerateStrongPassword()
         {
-            //Todoo
+            /*#0001 Password Generator
+             * 
+             * Password Generator - Generates a strong password of a given length and etc.
+             * When Authenticated, the password is stored in the json.
+             * 
+            */
+
             int minLenght = 8;
             int maxLenght = 128;
             int minLowerCase = 1;

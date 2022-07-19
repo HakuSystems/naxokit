@@ -204,7 +204,11 @@ namespace naxokit
                         }
                     }
                 }
-                /* Todoo
+                /* #0002 Update on Dashboard
+                 * 
+                 * this allready is the Update Function for the dashboard
+                 * however it gets some errors that have to be fixed
+                 * 
                 if (SettingsInitialized == true && CreditsInitialized == true && UpdateInitialized == true && PremiumInitialized == true)
                 {
                     if (!userIsUptoDate)
