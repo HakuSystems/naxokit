@@ -161,16 +161,8 @@ namespace naxokit.Screens.Auth
 
         public static string ApiGenerateStrongPassword()
         {
-            /*TODO
-             * #0001 Password Generator
-             * 
-             * Password Generator - Generates a strong password of a given length and etc.
-             * When Authenticated, the password is stored in the json.
-             * 
-            */
-
             int minLenght = 8;
-            int maxLenght = 128;
+            int maxLenght = 15;
             int minLowerCase = 1;
             int minUpperCase = 1;
             int minNumber = 1;
@@ -178,7 +170,38 @@ namespace naxokit.Screens.Auth
             string allowedSpecials = "@#$%/.!'_-";
 
             string newStrongPassword = "";
-
+            var sb = new StringBuilder();
+            var rnd = new Random();
+            int length = rnd.Next(minLenght, maxLenght);
+            int lowerCase = rnd.Next(minLowerCase, length);
+            int upperCase = rnd.Next(minUpperCase, length);
+            int number = rnd.Next(minNumber, length);
+            int specialChar = rnd.Next(minSpecialChar, length);
+            for (int i = 0; i < length; i++)
+            {
+                if (i < lowerCase)
+                {
+                    sb.Append((char)rnd.Next('a', 'z' + 1));
+                }
+                else if (i < upperCase)
+                {
+                    sb.Append((char)rnd.Next('A', 'Z' + 1));
+                }
+                else if (i < number)
+                {
+                    sb.Append((char)rnd.Next('0', '9' + 1));
+                }
+                else if (i < specialChar)
+                {
+                    sb.Append(allowedSpecials[rnd.Next(0, allowedSpecials.Length)]);
+                }
+                else
+                {
+                    sb.Append((char)rnd.Next('a', 'z' + 1));
+                }
+            }
+            newStrongPassword = sb.ToString();
+            naxoLog.Log("naxoApiHelper", "Generated Strong Password!");
             return newStrongPassword;
         }
     }
