@@ -162,7 +162,7 @@ namespace naxokit.Screens.Auth
         public static string ApiGenerateStrongPassword()
         {
             int minLenght = 8;
-            int maxLenght = 15;
+            int maxLenght = 128;
             int minLowerCase = 1;
             int minUpperCase = 1;
             int minNumber = 1;
