@@ -161,7 +161,8 @@ namespace naxokit.Screens.Auth
 
         public static string ApiGenerateStrongPassword()
         {
-            /*#0001 Password Generator
+            /*TODO
+             * #0001 Password Generator
              * 
              * Password Generator - Generates a strong password of a given length and etc.
              * When Authenticated, the password is stored in the json.

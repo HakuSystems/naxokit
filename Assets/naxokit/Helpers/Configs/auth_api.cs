@@ -6,7 +6,8 @@ using System.IO;
 
 namespace naxokit.Helpers.Configs
 {
-    /*#0003 Save Json Password
+    /*TODO
+     * #0003 Save Json Password
              * 
              * Implement Json Password Saving since our Auth-Key gets invalid
              * after some time.
