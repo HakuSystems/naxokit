@@ -170,7 +170,6 @@ namespace naxokit.Screens.Auth
             int minSpecialChar = 1;
             string allowedSpecials = "@#$%/.!'_-";
 
-            string newStrongPassword = "";
             var sb = new StringBuilder();
             var rnd = new Random();
             int length = rnd.Next(minLenght, maxLenght);

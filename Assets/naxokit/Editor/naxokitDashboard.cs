@@ -83,7 +83,7 @@ namespace naxokit
                 scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
                 EditorGUILayout.LabelField("naxokit", EditorStyles.boldLabel);
                 if (!finallyLoggedIn)
-                    EditorGUILayout.LabelField("You have to login to use naxokit (Login will be saved in appdata)", EditorStyles.centeredGreyMiniLabel);
+                    EditorGUILayout.LabelField("You have to login to use naxokit", EditorStyles.centeredGreyMiniLabel);
 
 
                 var HeaderImages = new Hashtable()
