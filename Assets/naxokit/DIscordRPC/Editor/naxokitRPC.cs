@@ -22,6 +22,7 @@ namespace naxokit.DISCORDRPC
 
         private static void UpdateRPC()
         {
+            // TODO add actual username
             var version = naxokitUpdater.CurrentVersion.Split(';');
             naxoLog.Log("naxokitRPC", "Updating RichPresence");
             richPresence.state = "Username: lyze";//Hardcored temp
@@ -33,7 +34,7 @@ namespace naxokit.DISCORDRPC
             DiscordRpc.UpdatePresence(richPresence);
         }
 
-        //todo add actuall account acessability
+        //TODO add actuall account acessability
         public static void ChangeStateRPC(string dataString = "Username: Hidden")
         {
             richPresence.state = dataString;
