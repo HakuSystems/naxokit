@@ -1,4 +1,5 @@
-﻿using naxokit.Screens;
+﻿using naxokit.Helpers.Configs;
+using naxokit.Screens;
 using naxokit.Screens.Auth;
 using naxokit.Styles;
 using naxokit.Updater;
@@ -20,6 +21,8 @@ namespace naxokit
         private Vector2 scrollPosition;
         private bool userIsUptoDate = false;
         public static bool finallyLoggedIn = false;
+        public static bool savePasswordLocally = false;
+        public static string passStatus = "";
 
 
         private static string usernameInput;
@@ -112,6 +115,27 @@ namespace naxokit
                                 EditorGUILayout.LabelField("Login");
                                 usernameInput = EditorGUILayout.TextField("Username", usernameInput);
                                 passwordInput = EditorGUILayout.PasswordField("Password", passwordInput);
+                                EditorGUILayout.BeginHorizontal();
+                                {
+                                    savePasswordLocally = EditorGUILayout.Toggle("Save Password Locally", savePasswordLocally);
+                                    EditorGUILayout.LabelField(passStatus, EditorStyles.centeredGreyMiniLabel);
+                                    passStatus = "no Password Saved";
+                                    if (auth_api.Config.Password != null)
+                                    {
+                                        passStatus = "Password available";
+                                        savePasswordLocally = true;
+                                        passwordInput = naxoApiHelper.GetSavedPassword();
+                                        if (GUILayout.Button("Clear Password"))
+                                        {
+                                            auth_api.Config.Password = null;
+                                            passwordInput = null;
+                                            usernameInput = null;
+                                            auth_api.Save();
+                                        }
+                                    }
+                                }
+                                EditorGUILayout.EndHorizontal();
+
                                 if (GUILayout.Button("Login"))
                                 {
                                     if (string.IsNullOrEmpty(usernameInput) || string.IsNullOrEmpty(passwordInput))

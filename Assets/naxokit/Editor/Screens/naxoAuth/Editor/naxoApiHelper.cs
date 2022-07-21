@@ -100,11 +100,28 @@ namespace naxokit.Screens.Auth
                 return;
             }
             naxoLog.Log("naxoApiHelper", "Login Successful");
+            if (naxokitDashboard.savePasswordLocally)
+                SaveRecivedPassword(password);
             auth_api.Config.AuthKey = data.Data.AuthKey;
             auth_api.Save();
             CheckUserSelf();
             naxokitDashboard.SetFinallyLoggedIn(true);
         }
+
+        private static void SaveRecivedPassword(string password)
+        {
+            naxoLog.Log("naxoApiHelper", "Saving Password");
+            auth_api.Config.Password = password;
+            auth_api.Save();
+        }
+
+        public static string GetSavedPassword()
+        {
+            if (string.IsNullOrEmpty(auth_api.Config.Password))
+                return "";
+            return auth_api.Config.Password;
+        }
+
         public static void Logout() => ClearLogin();
         public static async void SignUp(string username, string password, string email)
         {

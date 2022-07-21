@@ -71,5 +71,6 @@ namespace naxokit.Helpers.Configs
     public class NaxoConf
     {
         [CanBeNull] public string AuthKey { get; set; }
+        [CanBeNull] public string Password { get; set; }
     }
 }
