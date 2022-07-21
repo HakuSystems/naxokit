@@ -23,7 +23,6 @@ namespace naxokit.Screens.Auth
         private static bool running = false;
         private const string AppJson = "application/json";
 
-        private static string newStrongPassword = "";
         public static bool IsLoggedInAndVerified() => IsUserLoggedIn() && User.IsVerified;
 
         public static bool IsUserLoggedIn()
@@ -174,7 +173,6 @@ namespace naxokit.Screens.Auth
             }
             naxoLog.Log("naxoApiHelper", "Signup Successful");
             EditorUtility.DisplayDialog("naxoApiHelper", "Signup Successful", "OK");
-            Login(username, password);
             return;
         }
 

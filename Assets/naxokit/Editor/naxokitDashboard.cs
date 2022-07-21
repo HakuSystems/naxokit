@@ -52,18 +52,39 @@ namespace naxokit
         }
         public static void SetFinallyLoggedIn(bool isLoggedIn)
         {
-            finallyLoggedIn = isLoggedIn;
+            if (!naxoApiHelper.IsLoggedInAndVerified())
+                finallyLoggedIn = false;
+            else
+                finallyLoggedIn = isLoggedIn;
         }
 
         private void OnGUI()
         {
             EditorGUILayout.BeginVertical();
             {
+                scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+                EditorGUILayout.LabelField("naxokit", EditorStyles.boldLabel);
+                if (!finallyLoggedIn)
+                    EditorGUILayout.LabelField("You have to login to use naxokit", EditorStyles.centeredGreyMiniLabel);
+
+
+
+                var HeaderImages = new Hashtable()
+                    {
+                            {"Settings", Resources.Load("Settings") as Texture2D},
+                            {"Credits", Resources.Load("Credits") as Texture2D},
+                            {"Update", Resources.Load("Update") as Texture2D},
+                            {"Premium", Resources.Load("Premium") as Texture2D},
+                            {"Login", Resources.Load("Login")as Texture2D },
+                            {"Signup",Resources.Load("Signup")as Texture2D }
+
+                        };
+
                 if (naxoApiHelper.IsUserLoggedIn())
                 {
-                    //Initialize data etc
                     if (!naxoApiHelper.IsLoggedInAndVerified())
                     {
+                        EditorGUILayout.LabelField("You are logged in but not verified", EditorStyles.centeredGreyMiniLabel);
                         DrawLine.DrawHorizontalLine();
                         EditorGUILayout.BeginHorizontal();
                         {
@@ -77,28 +98,17 @@ namespace naxokit
                             }
                         }
                         if (GUILayout.Button("Redeem"))
-                            naxoApiHelper.RedeemLicense(redeemCode);
+                        {
+                            if (string.IsNullOrEmpty(redeemCode))
+                                EditorUtility.DisplayDialog("naxokitDashboard", "License Key cant be Empty", "Okay");
+                            else
+                                naxoApiHelper.RedeemLicense(redeemCode);
+                        }
                         EditorGUILayout.EndHorizontal();
                         DrawLine.DrawHorizontalLine();
                     }
                 }
 
-                scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-                EditorGUILayout.LabelField("naxokit", EditorStyles.boldLabel);
-                if (!finallyLoggedIn)
-                    EditorGUILayout.LabelField("You have to login to use naxokit", EditorStyles.centeredGreyMiniLabel);
-
-
-                var HeaderImages = new Hashtable()
-                    {
-                            {"Settings", Resources.Load("Settings") as Texture2D},
-                            {"Credits", Resources.Load("Credits") as Texture2D},
-                            {"Update", Resources.Load("Update") as Texture2D},
-                            {"Premium", Resources.Load("Premium") as Texture2D},
-                            {"Login", Resources.Load("Login")as Texture2D },
-                            {"Signup",Resources.Load("Signup")as Texture2D }
-
-                        };
 
                 foreach (DictionaryEntry entry in HeaderImages)
                 {
@@ -175,7 +185,7 @@ namespace naxokit
                             }
                         }
                     }
-                    if (finallyLoggedIn)
+                    if (finallyLoggedIn && naxoApiHelper.IsLoggedInAndVerified())
                     {
                         if (naxokitUpdater.ServerVersionList == null || naxokitUpdater.LatestVersion == null || naxokitUpdater.LatestBetaVersion == null)
                         {
@@ -257,6 +267,7 @@ namespace naxokit
                 {
                     EditorGUILayout.LabelField("V" + naxokitUpdater.CurrentVersion.Replace(';', ' '), EditorStyles.centeredGreyMiniLabel);
                 }
+
                 EditorGUILayout.EndScrollView();
             }
             EditorGUILayout.EndVertical();
