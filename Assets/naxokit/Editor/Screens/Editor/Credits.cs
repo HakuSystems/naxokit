@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor;
-using UnityEngine;
-using naxokit.Styles;
+﻿using UnityEditor;
 
 namespace naxokit.Screens
 {
@@ -13,11 +6,14 @@ namespace naxokit.Screens
     {
         public static void HandleCreditsOpend()
         {
-            var teamCreditsImage = Resources.Load("TeamCredits") as Texture2D;
-            DrawLine.DrawHorizontalLine();
-            var content = new GUIContent(teamCreditsImage);
-            EditorGUILayout.LabelField(content, GUILayout.Height(300));
-            DrawLine.DrawHorizontalLine();
+            EditorGUILayout.LabelField("Developers", EditorStyles.centeredGreyMiniLabel);
+            EditorGUILayout.LabelField("Everspace", EditorStyles.foldout);
+            EditorGUILayout.LabelField("lyze", EditorStyles.foldout);
+            EditorGUILayout.LabelField("Texotek", EditorStyles.foldout);
+            EditorGUILayout.LabelField("SupportTeam", EditorStyles.centeredGreyMiniLabel);
+            EditorGUILayout.LabelField("ZKWolf", EditorStyles.foldout);
+            EditorGUILayout.LabelField("SlySnake96", EditorStyles.foldout);
+            EditorGUILayout.LabelField("enemy of the state(ukeid)", EditorStyles.foldout);
 
         }
     }
