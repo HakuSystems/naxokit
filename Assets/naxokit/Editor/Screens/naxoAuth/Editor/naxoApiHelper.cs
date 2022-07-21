@@ -36,6 +36,7 @@ namespace naxokit.Screens.Auth
         private static void ClearLogin()
         {
             naxoLog.Log("naxoApiHelper", "Clearing Login Data");
+            naxokitDashboard.finallyLoggedIn = false;
             User = null;
             auth_api.Config.AuthKey = null;
             auth_api.Save();

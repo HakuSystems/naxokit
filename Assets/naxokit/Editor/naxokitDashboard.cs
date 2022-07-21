@@ -19,7 +19,7 @@ namespace naxokit
         private static bool SignUpOpen;
         private Vector2 scrollPosition;
         private bool userIsUptoDate = false;
-        private static bool finallyLoggedIn = false;
+        public static bool finallyLoggedIn = false;
 
 
         private static string usernameInput;
@@ -206,13 +206,6 @@ namespace naxokit
                         }
                     }
                 }
-                /* FIXME
-                 * #0002 Update on Dashboard
-                 * 
-                 * 
-                 * this allready is the Update Function for the dashboard
-                 * however it gets some errors that have to be fixed
-                 */ 
                 if (!userIsUptoDate)
                 {
                     DrawLine.DrawHorizontalLine();
@@ -221,10 +214,10 @@ namespace naxokit
                         EditorGUILayout.LabelField("Update Available", EditorStyles.boldLabel);
                         if (GUILayout.Button("Update", EditorStyles.miniButton, GUILayout.Width(100)))
                             naxokitUpdater.DeleteAndDownloadAsync();
-                        
-                        if(naxokitUpdater.LatestVersion != null)
+
+                        if (naxokitUpdater.LatestVersion != null)
                             EditorGUILayout.LabelField("Version: " + naxokitUpdater.LatestVersion.Version, EditorStyles.centeredGreyMiniLabel);
-                        
+
 
                     }
                     EditorGUILayout.EndHorizontal();
