@@ -2,6 +2,7 @@
 using naxokit.Helpers;
 using naxokit.Helpers.Configs;
 using naxokit.Styles;
+using naxokit.Screens.Auth;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,13 +21,19 @@ namespace naxokit.Screens
             EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
             EditorGUILayout.BeginHorizontal();
             {
-
                 isDiscordEnabled = EditorGUILayout.Toggle("Discord RichPresence", isDiscordEnabled);
                 if (GUILayout.Button("Hide Username"))
                     naxokitRPC.ChangeStateRPC();
-
             }
-            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndHorizontal();  
+            if (GUILayout.Button("Logout", GUILayout.Width(70)))
+            {
+
+                naxoApiHelper.Logout();
+                GetWindow<naxokitDashboard>().Close();
+                GetWindow<naxokitDashboard>().Show();
+            }
+                      
             DrawLine.DrawHorizontalLine();
 
         }

@@ -160,7 +160,9 @@ namespace naxokit
                             SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SettingsOpen, 30f, 0, 0, 12f, 5f);
                             if (SettingsOpen)
                             {
+                                EditorGUILayout.BeginVertical();
                                 Settings.HandleSettingsOpend();
+                                EditorGUILayout.EndVertical();
                             }
                         }
                         if (key.ToString() == "Credits")
@@ -210,30 +212,29 @@ namespace naxokit
                  * 
                  * this allready is the Update Function for the dashboard
                  * however it gets some errors that have to be fixed
-                 * 
-                if (SettingsInitialized == true && CreditsInitialized == true && UpdateInitialized == true && PremiumInitialized == true)
+                 */ 
+                if (!userIsUptoDate)
                 {
-                    if (!userIsUptoDate)
+                    DrawLine.DrawHorizontalLine();
+                    EditorGUILayout.BeginHorizontal();
                     {
-                        DrawLine.DrawHorizontalLine();
-                        EditorGUILayout.BeginHorizontal();
-                        {
-                            EditorGUILayout.LabelField("Update Available", EditorStyles.boldLabel);
-                            if (GUILayout.Button("Update", EditorStyles.miniButton, GUILayout.Width(100)))
-                                naxokitUpdater.DeleteAndDownloadAsync();
-                            EditorGUILayout.LabelField("V" + naxokitUpdater.LatestVersion.Version, EditorStyles.centeredGreyMiniLabel);
-
-                        }
-                        EditorGUILayout.EndHorizontal();
-                        DrawLine.DrawHorizontalLine();
+                        EditorGUILayout.LabelField("Update Available", EditorStyles.boldLabel);
+                        if (GUILayout.Button("Update", EditorStyles.miniButton, GUILayout.Width(100)))
+                            naxokitUpdater.DeleteAndDownloadAsync();
+                        
+                        if(naxokitUpdater.LatestVersion != null)
+                            EditorGUILayout.LabelField("Version: " + naxokitUpdater.LatestVersion.Version, EditorStyles.centeredGreyMiniLabel);
+                        
 
                     }
-                    else
-                    {
-                        EditorGUILayout.LabelField("V" + naxokitUpdater.CurrentVersion.Replace(';', ' '), EditorStyles.centeredGreyMiniLabel);
-                    }
+                    EditorGUILayout.EndHorizontal();
+                    DrawLine.DrawHorizontalLine();
+
                 }
-                */
+                else
+                {
+                    EditorGUILayout.LabelField("V" + naxokitUpdater.CurrentVersion.Replace(';', ' '), EditorStyles.centeredGreyMiniLabel);
+                }
                 EditorGUILayout.EndScrollView();
             }
             EditorGUILayout.EndVertical();
