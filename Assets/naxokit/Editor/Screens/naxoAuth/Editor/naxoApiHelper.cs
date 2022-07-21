@@ -183,44 +183,44 @@ namespace naxokit.Screens.Auth
             int minLenght = 8;
             int maxLenght = 128;
             int minLowerCase = 1;
-            int minUpperCase = 1;
             int minNumber = 1;
             int minSpecialChar = 1;
             string allowedSpecials = "@#$%/.!'_-";
+            string allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789";
 
-            var sb = new StringBuilder();
-            var rnd = new Random();
-            int length = rnd.Next(minLenght, maxLenght);
-            int lowerCase = rnd.Next(minLowerCase, length);
-            int upperCase = rnd.Next(minUpperCase, length);
-            int number = rnd.Next(minNumber, length);
-            int specialChar = rnd.Next(minSpecialChar, length);
-            for (int i = 0; i < length; i++)
+            string password = "";
+
+            int allowedCharsLenght = allowedChars.Length;
+            int allowedSpecialsLenght = allowedSpecials.Length;
+            int passwordLenght = UnityEngine.Random.Range(minLenght, maxLenght);
+            int lowerCaseLetters = UnityEngine.Random.Range(minLowerCase, passwordLenght);
+            int numbers = UnityEngine.Random.Range(minNumber, passwordLenght);
+            int specialChars = UnityEngine.Random.Range(minSpecialChar, passwordLenght);
+            for (int i = 0; i < lowerCaseLetters; i++)
             {
-                if (i < lowerCase)
-                {
-                    sb.Append((char)rnd.Next('a', 'z' + 1));
-                }
-                else if (i < upperCase)
-                {
-                    sb.Append((char)rnd.Next('A', 'Z' + 1));
-                }
-                else if (i < number)
-                {
-                    sb.Append((char)rnd.Next('0', '9' + 1));
-                }
-                else if (i < specialChar)
-                {
-                    sb.Append(allowedSpecials[rnd.Next(0, allowedSpecials.Length)]);
-                }
-                else
-                {
-                    sb.Append((char)rnd.Next('a', 'z' + 1));
-                }
+                password += allowedChars[UnityEngine.Random.Range(0, allowedCharsLenght)];
             }
-            newStrongPassword = sb.ToString();
+            for (int i = 0; i < numbers; i++)
+            {
+                password += allowedChars[UnityEngine.Random.Range(0, allowedCharsLenght)];
+            }
+            for (int i = 0; i < specialChars; i++)
+            {
+                password += allowedSpecials[UnityEngine.Random.Range(0, allowedSpecialsLenght)];
+            }
+            char[] passwordArray = password.ToCharArray();
+            Random rng = new Random();
+            int n = passwordArray.Length;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                var value = passwordArray[k];
+                passwordArray[k] = passwordArray[n];
+                passwordArray[n] = value;
+            }
             naxoLog.Log("naxoApiHelper", "Generated Strong Password!");
-            return newStrongPassword;
+            return new string(passwordArray);
         }
     }
 }

@@ -155,17 +155,22 @@ namespace naxokit
                                 usernameInput = EditorGUILayout.TextField("Username", usernameInput);
                                 passwordInput = EditorGUILayout.PasswordField("Password", passwordInput);
                                 emailInput = EditorGUILayout.TextField("Email", emailInput);
-                                if (GUILayout.Button("Generate Strong Password"))
+                                EditorGUILayout.BeginHorizontal();
                                 {
-                                    passwordInput = naxoApiHelper.ApiGenerateStrongPassword();
+                                    if (GUILayout.Button("Generate Strong Password"))
+                                    {
+                                        passwordInput = naxoApiHelper.ApiGenerateStrongPassword();
+                                    }
+                                    if (GUILayout.Button("Create Account"))
+                                    {
+                                        if (string.IsNullOrEmpty(usernameInput) || string.IsNullOrEmpty(passwordInput) || string.IsNullOrEmpty(emailInput))
+                                            EditorUtility.DisplayDialog("SignUp", "Credentials cant be Empty", "Okay");
+                                        else
+                                            naxoApiHelper.SignUp(usernameInput, passwordInput, emailInput);
+                                    }
                                 }
-                                if (GUILayout.Button("Create Account"))
-                                {
-                                    if (string.IsNullOrEmpty(usernameInput) || string.IsNullOrEmpty(passwordInput) || string.IsNullOrEmpty(emailInput))
-                                        EditorUtility.DisplayDialog("SignUp", "Credentials cant be Empty", "Okay");
-                                    else
-                                        naxoApiHelper.SignUp(usernameInput, passwordInput, emailInput);
-                                }
+                                EditorGUILayout.EndHorizontal();
+
                                 DrawLine.DrawHorizontalLine();
                             }
                         }
