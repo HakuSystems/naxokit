@@ -52,7 +52,6 @@ namespace naxokit.Helpers.Configs
             config = JsonConvert.DeserializeObject<ConfigData>(File.ReadAllText(configPath));
             discordrpc_Enabled = config.Discord.Enabled;
             discordrpc_Username = config.Discord.Username;
-            //FIXME: update discordrpc
 
             naxoLog.Log("Config", "Updated config file");
         }

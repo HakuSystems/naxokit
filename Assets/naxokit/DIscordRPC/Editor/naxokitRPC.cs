@@ -19,7 +19,6 @@ namespace naxokit.DiscordRPC
 
         public static void UpdateRPC()
         {
-            // TODO add actual username
             var version = naxokitUpdater.CurrentVersion.Split(';');
             naxoLog.Log("naxokitRPC", "Updating RichPresence");
             if (naxoApiHelper.User != null)

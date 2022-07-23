@@ -16,7 +16,6 @@ namespace naxokit.Screens
             {
                 Config.discordrpc_Enabled = EditorGUILayout.Toggle("Discord RichPresence", Config.discordrpc_Enabled);
                 Config.discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.discordrpc_Username);
-                UpdateConfigsAndChangeRPC();
 
             }
             EditorGUILayout.EndHorizontal();
