@@ -1,4 +1,4 @@
-﻿using naxokit.DISCORDRPC;
+﻿using naxokit.DiscordRPC;
 using naxokit.Helpers;
 using naxokit.Helpers.Configs;
 using naxokit.Styles;
@@ -10,20 +10,16 @@ namespace naxokit.Screens
 {
     public class Settings : EditorWindow
     {
-        private static bool runOnce = false;
-
-        public static bool isDiscordEnabled;
         public static void HandleSettingsOpend()
         {
             DrawLine.DrawHorizontalLine();
-            //Handling PlayerPrefs
-            GetCurrentPlayerPrefs();
             EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
             EditorGUILayout.BeginHorizontal();
             {
-                isDiscordEnabled = EditorGUILayout.Toggle("Discord RichPresence", isDiscordEnabled);
-                if (GUILayout.Button("Hide Username"))
-                    naxokitRPC.ChangeStateRPC();
+                Config.discordrpc_Enabled = EditorGUILayout.Toggle("Discord RichPresence", Config.discordrpc_Enabled);
+                Config.discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.discordrpc_Username);
+                Config.UpdateConfig();
+                    
             }
             EditorGUILayout.EndHorizontal();  
             if (GUILayout.Button("Logout", GUILayout.Width(70)))
@@ -37,23 +33,9 @@ namespace naxokit.Screens
             DrawLine.DrawHorizontalLine();
 
         }
+        
 
-        private static void GetCurrentPlayerPrefs()
-        {
-            if (!runOnce)
-            {
-                isDiscordEnabled = Converters.intToBool(PlayerPrefs.GetInt("rich_discord"));
-
-
-                runOnce = true;
-            }
-        }
-
-        public static void UpdateConfigs()
-        {
-            //currently only this config
-            discord_rich.UpdateDiscordRichConfig(isDiscordEnabled);
-        }
+        public static void UpdateConfig() => Config.UpdateConfig();
     }
 }
 

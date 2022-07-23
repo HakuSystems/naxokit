@@ -39,6 +39,7 @@ namespace naxokit.Screens.Auth
             User = null;
             auth_api.Config.AuthKey = null;
             auth_api.Save();
+            naxokit.DiscordRPC.naxokitRPC.UpdateRPC();
         }
         private static async Task<HttpResponseMessage> MakeApiCall(HttpRequestMessage request)
         {
@@ -105,6 +106,7 @@ namespace naxokit.Screens.Auth
             auth_api.Save();
             CheckUserSelf();
             naxokitDashboard.SetFinallyLoggedIn(true);
+            naxokit.DiscordRPC.naxokitRPC.UpdateRPC();
         }
 
         private static void SaveRecivedPassword(string password)

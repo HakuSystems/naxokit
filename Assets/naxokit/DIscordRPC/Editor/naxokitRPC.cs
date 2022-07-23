@@ -3,7 +3,7 @@ using naxokit.Helpers.Logger;
 using naxokit.Updater;
 using UnityEditor;
 
-namespace naxokit.DISCORDRPC
+namespace naxokit.DiscordRPC
 {
     [InitializeOnLoad]
     public class naxokitRPC
@@ -13,31 +13,24 @@ namespace naxokit.DISCORDRPC
 
         static naxokitRPC()
         {
-            if (discord_rich.GetCurrentDiscordBool())
-            {
-                DiscordRpc.Initialize("997507930909855754", ref handlers, false, string.Empty);
-                UpdateRPC();
-            }
+            DiscordRpc.Initialize("997507930909855754", ref handlers, false, string.Empty);
+            UpdateRPC();
         }
 
-        private static void UpdateRPC()
+        public static void UpdateRPC()
         {
             // TODO add actual username
             var version = naxokitUpdater.CurrentVersion.Split(';');
             naxoLog.Log("naxokitRPC", "Updating RichPresence");
-            richPresence.state = "Username: lyze";//Hardcored temp
+            if (naxokit.Screens.Auth.naxoApiHelper.IsLoggedInAndVerified())
+                richPresence.state = $"Username: {naxokit.Screens.Auth.naxoApiHelper.User.Username}";
+            else
+                richPresence.state = "Not logged in";
             richPresence.details = "naxokit.com";
             richPresence.largeImageKey = "big";
             richPresence.largeImageText = "In Unity with naxokit";
             richPresence.smallImageKey = "edit";
             richPresence.smallImageText = "ver " + version[0];
-            DiscordRpc.UpdatePresence(richPresence);
-        }
-
-        //TODO add actuall account acessability
-        public static void ChangeStateRPC(string dataString = "Username: Hidden")
-        {
-            richPresence.state = dataString;
             DiscordRpc.UpdatePresence(richPresence);
         }
     }

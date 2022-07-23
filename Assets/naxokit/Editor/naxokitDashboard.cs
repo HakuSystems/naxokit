@@ -43,11 +43,12 @@ namespace naxokit
             await naxokitUpdater.UpdateVersionData();
             if (naxokitUpdater.CompareCurrentVersionWithLatest())
                 userIsUptoDate = true;
+            Settings.UpdateConfig();
 
         }
         private void OnDestroy()
         {
-            Settings.UpdateConfigs();
+            Settings.UpdateConfig();
             AssetDatabase.Refresh();
         }
         public static void SetFinallyLoggedIn(bool isLoggedIn)
