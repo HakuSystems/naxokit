@@ -1,27 +1,29 @@
-﻿using naxokit.Helpers;
+﻿using naxokit.DiscordRPC;
+using naxokit.Helpers.Logger;
 using naxokit.Helpers.Models;
 using Newtonsoft.Json;
 using System;
 using System.IO;
-using UnityEngine;
-using naxokit.Helpers.Logger;
 
 namespace naxokit.Helpers.Configs
 {
     public class Config
     {
         public static bool discordrpc_Enabled;
-        public static bool discordrpc_Username; 
-        public static bool Discordrpc_Enabled {
+        public static bool discordrpc_Username;
+        public static bool Discordrpc_Enabled
+        {
             get { return discordrpc_Enabled; }
             set { discordrpc_Enabled = value; UpdateConfig(); }
-        } 
-        public static bool Discordrpc_Username {
+        }
+        public static bool Discordrpc_Username
+        {
             get { return discordrpc_Username; }
             set { discordrpc_Username = value; UpdateConfig(); }
         }
         public static void UpdateConfig()
         {
+            naxokitRPC.UpdateRPC();
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string specificFolder = Path.Combine(folder, "naxokit");
             Directory.CreateDirectory(specificFolder);
