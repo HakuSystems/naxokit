@@ -22,7 +22,7 @@ namespace naxokit.DiscordRPC
             // TODO add actual username
             var version = naxokitUpdater.CurrentVersion.Split(';');
             naxoLog.Log("naxokitRPC", "Updating RichPresence");
-            if (naxoApiHelper.IsUserLoggedIn() && naxoApiHelper.User != null)
+            if (naxoApiHelper.User != null)
                 richPresence.state = $"Username: {naxoApiHelper.User.Username}";
             else
                 richPresence.state = "Not logged in";
