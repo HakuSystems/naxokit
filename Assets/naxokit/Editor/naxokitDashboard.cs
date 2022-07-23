@@ -1,6 +1,6 @@
-﻿using naxokit.Helpers.Configs;
+﻿using naxokit.Helpers.Auth;
+using naxokit.Helpers.Configs;
 using naxokit.Screens;
-using naxokit.Screens.Auth;
 using naxokit.Styles;
 using naxokit.Updater;
 using System.Collections;
@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace naxokit
 {
-    internal class naxokitDashboard : EditorWindow
+    public class naxokitDashboard : EditorWindow
     {
         bool SettingsOpen = false;
         bool CreditsOpen = false;
@@ -43,12 +43,12 @@ namespace naxokit
             await naxokitUpdater.UpdateVersionData();
             if (naxokitUpdater.CompareCurrentVersionWithLatest())
                 userIsUptoDate = true;
-            Settings.UpdateConfig();
+            Settings.UpdateConfigsAndChangeRPC();
 
         }
         private void OnDestroy()
         {
-            Settings.UpdateConfig();
+            Settings.UpdateConfigsAndChangeRPC();
             AssetDatabase.Refresh();
         }
         public static void SetFinallyLoggedIn(bool isLoggedIn)

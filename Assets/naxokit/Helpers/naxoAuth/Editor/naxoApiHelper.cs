@@ -7,8 +7,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
+using Random = System.Random;
 
-namespace naxokit.Screens.Auth
+namespace naxokit.Helpers.Auth
 {
     public class naxoApiHelper
     {
@@ -39,7 +40,7 @@ namespace naxokit.Screens.Auth
             User = null;
             auth_api.Config.AuthKey = null;
             auth_api.Save();
-            naxokit.DiscordRPC.naxokitRPC.UpdateRPC();
+            DiscordRPC.naxokitRPC.UpdateRPC();
         }
         private static async Task<HttpResponseMessage> MakeApiCall(HttpRequestMessage request)
         {

@@ -1,5 +1,4 @@
-﻿using naxokit.DiscordRPC;
-using naxokit.Helpers.Logger;
+﻿using naxokit.Helpers.Logger;
 using naxokit.Helpers.Models;
 using Newtonsoft.Json;
 using System;
@@ -23,7 +22,6 @@ namespace naxokit.Helpers.Configs
         }
         public static void UpdateConfig()
         {
-            naxokitRPC.UpdateRPC();
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string specificFolder = Path.Combine(folder, "naxokit");
             Directory.CreateDirectory(specificFolder);

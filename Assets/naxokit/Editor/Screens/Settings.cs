@@ -1,8 +1,6 @@
-﻿using naxokit.DiscordRPC;
-using naxokit.Helpers;
+﻿using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
 using naxokit.Styles;
-using naxokit.Screens.Auth;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,10 +16,10 @@ namespace naxokit.Screens
             {
                 Config.discordrpc_Enabled = EditorGUILayout.Toggle("Discord RichPresence", Config.discordrpc_Enabled);
                 Config.discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.discordrpc_Username);
-                Config.UpdateConfig();
-                    
+                UpdateConfigsAndChangeRPC();
+
             }
-            EditorGUILayout.EndHorizontal();  
+            EditorGUILayout.EndHorizontal();
             if (GUILayout.Button("Logout", GUILayout.Width(70)))
             {
 
@@ -29,13 +27,17 @@ namespace naxokit.Screens
                 GetWindow<naxokitDashboard>().Close();
                 GetWindow<naxokitDashboard>().Show();
             }
-                      
+
             DrawLine.DrawHorizontalLine();
 
         }
-        
 
-        public static void UpdateConfig() => Config.UpdateConfig();
+
+        public static void UpdateConfigsAndChangeRPC()
+        {
+            DiscordRPC.naxokitRPC.UpdateRPC();
+            Config.UpdateConfig();
+        }
     }
 }
 
