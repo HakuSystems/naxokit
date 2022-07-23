@@ -1,4 +1,5 @@
-﻿using naxokit.Helpers.Logger;
+﻿using naxokit.Helpers.Auth;
+using naxokit.Helpers.Logger;
 using naxokit.Updater;
 using UnityEditor;
 
@@ -21,8 +22,8 @@ namespace naxokit.DiscordRPC
             // TODO add actual username
             var version = naxokitUpdater.CurrentVersion.Split(';');
             naxoLog.Log("naxokitRPC", "Updating RichPresence");
-            if (naxokit.Helpers.Auth.naxoApiHelper.IsLoggedInAndVerified())
-                richPresence.state = $"Username: {naxokit.Helpers.Auth.naxoApiHelper.User.Username}";
+            if (naxoApiHelper.IsUserLoggedIn() && naxoApiHelper.User != null)
+                richPresence.state = $"Username: {naxoApiHelper.User.Username}";
             else
                 richPresence.state = "Not logged in";
             richPresence.details = "naxokit.com";
