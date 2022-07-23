@@ -5,12 +5,14 @@ namespace naxokit.Styles
 {
     public class DrawLine
     {
-        public static void DrawHorizontalLine(int _height = 1)
+        public static void DrawHorizontalLine(int _height = 1, Color color = default)
         {
-            Rect rect = EditorGUILayout.GetControlRect(false, _height);
-            rect.height = _height;
-            EditorGUI.DrawRect(rect, Color.white);
-
+            if (color == default)
+                color = Color.white;
+            Rect r = EditorGUILayout.GetControlRect(false, _height);
+            r.height = _height;
+            r.y += (_height - 1) / 2;
+            EditorGUI.DrawRect(r, color);
         }
 
     }

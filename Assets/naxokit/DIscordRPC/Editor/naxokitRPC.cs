@@ -1,4 +1,5 @@
 ﻿using naxokit.Helpers.Auth;
+using naxokit.Helpers.Configs;
 using naxokit.Helpers.Logger;
 using naxokit.Updater;
 using UnityEditor;
@@ -19,18 +20,22 @@ namespace naxokit.DiscordRPC
 
         public static void UpdateRPC()
         {
-            var version = naxokitUpdater.CurrentVersion.Split(';');
-            naxoLog.Log("naxokitRPC", "Updating RichPresence");
-            if (naxoApiHelper.User != null)
-                richPresence.state = $"Username: {naxoApiHelper.User.Username}";
-            else
-                richPresence.state = "Not logged in";
-            richPresence.details = "naxokit.com";
-            richPresence.largeImageKey = "big";
-            richPresence.largeImageText = "In Unity with naxokit";
-            richPresence.smallImageKey = "edit";
-            richPresence.smallImageText = "ver " + version[0];
-            DiscordRpc.UpdatePresence(richPresence);
+            if(Config.Discordrpc_Enabled)
+            {
+                var version = naxokitUpdater.CurrentVersion.Split(';');
+                naxoLog.Log("naxokitRPC", "Updating RichPresence");
+                if (naxoApiHelper.User != null)
+                    richPresence.state = $"Username: {naxoApiHelper.User.Username}";
+                else
+                    richPresence.state = "Not logged in";
+                richPresence.details = "naxokit.com";
+                richPresence.largeImageKey = "big";
+                richPresence.largeImageText = "In Unity with naxokit";
+                richPresence.smallImageKey = "edit";
+                richPresence.smallImageText = "ver " + version[0];
+                DiscordRpc.UpdatePresence(richPresence);
+            }
+            
         }
     }
 }
