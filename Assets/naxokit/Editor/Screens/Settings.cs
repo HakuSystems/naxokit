@@ -12,13 +12,21 @@ namespace naxokit.Screens
         {
             DrawLine.DrawHorizontalLine();
             EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
-            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical();
             {
-                Config.discordrpc_Enabled = EditorGUILayout.Toggle("Discord RichPresence", Config.discordrpc_Enabled);
-                Config.discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.discordrpc_Username);
-
+                DrawLine.DrawHorizontalLine(1,Color.magenta);
+                EditorGUILayout.LabelField("Discord Rich Presence", EditorStyles.boldLabel);
+                EditorGUILayout.BeginHorizontal();
+                {
+                    Config.Discordrpc_Enabled = EditorGUILayout.Toggle("Enabled", Config.Discordrpc_Enabled);
+                    EditorGUILayout.TextField("Enable/Disable Requries Restart!", EditorStyles.centeredGreyMiniLabel);
+                    Config.discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.discordrpc_Username);
+                }
+                EditorGUILayout.EndHorizontal();
+                DrawLine.DrawHorizontalLine(1,Color.magenta);
+                EditorGUILayout.LabelField("OTHERSETTINGSHERE",EditorStyles.boldLabel);
             }
-            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
             if (GUILayout.Button("Logout", GUILayout.Width(70)))
             {
 
