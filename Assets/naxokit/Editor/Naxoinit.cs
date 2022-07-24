@@ -7,7 +7,7 @@ namespace naxokit {
     [InitializeOnLoad]
     class Naxoinit {
         static Naxoinit() {
-            Config.InitializeCofig();
+            Config.InitializeConfig();
         }
     }
 }

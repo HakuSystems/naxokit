@@ -20,7 +20,7 @@ namespace naxokit.Helpers.Configs
             get { return discordrpc_Username; }
             set { discordrpc_Username = value; UpdateConfig(); }
         }
-        public static void InitializeCofig() {
+        public static void InitializeConfig() {
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string specificFolder = Path.Combine(folder, "naxokit");
             string configPath = Path.Combine(specificFolder, "config.json");
