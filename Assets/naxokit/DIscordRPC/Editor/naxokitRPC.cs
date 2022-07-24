@@ -10,6 +10,7 @@ namespace naxokit.DiscordRPC
     public class naxokitRPC
     {
         private static DiscordRpc.RichPresence richPresence = new DiscordRpc.RichPresence();
+        
         private static DiscordRpc.EventHandlers handlers = default;
 
         static naxokitRPC()
@@ -25,10 +26,16 @@ namespace naxokit.DiscordRPC
                 var version = naxokitUpdater.CurrentVersion.Split(';');
                 naxoLog.Log("naxokitRPC", "Updating RichPresence");
                 if (naxoApiHelper.User != null)
-                    richPresence.state = $"Username: {naxoApiHelper.User.Username}";
+                {
+                    richPresence.details = $"Username: {naxoApiHelper.User.Username}";
+                    richPresence.state = "Permission: " + naxoApiHelper.User.Permission.ToString();
+                }
                 else
-                    richPresence.state = "Not logged in";
-                richPresence.details = "naxokit.com";
+                {
+                    richPresence.details = "Not logged in"; 
+                    richPresence.state = "";
+                }
+                
                 richPresence.largeImageKey = "big";
                 richPresence.largeImageText = "In Unity with naxokit";
                 richPresence.smallImageKey = "edit";

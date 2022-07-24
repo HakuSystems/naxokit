@@ -20,7 +20,7 @@ namespace naxokit.Screens
                 {
                     Config.Discordrpc_Enabled = EditorGUILayout.Toggle("Enabled", Config.Discordrpc_Enabled);
                     EditorGUILayout.TextField("Enable/Disable Requries Restart!", EditorStyles.centeredGreyMiniLabel);
-                    Config.discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.discordrpc_Username);
+                    Config.Discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.Discordrpc_Username);
                 }
                 EditorGUILayout.EndHorizontal();
                 DrawLine.DrawHorizontalLine(1,Color.magenta);

@@ -8,8 +8,8 @@ namespace naxokit.Helpers.Configs
 {
     public class Config
     {
-        public static bool discordrpc_Enabled;
-        public static bool discordrpc_Username;
+        private static bool discordrpc_Enabled = false;
+        private static bool discordrpc_Username = false;
         public static bool Discordrpc_Enabled
         {
             get { return discordrpc_Enabled; }
@@ -19,6 +19,16 @@ namespace naxokit.Helpers.Configs
         {
             get { return discordrpc_Username; }
             set { discordrpc_Username = value; UpdateConfig(); }
+        }
+        public static void InitializeCofig() {
+            string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string specificFolder = Path.Combine(folder, "naxokit");
+            string configPath = Path.Combine(specificFolder, "config.json");
+            if (File.Exists(configPath)) {
+                var config = JsonConvert.DeserializeObject<ConfigData>(File.ReadAllText(configPath));
+                discordrpc_Enabled = config.Discord.Enabled;
+                discordrpc_Username = config.Discord.Username;
+            }
         }
         public static void UpdateConfig()
         {
@@ -49,9 +59,6 @@ namespace naxokit.Helpers.Configs
                 File.WriteAllText(configPath, json2);
             }
             //update variables
-            config = JsonConvert.DeserializeObject<ConfigData>(File.ReadAllText(configPath));
-            discordrpc_Enabled = config.Discord.Enabled;
-            discordrpc_Username = config.Discord.Username;
 
             naxoLog.Log("Config", "Updated config file");
         }
