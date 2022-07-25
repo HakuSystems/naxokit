@@ -1,4 +1,5 @@
-﻿using naxokit.Helpers.Auth;
+﻿using System.Diagnostics;
+using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
 using naxokit.Screens;
 using naxokit.Styles;
@@ -6,7 +7,6 @@ using naxokit.Updater;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
-
 
 namespace naxokit
 {
@@ -20,10 +20,10 @@ namespace naxokit
         private static bool SignUpOpen;
         private Vector2 scrollPosition;
         private bool userIsUptoDate = false;
+        private bool hasSDK = true;
         public static bool finallyLoggedIn = false;
         public static bool savePasswordLocally = false;
         public static string passStatus = "";
-
 
         private static string usernameInput;
         private static string passwordInput;
@@ -32,16 +32,26 @@ namespace naxokit
 
         [MenuItem("naxokit/Dashboard")]
         public static void ShowWindow() => GetWindow(typeof(naxokitDashboard));
+        
+        private void checkSdk(){
+            #if VRC_SDK_VRCSDK3
+                UnityEngine.Debug.Log("SDK found"); //FIXME works but not very reliably, sometimes it does, sometimes it doesn't, usually it locks on true so it's fine
+            #else
+                UnityEngine.Debug.LogError("naxokit: VRC SDK not found");
+                hasSDK = false;
+            #endif
+        }
 
-        private async void OnEnable()
+        private /*async*/ void OnEnable()
         {
             titleContent = new GUIContent("Dashboard");
             minSize = new Vector2(600, 700);
 
-
+            //check if user has the VRCSDK installed
+            checkSdk();
             //Loads the latest version from the server
-            await naxokitUpdater.UpdateVersionData();
-            if (naxokitUpdater.CompareCurrentVersionWithLatest())
+            //await naxokitUpdater.UpdateVersionData();
+           // if (naxokitUpdater.CompareCurrentVersionWithLatest()) //FIXME this check apparently doesn't work very reliably, i still haven't been able to make it work on my computer --by M1S0
                 userIsUptoDate = true;
             Settings.UpdateConfigsAndChangeRPC();
 
@@ -61,14 +71,15 @@ namespace naxokit
 
         private void OnGUI()
         {
+            checkSdk();
             EditorGUILayout.BeginVertical();
             {
                 scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
                 EditorGUILayout.LabelField("naxokit", EditorStyles.boldLabel);
-                if (!finallyLoggedIn)
+                if(!hasSDK)
+                    EditorGUILayout.LabelField("You need to install the VRCSDK to use naxokit", EditorStyles.centeredGreyMiniLabel);
+                if (!finallyLoggedIn && hasSDK)
                     EditorGUILayout.LabelField("You have to login to use naxokit", EditorStyles.centeredGreyMiniLabel);
-
-
 
                 var HeaderImages = new Hashtable()
                     {
@@ -81,7 +92,7 @@ namespace naxokit
 
                         };
 
-                if (naxoApiHelper.IsUserLoggedIn())
+                if (naxoApiHelper.IsUserLoggedIn() && hasSDK)
                 {
                     if (!naxoApiHelper.IsLoggedInAndVerified())
                     {
@@ -110,140 +121,148 @@ namespace naxokit
                     }
                 }
 
-
                 foreach (DictionaryEntry entry in HeaderImages)
                 {
-                    var key = entry.Key;
-                    var value = entry.Value;
-                    if (!naxoApiHelper.IsUserLoggedIn())
-                    {
-                        if (key.ToString() == "Login")
+                    if(hasSDK){
+                        var key = entry.Key;
+                        var value = entry.Value;
+                        if (!naxoApiHelper.IsUserLoggedIn())
                         {
-                            LoginOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, LoginOpen, 30f, 0, 0, 12f, 5f);
-                            if (LoginOpen)
+                            if (key.ToString() == "Login")
                             {
-                                DrawLine.DrawHorizontalLine();
-                                EditorGUILayout.LabelField("Login");
-                                usernameInput = EditorGUILayout.TextField("Username", usernameInput);
-                                passwordInput = EditorGUILayout.PasswordField("Password", passwordInput);
-                                EditorGUILayout.BeginHorizontal();
+                                LoginOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, LoginOpen, 30f, 0, 0, 12f, 5f);
+                                if (LoginOpen)
                                 {
-                                    savePasswordLocally = EditorGUILayout.Toggle("Save Password Locally", savePasswordLocally);
-                                    EditorGUILayout.LabelField(passStatus, EditorStyles.centeredGreyMiniLabel);
-                                    passStatus = "no Password Saved";
-                                    if (auth_api.Config.Password != null)
+                                    DrawLine.DrawHorizontalLine();
+                                    EditorGUILayout.LabelField("Login");
+                                    usernameInput = EditorGUILayout.TextField("Username", usernameInput);
+                                    passwordInput = EditorGUILayout.PasswordField("Password", passwordInput);
+                                    EditorGUILayout.BeginHorizontal();
                                     {
-                                        passStatus = "Password available";
-                                        savePasswordLocally = true;
-                                        passwordInput = naxoApiHelper.GetSavedPassword();
-                                        if (GUILayout.Button("Clear Password"))
+                                        savePasswordLocally = EditorGUILayout.Toggle("Save Password Locally", savePasswordLocally);
+                                        EditorGUILayout.LabelField(passStatus, EditorStyles.centeredGreyMiniLabel);
+                                        passStatus = "no Password Saved";
+                                        if (auth_api.Config.Password != null)
                                         {
-                                            auth_api.Config.Password = null;
-                                            passwordInput = null;
-                                            usernameInput = null;
-                                            auth_api.Save();
+                                            passStatus = "Password available";
+                                            savePasswordLocally = true;
+                                            passwordInput = naxoApiHelper.GetSavedPassword();
+                                            if (GUILayout.Button("Clear Password"))
+                                            {
+                                                auth_api.Config.Password = null;
+                                                passwordInput = null;
+                                                usernameInput = null;
+                                                auth_api.Save();
+                                            }
                                         }
                                     }
-                                }
-                                EditorGUILayout.EndHorizontal();
+                                    EditorGUILayout.EndHorizontal();
 
-                                if (GUILayout.Button("Login"))
-                                {
-                                    if (string.IsNullOrEmpty(usernameInput) || string.IsNullOrEmpty(passwordInput))
-                                        EditorUtility.DisplayDialog("Login", "Credentials cant be Empty", "Okay");
-                                    else
-                                        naxoApiHelper.Login(usernameInput, passwordInput);
-                                }
-                                DrawLine.DrawHorizontalLine();
-                            }
-                        }
-                        if (key.ToString() == "Signup")
-                        {
-                            SignUpOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SignUpOpen, 30f, 0, 0, 12f, 5f);
-                            if (SignUpOpen)
-                            {
-                                DrawLine.DrawHorizontalLine();
-                                usernameInput = EditorGUILayout.TextField("Username", usernameInput);
-                                passwordInput = EditorGUILayout.PasswordField("Password", passwordInput);
-                                emailInput = EditorGUILayout.TextField("Email", emailInput);
-                                EditorGUILayout.BeginHorizontal();
-                                {
-                                    if (GUILayout.Button("Generate Strong Password"))
+                                    if (GUILayout.Button("Login"))
                                     {
-                                        passwordInput = naxoApiHelper.ApiGenerateStrongPassword();
-                                    }
-                                    if (GUILayout.Button("Create Account"))
-                                    {
-                                        if (string.IsNullOrEmpty(usernameInput) || string.IsNullOrEmpty(passwordInput) || string.IsNullOrEmpty(emailInput))
-                                            EditorUtility.DisplayDialog("SignUp", "Credentials cant be Empty", "Okay");
+                                        if (string.IsNullOrEmpty(usernameInput) || string.IsNullOrEmpty(passwordInput))
+                                            EditorUtility.DisplayDialog("Login", "Credentials cant be Empty", "Okay");
                                         else
-                                            naxoApiHelper.SignUp(usernameInput, passwordInput, emailInput);
+                                            naxoApiHelper.Login(usernameInput, passwordInput);
                                     }
+                                    DrawLine.DrawHorizontalLine();
                                 }
-                                EditorGUILayout.EndHorizontal();
-
-                                DrawLine.DrawHorizontalLine();
                             }
-                        }
-                    }
-                    if (finallyLoggedIn && naxoApiHelper.IsLoggedInAndVerified())
-                    {
-                        if (naxokitUpdater.ServerVersionList == null || naxokitUpdater.LatestVersion == null || naxokitUpdater.LatestBetaVersion == null)
-                        {
-                            EditorGUILayout.BeginVertical();
-                            EditorGUILayout.LabelField("Loading...");
-                            EditorGUILayout.EndVertical();
-                            return;
-                        }
-                        if (key.ToString() == "Settings")
-                        {
-                            SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SettingsOpen, 30f, 0, 0, 12f, 5f);
-                            if (SettingsOpen)
+                            if (key.ToString() == "Signup")
                             {
-                                EditorGUILayout.BeginVertical();
-                                Settings.HandleSettingsOpend();
-                                EditorGUILayout.EndVertical();
-                            }
-                        }
-                        if (key.ToString() == "Credits")
-                        {
-                            CreditsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, CreditsOpen, 30f, 0, 0, 12f, 5f);
-                            if (CreditsOpen)
-                            {
-                                EditorGUILayout.BeginVertical();
+                                SignUpOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SignUpOpen, 30f, 0, 0, 12f, 5f);
+                                if (SignUpOpen)
                                 {
-                                    Credits.HandleCreditsOpend();
+                                    DrawLine.DrawHorizontalLine();
+                                    usernameInput = EditorGUILayout.TextField("Username", usernameInput);
+                                    passwordInput = EditorGUILayout.PasswordField("Password", passwordInput);
+                                    emailInput = EditorGUILayout.TextField("Email", emailInput);
+                                    EditorGUILayout.BeginHorizontal();
+                                    {
+                                        if (GUILayout.Button("Generate Strong Password"))
+                                        {
+                                            passwordInput = naxoApiHelper.ApiGenerateStrongPassword();
+                                        }
+                                        if (GUILayout.Button("Create Account"))
+                                        {
+                                            if (string.IsNullOrEmpty(usernameInput) || string.IsNullOrEmpty(passwordInput) || string.IsNullOrEmpty(emailInput))
+                                                EditorUtility.DisplayDialog("SignUp", "Credentials cant be Empty", "Okay");
+                                            else
+                                                naxoApiHelper.SignUp(usernameInput, passwordInput, emailInput);
+                                        }
+                                    }
+                                    EditorGUILayout.EndHorizontal();
+
+                                    DrawLine.DrawHorizontalLine();
                                 }
-                                EditorGUILayout.EndVertical();
                             }
                         }
-                        if (key.ToString() == "Update")
+                        if (finallyLoggedIn && naxoApiHelper.IsLoggedInAndVerified())
                         {
-                            if (userIsUptoDate)
+                            if (naxokitUpdater.ServerVersionList == null || naxokitUpdater.LatestVersion == null || naxokitUpdater.LatestBetaVersion == null)
                             {
-                                UpdateOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, UpdateOpen, 30f, 0, 0, 12f, 5f);
-                                if (UpdateOpen)
+                                EditorGUILayout.BeginVertical();
+                                EditorGUILayout.LabelField("Loading...");
+                                EditorGUILayout.EndVertical();
+                                return;
+                            }
+                            if (key.ToString() == "Settings")
+                            {
+                                SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SettingsOpen, 30f, 0, 0, 12f, 5f);
+                                if (SettingsOpen)
+                                {
+                                    EditorGUILayout.BeginVertical();
+                                    Settings.HandleSettingsOpend();
+                                    EditorGUILayout.EndVertical();
+                                }
+                            }
+                            if (key.ToString() == "Credits")
+                            {
+                                CreditsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, CreditsOpen, 30f, 0, 0, 12f, 5f);
+                                if (CreditsOpen)
                                 {
                                     EditorGUILayout.BeginVertical();
                                     {
-                                        Update.HandleUpdateOpend();
+                                        Credits.HandleCreditsOpend();
+                                    }
+                                    EditorGUILayout.EndVertical();
+                                }
+                            }
+                            if (key.ToString() == "Update")
+                            {
+                                if (userIsUptoDate)
+                                {
+                                    UpdateOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, UpdateOpen, 30f, 0, 0, 12f, 5f);
+                                    if (UpdateOpen)
+                                    {
+                                        EditorGUILayout.BeginVertical();
+                                        {
+                                            Update.HandleUpdateOpend();
+                                        }
+                                        EditorGUILayout.EndVertical();
+                                    }
+                                }
+                            }
+                            if (key.ToString() == "Premium")
+                            {
+                                PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, PremiumOpen, 30f, 0, 0, 12f, 5f);
+                                if (PremiumOpen)
+                                {
+                                    EditorGUILayout.BeginVertical();
+                                    {
+                                        Premium.HandlePremiumOpend();
                                     }
                                     EditorGUILayout.EndVertical();
                                 }
                             }
                         }
-                        if (key.ToString() == "Premium")
-                        {
-                            PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, PremiumOpen, 30f, 0, 0, 12f, 5f);
-                            if (PremiumOpen)
-                            {
-                                EditorGUILayout.BeginVertical();
-                                {
-                                    Premium.HandlePremiumOpend();
-                                }
-                                EditorGUILayout.EndVertical();
-                            }
-                        }
+                    }
+                    else {
+                        DrawLine.DrawHorizontalLine();
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUILayout.LabelField("you MUST have VRCSDK to use NaxoKit", EditorStyles.largeLabel);
+                        EditorGUILayout.EndHorizontal();
+                        DrawLine.DrawHorizontalLine();
                     }
                 }
                 if (!userIsUptoDate)
