@@ -24,7 +24,7 @@ namespace naxokit.Screens
                 }
                 EditorGUILayout.EndHorizontal();
                 DrawLine.DrawHorizontalLine(1,Color.magenta);
-                EditorGUILayout.LabelField("OTHERSETTINGSHERE",EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("OTHERSETTINGSHERE",EditorStyles.boldLabel); //Temporary placeholder for other settings
             }
             EditorGUILayout.EndVertical();
             if (GUILayout.Button("Logout", GUILayout.Width(70)))

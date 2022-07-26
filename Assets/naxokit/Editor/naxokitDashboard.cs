@@ -54,7 +54,6 @@ namespace naxokit
             await naxokitUpdater.UpdateVersionData();
             if (naxokitUpdater.CompareCurrentVersionWithLatest())
                 userIsUptoDate = true;
-            Settings.UpdateConfigsAndChangeRPC();
 
         }
         private void OnDestroy()
