@@ -154,12 +154,16 @@ namespace naxokit.Updater
         }
         public static bool CompareCurrentVersionWithLatest()
         {
-            var splittedCurrentVersion = CurrentVersion.Split(';');
-            var splittedCurrentVersionIndex = splittedCurrentVersion[0];
-            if (splittedCurrentVersionIndex == LatestVersion.Version)
-                return true;
-            else
-                return false;
+            if (File.Exists($"Assets{Path.DirectorySeparatorChar}naxokit{Path.DirectorySeparatorChar}version.txt"))
+            {
+                var splittedCurrentVersion = CurrentVersion.Split(';');
+                var splittedCurrentVersionIndex = splittedCurrentVersion[0];
+                if (splittedCurrentVersionIndex == LatestVersion.Version)
+                    return true;
+                else
+                    return false;
+            }else   return false;
+            
         }
         public static async Task<VersionData> GetLatestVersion(VersionData.ReleaseType type, VersionData.BranchType branch)
         {

@@ -17,5 +17,9 @@ namespace naxokit.Helpers.Logger
         {
             Debug.LogWarning($"[{title}]: " + "<color=yellow>" + message + "</color>");
         }
+        public static void LogDebug(string title, string message)
+        {
+            Debug.Log($"[{title}]: " + "<color=blue>" + message + "</color>");
+        }
     }
 }
