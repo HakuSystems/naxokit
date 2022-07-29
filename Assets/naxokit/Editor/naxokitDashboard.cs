@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics;
 using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
-using naxokit.Screens;
 using naxokit.Styles;
 using naxokit.Updater;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using naxokit.Helpers.Logger;
+using naxokit.Screens;
 
 namespace naxokit
 {
@@ -74,7 +74,6 @@ namespace naxokit
             EditorGUILayout.BeginVertical();
             {
                 scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-                EditorGUILayout.LabelField("naxokit", EditorStyles.boldLabel);
                 if (!finallyLoggedIn)
                     EditorGUILayout.LabelField("You have to login to use naxokit", EditorStyles.centeredGreyMiniLabel);
 
@@ -89,8 +88,15 @@ namespace naxokit
 
                         };
 
-                if (naxoApiHelper.IsUserLoggedIn() && hasSDK)
+                if (naxoApiHelper.IsUserLoggedIn())
                 {
+                    GUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
+                    GUILayout.Button(naxoApiHelper.User.Permission.ToString(), EditorStyles.toolbarButton);
+                    GUILayout.Button(naxoApiHelper.User.Username, EditorStyles.toolbarButton);
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+
+
                     if (!naxoApiHelper.IsLoggedInAndVerified())
                     {
                         EditorGUILayout.LabelField("You are logged in but not verified", EditorStyles.centeredGreyMiniLabel);
@@ -239,18 +245,21 @@ namespace naxokit
                                 }
                             }
                         }
-                        if (key.ToString() == "Premium")
-                        {
-                            PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, PremiumOpen, 30f, 0, 0, 12f, 5f);
-                            if (PremiumOpen)
+                        if(naxoApiHelper.User.IsPremium){ //TODO not really a todo, but a question to developers how could we make this better? some may edit the code and make themself premium. (even if they are not premium)
+                            if (key.ToString() == "Premium")
                             {
-                                EditorGUILayout.BeginVertical();
+                                PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, PremiumOpen, 30f, 0, 0, 12f, 5f);
+                                if (PremiumOpen)
                                 {
-                                    Premium.HandlePremiumOpend();
+                                    EditorGUILayout.BeginVertical();
+                                    {
+                                        naxokit.Screens.Premium.HandlePremiumOpend();
+                                    }
+                                    EditorGUILayout.EndVertical();
                                 }
-                                EditorGUILayout.EndVertical();
                             }
                         }
+                        
                     }
                 }
                 if (!userIsUptoDate)

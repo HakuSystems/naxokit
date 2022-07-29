@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using naxokit.Styles;
 using UnityEditor;
+using UnityEngine;
 
 namespace naxokit.Screens
 {
@@ -11,8 +13,13 @@ namespace naxokit.Screens
     {
         public static void HandlePremiumOpend()
         {
+            DrawLine.DrawHorizontalLine();
             EditorGUILayout.LabelField("Premium", EditorStyles.boldLabel);
-            EditorGUILayout.LabelField("Comming Soon...", EditorStyles.centeredGreyMiniLabel);
+            if(GUILayout.Button("EasySearch"))
+            {
+                GetWindow<EasySearch>().Show();
+            }
+            DrawLine.DrawHorizontalLine();
         }
     }
 }
