@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Net.Http.Headers;
+using System.Diagnostics;
 using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
 using naxokit.Styles;
@@ -16,9 +17,11 @@ namespace naxokit
         bool SettingsOpen = false;
         bool CreditsOpen = false;
         bool UpdateOpen = false;
+        bool _isPlaying = false;
         bool PremiumOpen = false;
         private static bool LoginOpen = true;
         private static bool SignUpOpen;
+        private static bool PlayingOpen = true;
         private Vector2 scrollPosition;
         private bool userIsUptoDate = false;
         private bool hasSDK = true;
@@ -85,7 +88,8 @@ namespace naxokit
                             {"Update", Resources.Load("Update") as Texture2D},
                             {"Premium", Resources.Load("Premium") as Texture2D},
                             {"Login", Resources.Load("Login")as Texture2D },
-                            {"Signup",Resources.Load("Signup")as Texture2D }
+                            {"Signup",Resources.Load("Signup")as Texture2D },
+                            {"PlayMode", Resources.Load("PlayMode")as Texture2D }
 
                         };
 
@@ -97,8 +101,8 @@ namespace naxokit
                         naxoApiHelper.Logout();
                         GetWindow<naxokitDashboard>().Close();
                         GetWindow<naxokitDashboard>().Show();
+                        return;
                     }
-                    if(naxoApiHelper.User == null) return;
                     GUILayout.Button(naxoApiHelper.User.Permission.ToString(), EditorStyles.toolbarButton);
                     GUILayout.Button(naxoApiHelper.User.Username, EditorStyles.toolbarButton);
                     //check if user is in playmode
@@ -107,6 +111,7 @@ namespace naxokit
                         if (GUILayout.Button("Stop PlayMode", EditorStyles.toolbarButton))
                         {
                             EditorApplication.isPlaying = false;
+                            _isPlaying = false;
                         }
                     }
                     else
@@ -114,6 +119,7 @@ namespace naxokit
                         if (GUILayout.Button("Start PlayMode", EditorStyles.toolbarButton))
                         {
                             EditorApplication.isPlaying = true;
+                            _isPlaying = true;
                         }
                         if (naxokitUpdater.ServerVersionList == null || naxokitUpdater.LatestVersion == null || naxokitUpdater.LatestBetaVersion == null)
                         {
@@ -231,54 +237,69 @@ namespace naxokit
                     }
                     if (finallyLoggedIn && naxoApiHelper.IsLoggedInAndVerified())
                     {
-                        if (key.ToString() == "Settings")
-                        {
-                            SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SettingsOpen, 30f, 0, 0, 12f, 5f);
-                            if (SettingsOpen)
+                        if(_isPlaying){
+                            if (key.ToString() == "PlayMode")
                             {
-                                EditorGUILayout.BeginVertical();
-                                Settings.HandleSettingsOpend();
-                                EditorGUILayout.EndVertical();
-                            }
-                        }
-                        if (key.ToString() == "Credits")
-                        {
-                            CreditsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, CreditsOpen, 30f, 0, 0, 12f, 5f);
-                            if (CreditsOpen)
-                            {
-                                EditorGUILayout.BeginVertical();
-                                {
-                                    Credits.HandleCreditsOpend();
-                                }
-                                EditorGUILayout.EndVertical();
-                            }
-                        }
-                        if (key.ToString() == "Update")
-                        {
-                            if (userIsUptoDate)
-                            {
-                                UpdateOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, UpdateOpen, 30f, 0, 0, 12f, 5f);
-                                if (UpdateOpen)
+                                PlayingOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, PlayingOpen, 30f, 0, 0, 12f, 5f);
+                                if (PlayingOpen)
                                 {
                                     EditorGUILayout.BeginVertical();
                                     {
-                                        Update.HandleUpdateOpend();
+                                        naxokit.Screens.PlayMode.HandlePlayModeOpend();
                                     }
                                     EditorGUILayout.EndVertical();
                                 }
                             }
-                        }
-                        if(naxoApiHelper.User.IsPremium){ //TODO not really a todo, but a question to developers how could we make this better? some may edit the code and make themself premium. (even if they are not premium)
-                            if (key.ToString() == "Premium")
+                        }else{
+                            if (key.ToString() == "Settings")
                             {
-                                PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, PremiumOpen, 30f, 0, 0, 12f, 5f);
-                                if (PremiumOpen)
+                                SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SettingsOpen, 30f, 0, 0, 12f, 5f);
+                                if (SettingsOpen)
+                                {
+                                    EditorGUILayout.BeginVertical();
+                                    Settings.HandleSettingsOpend();
+                                    EditorGUILayout.EndVertical();
+                                }
+                            }
+                            if (key.ToString() == "Credits")
+                            {
+                                CreditsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, CreditsOpen, 30f, 0, 0, 12f, 5f);
+                                if (CreditsOpen)
                                 {
                                     EditorGUILayout.BeginVertical();
                                     {
-                                        naxokit.Screens.Premium.HandlePremiumOpend();
+                                        Credits.HandleCreditsOpend();
                                     }
                                     EditorGUILayout.EndVertical();
+                                }
+                            }
+                            if (key.ToString() == "Update")
+                            {
+                                if (userIsUptoDate)
+                                {
+                                    UpdateOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, UpdateOpen, 30f, 0, 0, 12f, 5f);
+                                    if (UpdateOpen)
+                                    {
+                                        EditorGUILayout.BeginVertical();
+                                        {
+                                            Update.HandleUpdateOpend();
+                                        }
+                                        EditorGUILayout.EndVertical();
+                                    }
+                                }
+                            }
+                            if(naxoApiHelper.User.IsPremium){ //TODO not really a todo, but a question to developers how could we make this better? some may edit the code and make themself premium. (even if they are not premium)
+                                if (key.ToString() == "Premium")
+                                {
+                                    PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, PremiumOpen, 30f, 0, 0, 12f, 5f);
+                                    if (PremiumOpen)
+                                    {
+                                        EditorGUILayout.BeginVertical();
+                                        {
+                                            naxokit.Screens.Premium.HandlePremiumOpend();
+                                        }
+                                        EditorGUILayout.EndVertical();
+                                    }
                                 }
                             }
                         }
