@@ -74,6 +74,7 @@ namespace naxokit
             EditorGUILayout.BeginVertical();
             {
                 scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+                
                 if (!finallyLoggedIn)
                     EditorGUILayout.LabelField("You have to login to use naxokit", EditorStyles.centeredGreyMiniLabel);
 
@@ -91,8 +92,36 @@ namespace naxokit
                 if (naxoApiHelper.IsUserLoggedIn())
                 {
                     GUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
+                    if (GUILayout.Button("Logout", EditorStyles.toolbarButton))
+                    {
+                        naxoApiHelper.Logout();
+                        GetWindow<naxokitDashboard>().Close();
+                        GetWindow<naxokitDashboard>().Show();
+                    }
                     GUILayout.Button(naxoApiHelper.User.Permission.ToString(), EditorStyles.toolbarButton);
                     GUILayout.Button(naxoApiHelper.User.Username, EditorStyles.toolbarButton);
+                    //check if user is in playmode
+                    if (EditorApplication.isPlaying)
+                    {
+                        if (GUILayout.Button("Stop PlayMode", EditorStyles.toolbarButton))
+                        {
+                            EditorApplication.isPlaying = false;
+                        }
+                    }
+                    else
+                    {
+                        if (GUILayout.Button("Start PlayMode", EditorStyles.toolbarButton))
+                        {
+                            EditorApplication.isPlaying = true;
+                        }
+                        if (naxokitUpdater.ServerVersionList == null || naxokitUpdater.LatestVersion == null || naxokitUpdater.LatestBetaVersion == null)
+                        {
+                            EditorGUILayout.BeginVertical();
+                            EditorGUILayout.LabelField("Loading...");
+                            EditorGUILayout.EndVertical();
+                            return;
+                        }
+                    }
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 
@@ -201,13 +230,6 @@ namespace naxokit
                     }
                     if (finallyLoggedIn && naxoApiHelper.IsLoggedInAndVerified())
                     {
-                        if (naxokitUpdater.ServerVersionList == null || naxokitUpdater.LatestVersion == null || naxokitUpdater.LatestBetaVersion == null)
-                        {
-                            EditorGUILayout.BeginVertical();
-                            EditorGUILayout.LabelField("Loading...");
-                            EditorGUILayout.EndVertical();
-                            return;
-                        }
                         if (key.ToString() == "Settings")
                         {
                             SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SettingsOpen, 30f, 0, 0, 12f, 5f);

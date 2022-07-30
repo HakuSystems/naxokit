@@ -27,13 +27,6 @@ namespace naxokit.Screens
                 EditorGUILayout.LabelField("OTHERSETTINGSHERE",EditorStyles.boldLabel); //Temporary placeholder for other settings
             }
             EditorGUILayout.EndVertical();
-            if (GUILayout.Button("Logout", GUILayout.Width(70)))
-            {
-
-                naxoApiHelper.Logout();
-                GetWindow<naxokitDashboard>().Close();
-                GetWindow<naxokitDashboard>().Show();
-            }
 
             DrawLine.DrawHorizontalLine();
 
