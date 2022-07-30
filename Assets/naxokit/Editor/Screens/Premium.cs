@@ -19,6 +19,10 @@ namespace naxokit.Screens
             {
                 GetWindow<EasySearch>().Show();
             }
+            if(GUILayout.Button("NaxoLoader"))
+            {
+                GetWindow<NaxoLoader>().Show();
+            }
             DrawLine.DrawHorizontalLine();
         }
     }
