@@ -98,6 +98,7 @@ namespace naxokit
                         GetWindow<naxokitDashboard>().Close();
                         GetWindow<naxokitDashboard>().Show();
                     }
+                    if(naxoApiHelper.User == null) return;
                     GUILayout.Button(naxoApiHelper.User.Permission.ToString(), EditorStyles.toolbarButton);
                     GUILayout.Button(naxoApiHelper.User.Username, EditorStyles.toolbarButton);
                     //check if user is in playmode
