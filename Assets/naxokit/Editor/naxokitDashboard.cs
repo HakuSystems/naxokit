@@ -25,7 +25,6 @@ namespace naxokit
         public static bool finallyLoggedIn = false;
         public static bool savePasswordLocally = false;
         public static string passStatus = "";
-
         private static string usernameInput;
         private static string passwordInput;
         private static string emailInput;
@@ -92,15 +91,10 @@ namespace naxokit
                 if (naxoApiHelper.IsUserLoggedIn())
                 {
                     GUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
-                    if (GUILayout.Button("Logout", EditorStyles.toolbarButton))
-                    {
-                        naxoApiHelper.Logout();
-                        GetWindow<naxokitDashboard>().Close();
-                        GetWindow<naxokitDashboard>().Show();
-                    }
-                    if(naxoApiHelper.User == null) return;
-                    GUILayout.Button(naxoApiHelper.User.Permission.ToString(), EditorStyles.toolbarButton);
-                    GUILayout.Button(naxoApiHelper.User.Username, EditorStyles.toolbarButton);
+                    GUILayout.Button(naxoApiHelper.User.Username, EditorStyles.boldLabel);
+                    if (!hasSDK)
+                        if(GUILayout.Button("Install VRCSDK", EditorStyles.toolbarButton))
+                            GetWindow(typeof(VRCSDKInstaller));
                     //check if user is in playmode
                     if (EditorApplication.isPlaying)
                     {
@@ -124,6 +118,14 @@ namespace naxokit
                         }
                     }
                     GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("Logout", EditorStyles.toolbarButton))
+                    {
+                        naxoApiHelper.Logout();
+                        GetWindow<naxokitDashboard>().Close();
+                        GetWindow<naxokitDashboard>().Show();
+                        return;
+                    }
+                    GUILayout.Button(naxoApiHelper.User.Permission.ToString(), EditorStyles.toolbarButton);
                     GUILayout.EndHorizontal();
 
 
