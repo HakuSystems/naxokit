@@ -21,7 +21,7 @@ namespace naxokit
         bool PremiumOpen = false;
         private static bool LoginOpen = true;
         private static bool SignUpOpen;
-        private static bool PlayingOpen = true;
+        private static bool PlayingOpen;
         private Vector2 scrollPosition;
         private bool userIsUptoDate = false;
         private bool hasSDK = true;
