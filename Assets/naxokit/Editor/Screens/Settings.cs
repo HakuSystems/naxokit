@@ -1,5 +1,6 @@
 ﻿using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
+using naxokit.Helpers.Logger;
 using naxokit.Styles;
 using UnityEditor;
 using UnityEngine;
@@ -37,6 +38,7 @@ namespace naxokit.Screens
         {
             DiscordRPC.naxokitRPC.UpdateRPC();
             Config.UpdateConfig();
+            naxoLog.Log("Settings","Configs updated!");
         }
     }
 }

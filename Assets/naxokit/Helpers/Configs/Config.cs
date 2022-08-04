@@ -58,9 +58,6 @@ namespace naxokit.Helpers.Configs
                 string json2 = JsonConvert.SerializeObject(config, Formatting.Indented);
                 File.WriteAllText(configPath, json2);
             }
-            //update variables
-
-            naxoLog.Log("Config", "Updated config file");
         }
     }
 }
