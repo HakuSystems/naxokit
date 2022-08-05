@@ -14,6 +14,7 @@ namespace naxokit
 {
     public class naxokitDashboard : EditorWindow
     {
+        public bool VRCToolsOpen = false;
         bool SettingsOpen = false;
         bool CreditsOpen = false;
         bool UpdateOpen = false;
@@ -88,7 +89,8 @@ namespace naxokit
                             {"Premium", Resources.Load("Premium") as Texture2D},
                             {"Login", Resources.Load("Login")as Texture2D },
                             {"Signup",Resources.Load("Signup")as Texture2D },
-                            {"PlayMode", Resources.Load("PlayMode")as Texture2D }
+                            {"PlayMode", Resources.Load("PlayMode")as Texture2D },
+                            {"VRCTools", Resources.Load("VRCTools")as Texture2D}
 
                         };
 
@@ -290,6 +292,20 @@ namespace naxokit
                                     }
                                 }
                             }
+                            if(key.ToString() == "VRCTools"){
+                                if(!hasSDK){ //TODO: Change this check when development is done
+                                    VRCToolsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, VRCToolsOpen, 30f, 0, 0, 12f, 5f);
+                                    if (VRCToolsOpen)
+                                    {
+                                        EditorGUILayout.BeginVertical();
+                                        {
+                                            VRCTools.HandleVRCToolsOpend();
+                                        }
+                                        EditorGUILayout.EndVertical();
+                                    }
+                                }
+                                
+                            }
                             if(naxoApiHelper.User.IsPremium){ //TODO not really a todo, but a question to developers how could we make this better? some may edit the code and make themself premium. (even if they are not premium)
                                 if (key.ToString() == "Premium")
                                 {
@@ -304,6 +320,7 @@ namespace naxokit
                                     }
                                 }
                             }
+                            
                         }
                         
                     }
