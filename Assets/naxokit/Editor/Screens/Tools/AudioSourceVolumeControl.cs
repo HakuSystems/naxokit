@@ -1,9 +1,11 @@
+using System.IO;
 using System;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using naxokit.Styles;
 using naxokit.Helpers.Logger;
+using System.Linq;
 
 public class AudioSourceVolumeControl : EditorWindow {
 
@@ -19,11 +21,16 @@ public class AudioSourceVolumeControl : EditorWindow {
     }
 
     private void OnEnable(){
-        minSize = new Vector2(800, 300);
-        maxSize = new Vector2(800, 300);
+        minSize = new Vector2(900, 300);
+        maxSize = new Vector2(900, 300);
         audioSources.Clear();
         foreach(var audioSource in GameObject.FindObjectsOfType<AudioSource>()) {
             audioSources.Add(audioSource);
+        }
+    }
+    private void OnDestroy(){
+        foreach(var audioSource in audioSources){
+            audioSource.Pause();
         }
     }
     private void Update() {
@@ -70,9 +77,23 @@ public class AudioSourceVolumeControl : EditorWindow {
                                 }                        
                                 if(audioSource != null){
                                     GUILayout.Space(10);
-                                    EditorGUILayout.LabelField(audioSource.name, EditorStyles.largeLabel);
-                                    if(GUILayout.Button("Select in Hierachry", EditorStyles.toolbarButton))
-                                        Selection.activeGameObject = audioSource.gameObject;
+                                    if(GUILayout.Button(audioSource.name, EditorStyles.toolbarButton)) {
+                                        Selection.activeObject = audioSource.gameObject;
+                                    }
+                                    AudioClip clip = audioSource.clip;
+                                    var clipFileNameExtension = Path.GetFileName(AssetDatabase.GetAssetPath(clip));
+                                    EditorGUILayout.LabelField(clipFileNameExtension, EditorStyles.boldLabel);
+                                    
+                                    if(clip != null){
+                                        if(GUILayout.Button("Play", EditorStyles.miniButton)) {
+                                            audioSource.Play();
+                                        }
+                                        if(GUILayout.Button("Pause", EditorStyles.miniButton)) {
+                                            audioSource.Pause();
+                                        }
+                                    }
+                                    
+                                    
                                     if(GUI.color == Color.green){
                                         EditorGUILayout.LabelField("GOOD TO HEAR", EditorStyles.toolbarButton);
                                     } else if(GUI.color == Color.yellow){
