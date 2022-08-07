@@ -60,7 +60,9 @@ public class AudioSourceVolumeControl : EditorWindow {
         {
             EditorGUILayout.BeginHorizontal();
             {
-                EditorGUILayout.LabelField($"Total: {audioSources.Count}", EditorStyles.toolbarButton);
+                if(audioSources.Count == 0)EditorGUILayout.LabelField("No AudioSources found",  EditorStyles.toolbarButton);
+                else EditorGUILayout.LabelField("AudioSources found: " + audioSources.Count,  EditorStyles.toolbarButton);
+
                 EditorGUILayout.LabelField("AudioSources in Hierarchy", EditorStyles.toolbarButton);
             }
             EditorGUILayout.EndHorizontal();
