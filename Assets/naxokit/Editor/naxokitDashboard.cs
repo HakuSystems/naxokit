@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Runtime.Versioning;
+using System.Net.Http.Headers;
 using System.Diagnostics;
 using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
@@ -19,6 +20,7 @@ namespace naxokit
         bool CreditsOpen = false;
         bool UpdateOpen = false;
         bool _isPlaying = false;
+        public bool ToolsOpen =false;
         bool PremiumOpen = false;
         private static bool LoginOpen = true;
         private static bool SignUpOpen;
@@ -33,6 +35,7 @@ namespace naxokit
         private static string passwordInput;
         private static string emailInput;
         private static string redeemCode;
+
 
         [MenuItem("naxokit/Dashboard")]
         public static void ShowWindow() => GetWindow(typeof(naxokitDashboard));
@@ -90,7 +93,8 @@ namespace naxokit
                             {"Login", Resources.Load("Login")as Texture2D },
                             {"Signup",Resources.Load("Signup")as Texture2D },
                             {"PlayMode", Resources.Load("PlayMode")as Texture2D },
-                            {"VRCTools", Resources.Load("VRCTools")as Texture2D}
+                            {"VRCTools", Resources.Load("VRCTools")as Texture2D},
+                            {"Tools", Resources.Load("Tools")as Texture2D}
 
                         };
 
@@ -255,6 +259,7 @@ namespace naxokit
                                 }
                             }
                         }else{
+                            
                             if (key.ToString() == "Settings")
                             {
                                 SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, SettingsOpen, 30f, 0, 0, 12f, 5f);
@@ -290,6 +295,17 @@ namespace naxokit
                                         }
                                         EditorGUILayout.EndVertical();
                                     }
+                                }
+                            }
+                            if(key.ToString() == "Tools"){
+                                ToolsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)value, ToolsOpen, 30f, 0, 0, 12f, 5f);
+                                if (ToolsOpen)
+                                {
+                                    EditorGUILayout.BeginVertical();
+                                    {
+                                        naxokit.Screens.naxoTools.HandleToolsOpend();
+                                    }
+                                    EditorGUILayout.EndVertical();
                                 }
                             }
                             if(key.ToString() == "VRCTools"){
