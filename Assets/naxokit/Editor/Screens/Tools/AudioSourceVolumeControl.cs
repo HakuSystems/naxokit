@@ -21,8 +21,8 @@ public class AudioSourceVolumeControl : EditorWindow {
     }
 
     private void OnEnable(){
-        minSize = new Vector2(900, 300);
-        maxSize = new Vector2(900, 300);
+        minSize = new Vector2(1000, 300);
+        maxSize = new Vector2(1000, 300);
         audioSources.Clear();
         foreach(var audioSource in GameObject.FindObjectsOfType<AudioSource>()) {
             audioSources.Add(audioSource);
@@ -41,7 +41,19 @@ public class AudioSourceVolumeControl : EditorWindow {
                 audioSources.Add(audioSource);
             }
         }
-        
+        int currentlyPlaying = 0;
+        foreach(var audioSource in audioSources){
+            if(audioSource.isPlaying) {
+                currentlyPlaying++;
+            }
+        }
+        if(currentlyPlaying > 1) {
+            foreach(var audioSource in audioSources){
+                if(audioSource.isPlaying) {
+                    audioSource.Pause();
+                }
+            }
+        }
     }
     private void OnGUI() {
         EditorGUILayout.BeginVertical();
@@ -76,13 +88,16 @@ public class AudioSourceVolumeControl : EditorWindow {
                                     GUI.color = Color.red;
                                 }                        
                                 if(audioSource != null){
-                                    GUILayout.Space(10);
                                     if(GUILayout.Button(audioSource.name, EditorStyles.toolbarButton)) {
                                         Selection.activeObject = audioSource.gameObject;
                                     }
                                     AudioClip clip = audioSource.clip;
                                     var clipFileNameExtension = Path.GetFileName(AssetDatabase.GetAssetPath(clip));
+                                    
                                     EditorGUILayout.LabelField(clipFileNameExtension, EditorStyles.boldLabel);
+                                    
+                                    if(audioSource.isPlaying)
+                                    EditorGUI.ProgressBar(GUILayoutUtility.GetRect(100, 20), audioSource.time / audioSource.clip.length, $"{(int)(audioSource.time / 60)}:{(int)(audioSource.time % 60)} / {(int)(audioSource.clip.length / 60)}:{(int)(audioSource.clip.length % 60)}");
                                     
                                     if(clip != null){
                                         if(GUILayout.Button("Play", EditorStyles.miniButton)) {
