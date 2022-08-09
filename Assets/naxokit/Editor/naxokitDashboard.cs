@@ -11,10 +11,6 @@ using UnityEngine;
 using naxokit.Helpers.Logger;
 using naxokit.Screens;
 
-//FIXME: Somehow the Foldouts are not sized correctly. The foldout is too small.
-//when UpdateOpen foldout is Active then the foldout is resized to the size of the content.
-//we need to resize every foldout so every foldout has the same size.
-
 namespace naxokit
 {
     public class naxokitDashboard : EditorWindow
