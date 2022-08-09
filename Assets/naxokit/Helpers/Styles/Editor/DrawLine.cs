@@ -9,7 +9,8 @@ namespace naxokit.Styles
         {
             if (color == default)
                 color = Color.white;
-            Rect r = EditorGUILayout.GetControlRect(false, _height);
+            Rect r = GUILayoutUtility.GetRect(EditorGUIUtility.currentViewWidth, _height, NaxoGUIStyleStyles.GUIStyleType.EyeDropperHorizontalLine.ToString());
+            // Rect r = EditorGUILayout.GetControlRect(false, _height);
             r.height = _height;
             r.y += (_height - 1) / 2;
             EditorGUI.DrawRect(r, color);
