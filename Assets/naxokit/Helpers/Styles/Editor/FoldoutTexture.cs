@@ -7,7 +7,7 @@ namespace naxokit.Styles
     {
         public static bool MakeTextureFoldout(Texture2D texture2D, bool boolToggle, float floatHeight, float floatOffsetX, float floatOffsetY, float floatArrowOffsetY, float floatArrowOffsetX)
         {
-            GUIStyle formatting = new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.ShurikenModuleTitle.ToString());
+            GUIStyle formatting = new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.ScriptText.ToString()); //ScriptText looks way better than ShurikenModuleTitle
             formatting.contentOffset = new Vector2(18.0f + floatOffsetX, -2.0f + floatOffsetY);
             formatting.fixedHeight = floatHeight;
             Rect rect = GUILayoutUtility.GetRect(5.0f, floatHeight, formatting);
