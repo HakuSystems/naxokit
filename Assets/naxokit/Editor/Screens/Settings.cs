@@ -9,6 +9,7 @@ namespace naxokit.Screens
 {
     public class Settings : EditorWindow
     {
+
         public static void HandleSettingsOpend()
         {
             DrawLine.DrawHorizontalLine();
@@ -25,7 +26,15 @@ namespace naxokit.Screens
                 }
                 EditorGUILayout.EndHorizontal();
                 DrawLine.DrawHorizontalLine(1, Color.magenta);
-                EditorGUILayout.LabelField("OTHERSETTINGSHERE", EditorStyles.boldLabel); //Temporary placeholder for other settings
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUILayout.LabelField("Scene Autosaver ", EditorStyles.boldLabel);
+                    Config.SceneAutosaver_Enabled = EditorGUILayout.Toggle("Enabled", Config.SceneAutosaver_Enabled);
+                }
+                EditorGUILayout.EndHorizontal();
+                GUILayout.Space(5);
+
+                DrawLine.DrawHorizontalLine(1, Color.magenta);
             }
             EditorGUILayout.EndVertical();
 

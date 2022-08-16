@@ -8,6 +8,7 @@ namespace naxokit.Helpers.Configs
 {
     public class Config
     {
+        private static bool sceneAutosaver_Enabled = false;
         private static bool discordrpc_Enabled = false;
         private static bool discordrpc_Username = false;
         public static bool Discordrpc_Enabled
@@ -20,14 +21,25 @@ namespace naxokit.Helpers.Configs
             get { return discordrpc_Username; }
             set { discordrpc_Username = value; UpdateConfig(); }
         }
-        public static void InitializeConfig() {
+
+        public static bool SceneAutosaver_Enabled
+        {
+            get { return sceneAutosaver_Enabled; }
+            set { sceneAutosaver_Enabled = value; UpdateConfig(); }
+        }
+
+        public static void InitializeConfig()
+        {
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string specificFolder = Path.Combine(folder, "naxokit");
             string configPath = Path.Combine(specificFolder, "config.json");
-            if (File.Exists(configPath)) {
+            if (File.Exists(configPath))
+            {
                 var config = JsonConvert.DeserializeObject<ConfigData>(File.ReadAllText(configPath));
                 discordrpc_Enabled = config.Discord.Enabled;
                 discordrpc_Username = config.Discord.Username;
+
+                sceneAutosaver_Enabled = config.SceneSaver.Enabled;
             }
         }
         public static void UpdateConfig()
@@ -44,6 +56,9 @@ namespace naxokit.Helpers.Configs
                 config = new ConfigData();
                 config.Discord.Enabled = true;
                 config.Discord.Username = true;
+
+                config.SceneSaver.Enabled = false;
+
                 string json = JsonConvert.SerializeObject(config, Formatting.Indented);
                 File.WriteAllText(configPath, json);
             }
@@ -55,6 +70,9 @@ namespace naxokit.Helpers.Configs
                 //update config file
                 config.Discord.Enabled = discordrpc_Enabled;
                 config.Discord.Username = discordrpc_Username;
+
+                config.SceneSaver.Enabled = sceneAutosaver_Enabled;
+
                 string json2 = JsonConvert.SerializeObject(config, Formatting.Indented);
                 File.WriteAllText(configPath, json2);
             }
