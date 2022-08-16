@@ -8,30 +8,36 @@ using naxokit.Premium;
 using naxokit.Helpers.Logger;
 using UnityEditor.UIElements;
 
-namespace naxokit.Screens{
-    public class EasySearch : EditorWindow {
+namespace naxokit.Screens
+{
+    public class EasySearch : EditorWindow
+    {
 
         private string searchString = "";
         private string endsWithString = "unitypackage";
         private static int sliderLeftValue = 10;
-       
+
 
         private static Vector2 scrollPosition;
-        
-        private static void ShowWindow() {
+
+        private static void ShowWindow()
+        {
             var window = GetWindow<EasySearch>();
             window.Show();
         }
-        private void OnEnable() {
+        private void OnEnable()
+        {
             //check if the results will show in the editor window
-            if (Everything.Everything_GetMatchPath()) {
+            if (Everything.Everything_GetMatchPath())
+            {
                 Everything.Everything_SetMatchCase(false);
             }
 
             titleContent = new GUIContent("EasySearch");
             minSize = new Vector2(600, 300);
         }
-        private void OnGUI() {
+        private void OnGUI()
+        {
 
             GUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
             GUILayout.Button("naxokit", EditorStyles.toolbarButton);
@@ -50,13 +56,13 @@ namespace naxokit.Screens{
 
             GUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("EndsWith:", EditorStyles.centeredGreyMiniLabel);
-            endsWithString=EditorGUILayout.TextField(endsWithString, EditorStyles.toolbarButton);
+            endsWithString = EditorGUILayout.TextField(endsWithString, EditorStyles.toolbarButton);
             sliderLeftValue = EditorGUILayout.IntSlider(sliderLeftValue, 1, 1000);
             EditorGUILayout.EndHorizontal();
             GUILayout.Space(4);
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Search", EditorStyles.toolbarButton) )
+            if (GUILayout.Button("Search", EditorStyles.toolbarButton))
             {
                 if (endsWithString.StartsWith("."))
                     endsWithString = endsWithString.Replace(".", "");
@@ -72,7 +78,7 @@ namespace naxokit.Screens{
             EditorGUILayout.EndHorizontal();
 
 
-            if(_results == null) return;
+            if (_results == null) return;
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(600));
             var resultCount = 0;
@@ -88,7 +94,11 @@ namespace naxokit.Screens{
                     if (result.Filename.EndsWith(".unitypackage"))
                     {
                         GUILayout.Label(result.Filename);
-                        if (GUILayout.Button("Import",EditorStyles.toolbarButton, GUILayout.Width(50)))
+                        if (GUILayout.Button("Add to MassImporter", EditorStyles.toolbarButton))
+                        {
+                            MassImporter.AddToMassImporter(result.Path);
+                        }
+                        if (GUILayout.Button("Import", EditorStyles.toolbarButton, GUILayout.Width(50)))
                         {
                             AssetDatabase.ImportPackage(result.Path, true);
                         }
@@ -96,7 +106,7 @@ namespace naxokit.Screens{
                     else
                     {
                         GUILayout.Label(result.Filename);
-                        if (GUILayout.Button("(try to)Open",EditorStyles.toolbarButton, GUILayout.Width(80)))
+                        if (GUILayout.Button("(try to)Open", EditorStyles.toolbarButton, GUILayout.Width(80)))
                         {
                             Process.Start(result.Path);
                         }
@@ -104,7 +114,7 @@ namespace naxokit.Screens{
                 }
                 EditorGUILayout.EndHorizontal();
                 GUILayout.Space(3);
-            }            
+            }
 
             GUILayout.EndScrollView();
 
@@ -115,7 +125,7 @@ namespace naxokit.Screens{
         {
             var voidToolsURL = "https://www.voidtools.com/downloads/";
             Application.OpenURL(voidToolsURL);
-            
+
         }
 
         private void FillList()

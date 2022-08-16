@@ -11,10 +11,6 @@ using UnityEngine;
 using naxokit.Helpers.Logger;
 using naxokit.Screens;
 
-//FIXME: Somehow the Foldouts are not sized correctly. The foldout is too small.
-//when UpdateOpen foldout is Active then the foldout is resized to the size of the content.
-//we need to resize every foldout so every foldout has the same size.
-
 namespace naxokit
 {
     public class naxokitDashboard : EditorWindow
@@ -57,7 +53,7 @@ namespace naxokit
         private async void OnEnable()
         {
             titleContent = new GUIContent("Dashboard");
-            minSize = new Vector2(600, 700);
+            minSize = new Vector2(1000, 300);
 
             //check if user has the VRCSDK installed
             CheckSDK();
@@ -100,7 +96,7 @@ namespace naxokit
         {
             EditorGUILayout.BeginVertical();
             {
-                scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+                scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, false, GUILayout.Width(EditorGUIUtility.currentViewWidth));
                 {
                     if (naxokitUpdater.ServerVersionList == null
                                             && naxokitUpdater.LatestVersion == null
@@ -109,13 +105,12 @@ namespace naxokit
                         EditorGUILayout.LabelField("Please wait while we load the latest version data.");
                         return;
                     }
-
                     #region Login and Signup
                     EditorGUILayout.BeginVertical();
                     {
                         if (!naxoApiHelper.IsUserLoggedIn())
                         {
-                            LoginOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("Login") as Texture2D, LoginOpen, 30f, 0, 0, 12f, 5f);
+                            LoginOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("Login") as Texture2D, LoginOpen);
                             if (LoginOpen)
                             {
                                 DrawLine.DrawHorizontalLine();
@@ -152,7 +147,7 @@ namespace naxokit
                                 }
                                 DrawLine.DrawHorizontalLine();
                             }
-                            SignUpOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("SignUp") as Texture2D, SignUpOpen, 30f, 0, 0, 12f, 5f);
+                            SignUpOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("SignUp") as Texture2D, SignUpOpen);
                             if (SignUpOpen)
                             {
                                 DrawLine.DrawHorizontalLine();
@@ -213,8 +208,8 @@ namespace naxokit
                     #region  All Tools aka Navigation
                     if (finallyLoggedIn || naxoApiHelper.IsLoggedInAndVerified())
                     {
-                        GUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
-                        GUILayout.Button(naxoApiHelper.User.Username, EditorStyles.boldLabel);
+                        GUILayout.BeginHorizontal(GUI.skin.FindStyle(NaxoGUIStyleStyles.GUIStyleType.Toolbar.ToString()));
+                        GUILayout.Button(naxoApiHelper.User.Username, GUI.skin.FindStyle(NaxoGUIStyleStyles.GUIStyleType.ProgressBarText.ToString()));
                         if (!hasSDK)
                             if (GUILayout.Button("Install VRCSDK", EditorStyles.toolbarButton))
                                 GetWindow(typeof(VRCSDKInstaller));
@@ -243,7 +238,7 @@ namespace naxokit
                             GetWindow<naxokitDashboard>().Show();
                             return;
                         }
-                        GUILayout.Button(naxoApiHelper.User.Permission.ToString(), EditorStyles.toolbarButton);
+                        GUILayout.Button(naxoApiHelper.User.Permission.ToString(), GUI.skin.FindStyle(NaxoGUIStyleStyles.GUIStyleType.ProgressBarText.ToString()));
                         GUILayout.EndHorizontal();
 
                         EditorGUILayout.BeginVertical();
@@ -254,7 +249,7 @@ namespace naxokit
                                 switch (tool.Key.ToString())
                                 {
                                     case "Settings":
-                                        SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, SettingsOpen, 30f, 0, 0, 12f, 5f);
+                                        SettingsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, SettingsOpen);
                                         if (SettingsOpen)
                                         {
                                             EditorGUILayout.BeginVertical();
@@ -265,7 +260,7 @@ namespace naxokit
                                         }
                                         break;
                                     case "Credits":
-                                        CreditsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, CreditsOpen, 30f, 0, 0, 12f, 5f);
+                                        CreditsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, CreditsOpen);
                                         if (CreditsOpen)
                                         {
                                             EditorGUILayout.BeginVertical();
@@ -278,7 +273,7 @@ namespace naxokit
                                     case "Premium":
                                         if ((naxoApiHelper.User.IsPremium)) //TODO: Find a better solution for Premium Checks
                                         {
-                                            PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, PremiumOpen, 30f, 0, 0, 12f, 5f);
+                                            PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, PremiumOpen);
                                             if (PremiumOpen)
                                             {
                                                 EditorGUILayout.BeginVertical();
@@ -292,7 +287,7 @@ namespace naxokit
                                     case "PlayMode":
                                         if (Application.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode)
                                         {
-                                            PlayingOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, PlayingOpen, 30f, 0, 0, 12f, 5f);
+                                            PlayingOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, PlayingOpen);
                                             if (PlayingOpen)
                                             {
                                                 EditorGUILayout.BeginVertical();
@@ -306,7 +301,7 @@ namespace naxokit
                                     case "VRCTools":
                                         if (hasSDK) //hasSDK, CheckSDK
                                         {
-                                            VRCToolsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, VRCToolsOpen, 30f, 0, 0, 12f, 5f);
+                                            VRCToolsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, VRCToolsOpen);
                                             if (VRCToolsOpen)
                                             {
                                                 EditorGUILayout.BeginVertical();
@@ -318,7 +313,7 @@ namespace naxokit
                                         }
                                         break;
                                     case "Tools":
-                                        ToolsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, ToolsOpen, 30f, 0, 0, 12f, 5f);
+                                        ToolsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, ToolsOpen);
                                         if (ToolsOpen)
                                         {
                                             EditorGUILayout.BeginVertical();
@@ -338,21 +333,22 @@ namespace naxokit
                             EditorGUILayout.BeginHorizontal();
                             {
                                 EditorGUILayout.LabelField("Update Available", EditorStyles.boldLabel);
-                                if (GUILayout.Button("Update", EditorStyles.miniButton, GUILayout.Width(100)))
+                                if (GUILayout.Button("Update", EditorStyles.miniButtonMid, GUILayout.Width(250)))
                                     naxokitUpdater.DeleteAndDownloadAsync();
 
                                 if (naxokitUpdater.LatestVersion != null)
-                                    EditorGUILayout.LabelField("Version: " + naxokitUpdater.LatestVersion.Version, EditorStyles.centeredGreyMiniLabel);
+                                    EditorGUILayout.LabelField("Version: " + naxokitUpdater.LatestVersion.Version, EditorStyles.centeredGreyMiniLabel, GUILayout.Width(EditorGUIUtility.currentViewWidth));
 
 
                             }
                             EditorGUILayout.EndHorizontal();
                             DrawLine.DrawHorizontalLine();
 
+
                         }
                         else
                         {
-                            UpdateOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("Update") as Texture2D, UpdateOpen, 30f, 0, 0, 12f, 5f);
+                            UpdateOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("Update") as Texture2D, UpdateOpen);
                             if (UpdateOpen)
                             {
                                 EditorGUILayout.BeginVertical();

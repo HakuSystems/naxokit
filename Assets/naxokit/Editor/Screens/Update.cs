@@ -32,16 +32,16 @@ namespace naxokit.Screens
                     currentVersion = naxokitUpdater.LatestVersion.Version;
                     runOnce = true;
                 }
-                scrollView = EditorGUILayout.BeginScrollView(scrollView);
+                scrollView = EditorGUILayout.BeginScrollView(scrollView, false, false, GUILayout.Width(EditorGUIUtility.currentViewWidth));
                 {
                     EditorGUILayout.BeginVertical();
                     {
                         var updateImageDisplay = Resources.Load("LatestUpdateHeader") as Texture2D;
                         var content = new GUIContent(updateImageDisplay);
-                        EditorGUILayout.LabelField(content, GUILayout.Height(140));
+                        EditorGUILayout.LabelField(content, GUILayout.Height(140), GUILayout.Width(EditorGUIUtility.currentViewWidth));
 
                         EditorGUILayout.LabelField("Search Version", EditorStyles.boldLabel);
-                        EditorGUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
+                        EditorGUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"), GUILayout.Width(EditorGUIUtility.currentViewWidth));
                         {
 
                             _searchString = GUILayout.TextField(_searchString, GUI.skin.FindStyle("ToolbarSeachTextField"));
@@ -60,9 +60,9 @@ namespace naxokit.Screens
                             {
                                 if (version.Version != currentVersion)
                                 {
-                                    EditorGUILayout.BeginHorizontal();
+                                    EditorGUILayout.BeginHorizontal(GUILayout.Width(EditorGUIUtility.currentViewWidth));
                                     {
-                                        EditorGUILayout.LabelField(version.Version, EditorStyles.boldLabel);
+                                        EditorGUILayout.LabelField(version.Version);
                                         if (GUILayout.Button("Install"))
                                         {
                                             naxokitUpdater.DeleteAndDownloadAsync(version.Version);
@@ -74,9 +74,9 @@ namespace naxokit.Screens
                             }
                             else if (version.Version.Contains(_searchString))
                             {
-                                EditorGUILayout.BeginHorizontal();
+                                EditorGUILayout.BeginHorizontal(GUILayout.Width(EditorGUIUtility.currentViewWidth));
                                 {
-                                    EditorGUILayout.LabelField(version.Version, EditorStyles.boldLabel);
+                                    EditorGUILayout.LabelField(version.Version);
                                     if (GUILayout.Button("Install"))
                                     {
                                         naxokitUpdater.DeleteAndDownloadAsync(version.Version);
@@ -88,7 +88,6 @@ namespace naxokit.Screens
                         }
                         if (_searchString != "" && _searchString != "Current Version: " + versionList.Count)
                         {
-                            //Bug #1: even when there is a result it shows that there is "no result"
                             EditorGUILayout.LabelField("No results found for: " + _searchString, EditorStyles.boldLabel);
                         }
 
