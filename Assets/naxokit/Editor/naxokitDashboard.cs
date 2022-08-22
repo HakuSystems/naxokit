@@ -214,7 +214,7 @@ namespace naxokit
                             if (GUILayout.Button("Install VRCSDK", EditorStyles.toolbarButton))
                                 GetWindow(typeof(VRCSDKInstaller));
                         //check if user is in playmode
-                        if (EditorApplication.isPlaying)
+                        if (Naxoinit.IsPlayMode())
                         {
                             if (GUILayout.Button("Stop PlayMode", EditorStyles.toolbarButton))
                             {
@@ -285,7 +285,7 @@ namespace naxokit
                                         }
                                         break;
                                     case "PlayMode":
-                                        if (Application.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode)
+                                        if (Naxoinit.IsPlayMode())
                                         {
                                             PlayingOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, PlayingOpen);
                                             if (PlayingOpen)

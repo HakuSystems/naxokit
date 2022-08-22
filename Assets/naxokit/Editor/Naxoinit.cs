@@ -15,12 +15,22 @@ namespace naxokit
         {
             Config.InitializeConfig();
             SceneSaver();
+            IsPlayMode();
         }
+
+        public static bool IsPlayMode()
+        {
+            if (EditorApplication.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode)
+                return true;
+            else
+                return false;
+        }
+
         private static void SceneSaver()
         {
             EditorApplication.hierarchyChanged += () =>
             {
-                if (Config.SceneAutosaver_Enabled && !Application.isPlaying && !EditorApplication.isPlayingOrWillChangePlaymode) //only works in Edit Mode
+                if (Config.SceneAutosaver_Enabled && !IsPlayMode()) //only works in Edit Mode
                 {
                     EditorSceneManager.SaveOpenScenes();
                     naxoLog.Log("SceneSaver", "Open Scenes saved");
