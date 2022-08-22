@@ -3,6 +3,8 @@ using naxokit.Helpers.Models;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Threading;
+using UnityEditor.SceneManagement;
 
 namespace naxokit.Helpers.Configs
 {
@@ -36,9 +38,11 @@ namespace naxokit.Helpers.Configs
             if (File.Exists(configPath))
             {
                 var config = JsonConvert.DeserializeObject<ConfigData>(File.ReadAllText(configPath));
+                //discord
                 discordrpc_Enabled = config.Discord.Enabled;
                 discordrpc_Username = config.Discord.Username;
 
+                //scene saver
                 sceneAutosaver_Enabled = config.SceneSaver.Enabled;
             }
         }
@@ -54,9 +58,11 @@ namespace naxokit.Helpers.Configs
             {
                 //create config file
                 config = new ConfigData();
+                //discord
                 config.Discord.Enabled = true;
                 config.Discord.Username = true;
 
+                //scene saver
                 config.SceneSaver.Enabled = false;
 
                 string json = JsonConvert.SerializeObject(config, Formatting.Indented);
@@ -68,9 +74,11 @@ namespace naxokit.Helpers.Configs
                 string json = File.ReadAllText(configPath);
                 config = JsonConvert.DeserializeObject<ConfigData>(json);
                 //update config file
+                //discord
                 config.Discord.Enabled = discordrpc_Enabled;
                 config.Discord.Username = discordrpc_Username;
 
+                //scene saver
                 config.SceneSaver.Enabled = sceneAutosaver_Enabled;
 
                 string json2 = JsonConvert.SerializeObject(config, Formatting.Indented);

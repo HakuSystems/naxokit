@@ -16,16 +16,16 @@ namespace naxokit
             Config.InitializeConfig();
             SceneSaver();
         }
-
         private static void SceneSaver()
         {
-            var currentScene = EditorSceneManager.GetActiveScene();
-
-            if (Config.SceneAutosaver_Enabled)
+            EditorApplication.hierarchyChanged += () =>
             {
-                naxoLog.Log("SceneSaver", "Saving scene: " + currentScene.name);
-                EditorSceneManager.SaveScene(currentScene);
-            }
+                if (Config.SceneAutosaver_Enabled && !Application.isPlaying && !EditorApplication.isPlayingOrWillChangePlaymode) //only works in Edit Mode
+                {
+                    EditorSceneManager.SaveOpenScenes();
+                    naxoLog.Log("SceneSaver", "Open Scenes saved");
+                }
+            };
         }
     }
 }

@@ -29,6 +29,7 @@ namespace naxokit.Screens
                 EditorGUILayout.BeginHorizontal();
                 {
                     EditorGUILayout.LabelField("Scene Autosaver ", EditorStyles.boldLabel);
+                    EditorGUILayout.TextField("Only saves in Edit Mode!", EditorStyles.centeredGreyMiniLabel);
                     Config.SceneAutosaver_Enabled = EditorGUILayout.Toggle("Enabled", Config.SceneAutosaver_Enabled);
                 }
                 EditorGUILayout.EndHorizontal();
