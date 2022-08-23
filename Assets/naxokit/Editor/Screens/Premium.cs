@@ -15,13 +15,17 @@ namespace naxokit.Screens
         {
             DrawLine.DrawHorizontalLine();
             EditorGUILayout.LabelField("Premium", EditorStyles.boldLabel);
-            if(GUILayout.Button("EasySearch"))
+            if (GUILayout.Button("EasySearch"))
             {
                 GetWindow<EasySearch>().Show();
             }
-            if(GUILayout.Button("NaxoLoader"))
+            if (GUILayout.Button("NaxoLoader"))
             {
                 GetWindow<NaxoLoader>().Show();
+            }
+            if (GUILayout.Button("BackupManager"))
+            {
+                GetWindow<BackupManager>().Show();
             }
             DrawLine.DrawHorizontalLine();
         }

@@ -117,6 +117,7 @@ namespace naxokit.Screens
             }
 
             GUILayout.EndScrollView();
+            GUILayout.Label("Thanks for the Support on Patreon!", EditorStyles.centeredGreyMiniLabel);
 
         }
         private readonly List<Everything.Result> _results = new List<Everything.Result>();
