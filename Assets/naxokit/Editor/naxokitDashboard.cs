@@ -19,7 +19,6 @@ namespace naxokit
         bool SettingsOpen = false;
         bool CreditsOpen = false;
         bool UpdateOpen = false;
-        bool _isPlaying = false;
         public bool ToolsOpen = false;
         bool PremiumOpen = false;
         private static bool LoginOpen = true;
@@ -211,24 +210,18 @@ namespace naxokit
                         GUILayout.BeginHorizontal(GUI.skin.FindStyle(NaxoGUIStyleStyles.GUIStyleType.Toolbar.ToString()));
                         GUILayout.Button(naxoApiHelper.User.Username, GUI.skin.FindStyle(NaxoGUIStyleStyles.GUIStyleType.ProgressBarText.ToString()));
                         if (!hasSDK)
-                            if (GUILayout.Button("Install VRCSDK", EditorStyles.toolbarButton))
-                                GetWindow(typeof(VRCSDKInstaller));
+                            if (GUILayout.Button("Install nanoSDK", EditorStyles.toolbarButton))
+                                GetWindow(typeof(NANOSDKInstaller));
                         //check if user is in playmode
                         if (Naxoinit.IsPlayMode())
                         {
                             if (GUILayout.Button("Stop PlayMode", EditorStyles.toolbarButton))
-                            {
                                 EditorApplication.isPlaying = false;
-                                _isPlaying = false;
-                            }
                         }
                         else
                         {
                             if (GUILayout.Button("Start PlayMode", EditorStyles.toolbarButton))
-                            {
                                 EditorApplication.isPlaying = true;
-                                _isPlaying = true;
-                            }
                         }
                         GUILayout.FlexibleSpace();
                         if (GUILayout.Button("Logout", EditorStyles.toolbarButton))

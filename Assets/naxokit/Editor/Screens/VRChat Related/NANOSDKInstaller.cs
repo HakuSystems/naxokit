@@ -2,14 +2,17 @@ using UnityEngine;
 using UnityEditor;
 //TODO: Fetch the VRC SDK version from https://api.vrchat.cloud/api/1/config look for "downloadUrls" there should be 
 //a download url for the latest version of the SDK.
-public class VRCSDKInstaller : EditorWindow {
-    public static void ShowWindow() {
-        var window = GetWindow<VRCSDKInstaller>();
-        window.titleContent = new GUIContent("VRCSDKInstaller");
+public class NANOSDKInstaller : EditorWindow
+{
+    public static void ShowWindow()
+    {
+        var window = GetWindow<NANOSDKInstaller>();
+        window.titleContent = new GUIContent("NANOSDKInstaller");
         window.Show();
     }
 
-    private void OnGUI() {
-        
+    private void OnGUI()
+    {
+
     }
 }
