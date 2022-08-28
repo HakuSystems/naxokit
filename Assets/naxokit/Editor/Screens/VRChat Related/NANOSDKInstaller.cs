@@ -13,6 +13,10 @@ public class NANOSDKInstaller : EditorWindow
 
     private void OnGUI()
     {
-
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("it is Recommended to uninstall naxokit. since some scripts may not work after install", EditorStyles.wordWrappedLabel);
+        }
+        EditorGUILayout.EndHorizontal();
     }
 }

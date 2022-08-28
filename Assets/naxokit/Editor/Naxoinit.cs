@@ -6,6 +6,7 @@ using System.Threading;
 using UnityEditor.SceneManagement;
 using naxokit.Helpers.Logger;
 
+
 namespace naxokit
 {
     [InitializeOnLoad]
@@ -15,9 +16,7 @@ namespace naxokit
         {
             Config.InitializeConfig();
             SceneSaver();
-            IsPlayMode();
         }
-
         public static bool IsPlayMode()
         {
             if (EditorApplication.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode)
