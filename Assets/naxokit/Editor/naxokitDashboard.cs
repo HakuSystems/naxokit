@@ -69,6 +69,7 @@ namespace naxokit
         private void OnDestroy()
         {
             Settings.UpdateConfigsAndChangeRPC();
+            Config.UpdateConfig();
             AssetDatabase.Refresh();
         }
         public static void SetFinallyLoggedIn(bool isLoggedIn)
@@ -237,7 +238,7 @@ namespace naxokit
                         EditorGUILayout.BeginVertical();
                         if (GUILayout.Button("backuptest"))
                         {
-                            BackupManager.CreateBackup(Config.SaveAsUnitypackage_Enabled, Config.DeleteOldBackups_Enabled); //TODO path is null idk why
+                            BackupManager.CreateBackup(Config.BackupManager_SaveAsUnitypackage_Enabled, Config.BackupManager_DeleteOldBackups_Enabled); //TODO path is null idk why
                         }
                         foreach (DictionaryEntry tool in ToolNames())
                         {

@@ -14,36 +14,36 @@ namespace naxokit.Helpers.Configs
     public class Config
     {
         //BackupManager
-        private static bool saveAsUnitypackage_Enabled = true;
-        private static bool saveinProjectFolder_Enabled = true;
-        private static bool deleteOldBackups_Enabled = false;
-        private static bool autoBackup_Enabled = false;
-        private static string backupFolder_Selected = "";
+        private static bool backupManager_saveAsUnitypackage_Enabled = true;
+        private static bool backupManager_saveinProjectFolder_Enabled = true;
+        private static bool backupManager_deleteOldBackups_Enabled = false;
+        private static bool backupManager_autoBackup_Enabled = false;
+        private static string backupManager_backupFolder_Selected = "";
 
-        public static bool SaveAsUnitypackage_Enabled
+        public static bool BackupManager_SaveAsUnitypackage_Enabled
         {
-            get { return saveAsUnitypackage_Enabled; }
-            set { saveAsUnitypackage_Enabled = value; UpdateConfig(); }
+            get { return backupManager_saveAsUnitypackage_Enabled; }
+            set { backupManager_saveAsUnitypackage_Enabled = value; }
         }
-        public static bool SaveinProjectFolder_Enabled
+        public static bool BackupManager_SaveinProjectFolder_Enabled
         {
-            get { return saveinProjectFolder_Enabled; }
-            set { saveinProjectFolder_Enabled = value; UpdateConfig(); }
+            get { return backupManager_saveinProjectFolder_Enabled; }
+            set { backupManager_saveinProjectFolder_Enabled = value; }
         }
-        public static bool DeleteOldBackups_Enabled
+        public static bool BackupManager_DeleteOldBackups_Enabled
         {
-            get { return deleteOldBackups_Enabled; }
-            set { deleteOldBackups_Enabled = value; UpdateConfig(); }
+            get { return backupManager_deleteOldBackups_Enabled; }
+            set { backupManager_deleteOldBackups_Enabled = value; }
         }
-        public static string BackupFolder_Selected
+        public static string BackupManager_BackupFolder_Selected
         {
-            get { return backupFolder_Selected; }
-            set { backupFolder_Selected = value; UpdateConfig(); }
+            get { return backupManager_backupFolder_Selected; }
+            set { backupManager_backupFolder_Selected = value; }
         }
-        public static bool AutoBackup_Enabled
+        public static bool BackupManager_AutoBackup_Enabled
         {
-            get { return autoBackup_Enabled; }
-            set { autoBackup_Enabled = value; UpdateConfig(); }
+            get { return backupManager_autoBackup_Enabled; }
+            set { backupManager_autoBackup_Enabled = value; }
         }
 
         //SceneSaver
@@ -51,7 +51,7 @@ namespace naxokit.Helpers.Configs
         public static bool SceneAutosaver_Enabled
         {
             get { return sceneAutosaver_Enabled; }
-            set { sceneAutosaver_Enabled = value; UpdateConfig(); }
+            set { sceneAutosaver_Enabled = value; }
         }
 
         //DiscordRPC
@@ -60,12 +60,12 @@ namespace naxokit.Helpers.Configs
         public static bool Discordrpc_Enabled
         {
             get { return discordrpc_Enabled; }
-            set { discordrpc_Enabled = value; UpdateConfig(); }
+            set { discordrpc_Enabled = value; }
         }
         public static bool Discordrpc_Username
         {
             get { return discordrpc_Username; }
-            set { discordrpc_Username = value; UpdateConfig(); }
+            set { discordrpc_Username = value; }
         }
 
         public static void InitializeConfig()
@@ -93,18 +93,18 @@ namespace naxokit.Helpers.Configs
                 //create config file
                 config = new ConfigData();
 
-                WriteData(config);
+                WriteDefaults(config);
 
                 string json = JsonConvert.SerializeObject(config, Formatting.Indented);
                 File.WriteAllText(configPath, json);
             }
             else
             {
-                //read config file
+                //Write to config file
                 string json = File.ReadAllText(configPath);
                 config = JsonConvert.DeserializeObject<ConfigData>(json);
 
-                UpdateData(config);
+                WritetoConfig(config);
 
                 string json2 = JsonConvert.SerializeObject(config, Formatting.Indented);
                 File.WriteAllText(configPath, json2);
@@ -114,21 +114,28 @@ namespace naxokit.Helpers.Configs
         private static void UpdateData(ConfigData config) //when Config file Updates the values
         {
             //discord
+            discordrpc_Enabled = config.Discord.Enabled;
+            discordrpc_Username = config.Discord.Username;
+            //BackupManager
+            BackupManager_SaveAsUnitypackage_Enabled = config.BackupManager.SaveAsUnitypackage;
+            backupManager_backupFolder_Selected = config.BackupManager.BackupFolder;
+            BackupManager_DeleteOldBackups_Enabled = config.BackupManager.DeleteOldBackups;
+            BackupManager_AutoBackup_Enabled = config.BackupManager.AutoBackup;
+            BackupManager_SaveinProjectFolder_Enabled = config.BackupManager.SaveinProjectFolder;
+        }
+
+        private static void WritetoConfig(ConfigData config)
+        {
             config.Discord.Enabled = discordrpc_Enabled;
             config.Discord.Username = discordrpc_Username;
 
-            //scene saver
-            config.SceneSaver.Enabled = sceneAutosaver_Enabled;
-
-            //BackupManager
-            config.BackupManager.SaveAsUnitypackage = saveAsUnitypackage_Enabled;
-            config.BackupManager.SaveinProjectFolder = saveinProjectFolder_Enabled;
-            config.BackupManager.DeleteOldBackups = deleteOldBackups_Enabled;
-            config.BackupManager.BackupFolder = backupFolder_Selected;
-            config.BackupManager.AutoBackup = autoBackup_Enabled;
+            config.BackupManager.SaveAsUnitypackage = BackupManager_SaveAsUnitypackage_Enabled;
+            config.BackupManager.BackupFolder = BackupManager_BackupFolder_Selected;
+            config.BackupManager.DeleteOldBackups = BackupManager_DeleteOldBackups_Enabled;
+            config.BackupManager.SaveinProjectFolder = BackupManager_SaveinProjectFolder_Enabled;
+            config.BackupManager.AutoBackup = BackupManager_AutoBackup_Enabled;
         }
-
-        private static void WriteData(ConfigData config) //When Config file was created
+        private static void WriteDefaults(ConfigData config) //When Config file was created
         {
             //discord
             config.Discord.Enabled = true;
@@ -143,6 +150,12 @@ namespace naxokit.Helpers.Configs
             config.BackupManager.DeleteOldBackups = false;
             config.BackupManager.BackupFolder = "";
             config.BackupManager.AutoBackup = false;
+        }
+
+        private static void Debug_DumpValues() 
+        {
+            naxoLog.Log("Debug", Convert.ToString(discordrpc_Enabled));
+            naxoLog.Log("Debug", Convert.ToString(discordrpc_Username));
         }
     }
 }
