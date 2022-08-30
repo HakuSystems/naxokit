@@ -5,7 +5,8 @@ using System;
 using System.Threading;
 using UnityEditor.SceneManagement;
 using naxokit.Helpers.Logger;
-
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 namespace naxokit
 {
@@ -21,10 +22,15 @@ namespace naxokit
         }
         public static bool IsPlayMode()
         {
+            var scenePath = "Assets/naxokit/Helpers/Scenes/naxokitPlayModeTools.unity";
             if (EditorApplication.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                if (!EditorSceneManager.GetSceneByPath(scenePath).isLoaded)
+                    EditorSceneManager.LoadSceneInPlayMode(scenePath, new LoadSceneParameters(LoadSceneMode.Additive));
+
                 return true;
-            else
-                return false;
+            }
+            return false;
         }
 
         private static void SceneSaver()
