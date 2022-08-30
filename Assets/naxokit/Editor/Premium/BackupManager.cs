@@ -45,6 +45,9 @@ public class BackupManager : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             Config.BackupManager_SaveinProjectFolder_Enabled = EditorGUILayout.Toggle("Save in Project Folder", Config.BackupManager_SaveinProjectFolder_Enabled);
+            if (!Directory.Exists(Config.BackupManager_BackupFolder_Selected))
+                Directory.CreateDirectory(Config.BackupManager_BackupFolder_Selected);
+
             if (!Config.BackupManager_SaveinProjectFolder_Enabled)
             {
                 if (GUILayout.Button("Select Folder on Computer"))
