@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/naxokit/Helpers/Scenes/naxokitPlayModeTools.unity
+    guid: 7d96d82feefa06a488077eed273b3b30
   m_configObjects: {}
