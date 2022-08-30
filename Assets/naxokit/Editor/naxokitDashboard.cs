@@ -264,7 +264,7 @@ namespace naxokit
                                         }
                                         break;
                                     case "Premium":
-                                        if ((naxoApiHelper.User.IsPremium)) //TODO: Find a better solution for Premium Checks
+                                        if (Config.IsPremiumBoolSinceLastCheck)
                                         {
                                             PremiumOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, PremiumOpen);
                                             if (PremiumOpen)

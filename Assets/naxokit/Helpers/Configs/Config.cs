@@ -13,6 +13,11 @@ namespace naxokit.Helpers.Configs
 {
     public class Config
     {
+
+        //PremiumCheck
+        public static DateTime LastPremiumCheck { get; set; }
+        public static bool IsPremiumBoolSinceLastCheck { get; set; }
+
         //DiscordRPC
         public static bool Discordrpc_Enabled { get; set; }
         public static bool Discordrpc_Username { get; set; }
@@ -23,10 +28,10 @@ namespace naxokit.Helpers.Configs
         //BackupManager
         public static bool BackupManager_SaveAsUnitypackage_Enabled { get; set; }
         public static bool BackupManager_SaveinProjectFolder_Enabled { get; set; }
-        public static bool BackupManager_DeleteOldBackups_Enabled { get; set; } 
+        public static bool BackupManager_DeleteOldBackups_Enabled { get; set; }
         public static string BackupManager_BackupFolder_Selected { get; set; }
         public static bool BackupManager_AutoBackup_Enabled { get; set; }
-        
+
         public static void InitializeConfig()
         {
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -72,9 +77,17 @@ namespace naxokit.Helpers.Configs
 
         private static void UpdateData(ConfigData config) //when Config file Updates the values
         {
+            //PremiumCheck
+            LastPremiumCheck = config.PremiumCheck.LastPremiumCheck;
+            IsPremiumBoolSinceLastCheck = config.PremiumCheck.IsPremiumBoolSinceLastCheck;
+
             //discord
             Discordrpc_Enabled = config.Discord.Enabled;
             Discordrpc_Username = config.Discord.Username;
+
+            //SceneSaver
+            SceneAutosaver_Enabled = config.SceneSaver.Enabled;
+
             //BackupManager
             BackupManager_SaveAsUnitypackage_Enabled = config.BackupManager.SaveAsUnitypackage;
             BackupManager_BackupFolder_Selected = config.BackupManager.BackupFolder;
@@ -85,9 +98,17 @@ namespace naxokit.Helpers.Configs
 
         private static void WritetoConfig(ConfigData config)
         {
+            //PremiumCheck
+            config.PremiumCheck.LastPremiumCheck = LastPremiumCheck;
+            config.PremiumCheck.IsPremiumBoolSinceLastCheck = IsPremiumBoolSinceLastCheck;
+            //discord
             config.Discord.Enabled = Discordrpc_Enabled;
             config.Discord.Username = Discordrpc_Username;
 
+            //SceneSaver
+            config.SceneSaver.Enabled = SceneAutosaver_Enabled;
+
+            //BackupManager
             config.BackupManager.SaveAsUnitypackage = BackupManager_SaveAsUnitypackage_Enabled;
             config.BackupManager.BackupFolder = BackupManager_BackupFolder_Selected;
             config.BackupManager.DeleteOldBackups = BackupManager_DeleteOldBackups_Enabled;
@@ -96,6 +117,11 @@ namespace naxokit.Helpers.Configs
         }
         private static void WriteDefaults(ConfigData config) //When Config file was created
         {
+            //PremiumCheck
+            config.PremiumCheck.LastPremiumCheck = DateTime.MinValue;
+            config.PremiumCheck.IsPremiumBoolSinceLastCheck = false;
+
+
             //discord
             config.Discord.Enabled = true;
             config.Discord.Username = true;
@@ -111,7 +137,7 @@ namespace naxokit.Helpers.Configs
             config.BackupManager.AutoBackup = false;
         }
 
-        private static void Debug_DumpValues() 
+        private static void Debug_DumpValues()
         {
             naxoLog.Log("Debug", Convert.ToString(Discordrpc_Enabled));
             naxoLog.Log("Debug", Convert.ToString(Discordrpc_Username));

@@ -1,3 +1,4 @@
+using System;
 using System.Security;
 namespace naxokit.Helpers.Models
 {
@@ -8,10 +9,18 @@ namespace naxokit.Helpers.Models
             Discord = new DiscordData();
             SceneSaver = new SceneSaverData();
             BackupManager = new BackupManagerData();
+            PremiumCheck = new PremiumCheckData();
         }
+        public PremiumCheckData PremiumCheck { get; set; }
         public SceneSaverData SceneSaver { get; set; }
         public DiscordData Discord { get; set; }
         public BackupManagerData BackupManager { get; set; }
+    }
+
+    public class PremiumCheckData
+    {
+        public DateTime LastPremiumCheck { get; set; }
+        public bool IsPremiumBoolSinceLastCheck { get; set; }
     }
 
     public class BackupManagerData

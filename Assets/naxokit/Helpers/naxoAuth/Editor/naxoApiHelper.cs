@@ -68,6 +68,9 @@ namespace naxokit.Helpers.Auth
             User = data.Data;
             naxoLog.Log("naxoApiHelper", "Sucsessfully got User: " + User.Username);
             naxokitDashboard.SetFinallyLoggedIn(true);
+            Config.IsPremiumBoolSinceLastCheck = User.IsPremium;
+            Config.LastPremiumCheck = DateTime.Now;
+            Config.UpdateConfig();
             running = false;
         }
         public static async void RedeemLicense(string code)

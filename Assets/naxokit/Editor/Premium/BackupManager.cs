@@ -142,6 +142,8 @@ public class BackupManager : EditorWindow
 
     public static void CreateBackup(bool _saveAsUnitypackage, bool _deleteOldBackups)
     {
+        if (!Config.IsPremiumBoolSinceLastCheck)
+            return;
         if (!Directory.Exists(Config.BackupManager_BackupFolder_Selected))
             Directory.CreateDirectory(Config.BackupManager_BackupFolder_Selected);
 
@@ -168,19 +170,19 @@ public class BackupManager : EditorWindow
                 var packagePath = backupPath + "/" + backupName + ".unitypackage";
                 AssetDatabase.ExportPackage(assets.ToArray(), packagePath, ExportPackageOptions.Recurse);
             }
-            
+
             if (_deleteOldBackups)
             {
                 var directories = Directory.GetDirectories(Config.BackupManager_BackupFolder_Selected, "*", SearchOption.TopDirectoryOnly);
                 foreach (var directory in directories)
                 {
-                    if(directory.Contains(backupName)) continue;
+                    if (directory.Contains(backupName)) continue;
                     Directory.Delete(directory, true);
                     File.Delete(directory + ".meta");
                 }
             }
 
-            
+
             naxoLog.Log("BackupManager", "Backup created");
         }
         EditorUtility.ClearProgressBar();
