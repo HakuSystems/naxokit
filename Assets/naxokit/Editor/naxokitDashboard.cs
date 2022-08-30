@@ -101,7 +101,7 @@ namespace naxokit
                                             && naxokitUpdater.LatestVersion == null
                                             && naxokitUpdater.LatestBetaVersion == null)
                     {
-                        EditorGUILayout.LabelField("Please wait while we load the latest version data.");
+                        EditorGUILayout.LabelField("Please wait...", EditorStyles.boldLabel);
                         return;
                     }
                     #region Login and Signup
