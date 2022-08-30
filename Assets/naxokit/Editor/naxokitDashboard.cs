@@ -235,10 +235,6 @@ namespace naxokit
                         GUILayout.EndHorizontal();
 
                         EditorGUILayout.BeginVertical();
-                        if (GUILayout.Button("backuptest"))
-                        {
-                            BackupManager.CreateBackup(Config.BackupManager_SaveAsUnitypackage_Enabled, Config.BackupManager_DeleteOldBackups_Enabled); //TODO path is null idk why
-                        }
                         foreach (DictionaryEntry tool in ToolNames())
                         {
                             if (naxoApiHelper.IsUserLoggedIn())
