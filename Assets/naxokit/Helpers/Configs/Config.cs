@@ -13,61 +13,20 @@ namespace naxokit.Helpers.Configs
 {
     public class Config
     {
-        //BackupManager
-        private static bool backupManager_saveAsUnitypackage_Enabled = true;
-        private static bool backupManager_saveinProjectFolder_Enabled = true;
-        private static bool backupManager_deleteOldBackups_Enabled = false;
-        private static bool backupManager_autoBackup_Enabled = false;
-        private static string backupManager_backupFolder_Selected = "";
-
-        public static bool BackupManager_SaveAsUnitypackage_Enabled
-        {
-            get { return backupManager_saveAsUnitypackage_Enabled; }
-            set { backupManager_saveAsUnitypackage_Enabled = value; }
-        }
-        public static bool BackupManager_SaveinProjectFolder_Enabled
-        {
-            get { return backupManager_saveinProjectFolder_Enabled; }
-            set { backupManager_saveinProjectFolder_Enabled = value; }
-        }
-        public static bool BackupManager_DeleteOldBackups_Enabled
-        {
-            get { return backupManager_deleteOldBackups_Enabled; }
-            set { backupManager_deleteOldBackups_Enabled = value; }
-        }
-        public static string BackupManager_BackupFolder_Selected
-        {
-            get { return backupManager_backupFolder_Selected; }
-            set { backupManager_backupFolder_Selected = value; }
-        }
-        public static bool BackupManager_AutoBackup_Enabled
-        {
-            get { return backupManager_autoBackup_Enabled; }
-            set { backupManager_autoBackup_Enabled = value; }
-        }
+        //DiscordRPC
+        public static bool Discordrpc_Enabled { get; set; }
+        public static bool Discordrpc_Username { get; set; }
 
         //SceneSaver
-        private static bool sceneAutosaver_Enabled = false;
-        public static bool SceneAutosaver_Enabled
-        {
-            get { return sceneAutosaver_Enabled; }
-            set { sceneAutosaver_Enabled = value; }
-        }
+        public static bool SceneAutosaver_Enabled { get; set; }
 
-        //DiscordRPC
-        private static bool discordrpc_Enabled = false;
-        private static bool discordrpc_Username = false;
-        public static bool Discordrpc_Enabled
-        {
-            get { return discordrpc_Enabled; }
-            set { discordrpc_Enabled = value; }
-        }
-        public static bool Discordrpc_Username
-        {
-            get { return discordrpc_Username; }
-            set { discordrpc_Username = value; }
-        }
-
+        //BackupManager
+        public static bool BackupManager_SaveAsUnitypackage_Enabled { get; set; }
+        public static bool BackupManager_SaveinProjectFolder_Enabled { get; set; }
+        public static bool BackupManager_DeleteOldBackups_Enabled { get; set; } 
+        public static string BackupManager_BackupFolder_Selected { get; set; }
+        public static bool BackupManager_AutoBackup_Enabled { get; set; }
+        
         public static void InitializeConfig()
         {
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -77,7 +36,6 @@ namespace naxokit.Helpers.Configs
             {
                 var config = JsonConvert.DeserializeObject<ConfigData>(File.ReadAllText(configPath));
                 UpdateData(config);
-
             }
         }
         public static void UpdateConfig()
@@ -94,6 +52,7 @@ namespace naxokit.Helpers.Configs
                 config = new ConfigData();
 
                 WriteDefaults(config);
+                UpdateData(config);
 
                 string json = JsonConvert.SerializeObject(config, Formatting.Indented);
                 File.WriteAllText(configPath, json);
@@ -114,11 +73,11 @@ namespace naxokit.Helpers.Configs
         private static void UpdateData(ConfigData config) //when Config file Updates the values
         {
             //discord
-            discordrpc_Enabled = config.Discord.Enabled;
-            discordrpc_Username = config.Discord.Username;
+            Discordrpc_Enabled = config.Discord.Enabled;
+            Discordrpc_Username = config.Discord.Username;
             //BackupManager
             BackupManager_SaveAsUnitypackage_Enabled = config.BackupManager.SaveAsUnitypackage;
-            backupManager_backupFolder_Selected = config.BackupManager.BackupFolder;
+            BackupManager_BackupFolder_Selected = config.BackupManager.BackupFolder;
             BackupManager_DeleteOldBackups_Enabled = config.BackupManager.DeleteOldBackups;
             BackupManager_AutoBackup_Enabled = config.BackupManager.AutoBackup;
             BackupManager_SaveinProjectFolder_Enabled = config.BackupManager.SaveinProjectFolder;
@@ -126,8 +85,8 @@ namespace naxokit.Helpers.Configs
 
         private static void WritetoConfig(ConfigData config)
         {
-            config.Discord.Enabled = discordrpc_Enabled;
-            config.Discord.Username = discordrpc_Username;
+            config.Discord.Enabled = Discordrpc_Enabled;
+            config.Discord.Username = Discordrpc_Username;
 
             config.BackupManager.SaveAsUnitypackage = BackupManager_SaveAsUnitypackage_Enabled;
             config.BackupManager.BackupFolder = BackupManager_BackupFolder_Selected;
@@ -154,8 +113,8 @@ namespace naxokit.Helpers.Configs
 
         private static void Debug_DumpValues() 
         {
-            naxoLog.Log("Debug", Convert.ToString(discordrpc_Enabled));
-            naxoLog.Log("Debug", Convert.ToString(discordrpc_Username));
+            naxoLog.Log("Debug", Convert.ToString(Discordrpc_Enabled));
+            naxoLog.Log("Debug", Convert.ToString(Discordrpc_Username));
         }
     }
 }

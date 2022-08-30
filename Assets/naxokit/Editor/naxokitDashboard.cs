@@ -69,7 +69,6 @@ namespace naxokit
         private void OnDestroy()
         {
             Settings.UpdateConfigsAndChangeRPC();
-            Config.UpdateConfig();
             AssetDatabase.Refresh();
         }
         public static void SetFinallyLoggedIn(bool isLoggedIn)

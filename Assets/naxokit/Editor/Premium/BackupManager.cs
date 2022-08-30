@@ -28,7 +28,6 @@ public class BackupManager : EditorWindow
     }
     private void OnDestroy()
     {
-        Settings.UpdateConfigsAndChangeRPC();
         Config.UpdateConfig();
         AssetDatabase.Refresh();
     }
@@ -76,6 +75,7 @@ public class BackupManager : EditorWindow
                         foreach (var directory in directories)
                         {
                             Directory.Delete(directory, true);
+                            File.Delete(directory + ".meta");
                         }
                         naxoLog.Log("BackupManager", "All backups deleted");
                     }
@@ -144,20 +144,8 @@ public class BackupManager : EditorWindow
 
         if (Directory.Exists(Config.BackupManager_BackupFolder_Selected))
         {
-            if (_deleteOldBackups)
-            {
-                var directories = Directory.GetDirectories(Config.BackupManager_BackupFolder_Selected);
-                foreach (var directory in directories)
-                {
-                    Directory.Delete(directory, true);
-                }
-            }
-
             var backupName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-            var packageName = "naxokit-backup-" + backupName;
-            var backupPath = Config.BackupManager_BackupFolder_Selected + "/" + packageName;
-            if (Directory.Exists(backupPath))
-                Directory.Delete(backupPath, true);
+            var backupPath = Config.BackupManager_BackupFolder_Selected + "/" + backupName;
             Directory.CreateDirectory(backupPath);
             var files = Directory.GetFiles(Application.dataPath, "*", SearchOption.AllDirectories);
             if (!_saveAsUnitypackage)
@@ -165,7 +153,7 @@ public class BackupManager : EditorWindow
                 foreach (var file in files)
                 {
                     var relativePath = file.Replace(Application.dataPath, "");
-                    var destination = backupPath + relativePath;
+                    var destination = backupPath + relativePath.Replace("\\", "/");
                     var destinationDirectory = Path.GetDirectoryName(destination);
                     if (!Directory.Exists(destinationDirectory))
                         Directory.CreateDirectory(destinationDirectory);
@@ -174,9 +162,22 @@ public class BackupManager : EditorWindow
             }
             else
             {
-                var packagePath = backupPath + "/" + packageName + ".unitypackage";
+                var packagePath = backupPath + "/" + backupName + ".unitypackage";
                 AssetDatabase.ExportPackage(assets.ToArray(), packagePath, ExportPackageOptions.Recurse);
             }
+            
+            if (_deleteOldBackups)
+            {
+                var directories = Directory.GetDirectories(Config.BackupManager_BackupFolder_Selected, "*", SearchOption.TopDirectoryOnly);
+                foreach (var directory in directories)
+                {
+                    if(directory.Contains(backupName)) continue;
+                    Directory.Delete(directory, true);
+                    File.Delete(directory + ".meta");
+                }
+            }
+
+            
             naxoLog.Log("BackupManager", "Backup created");
         }
         EditorUtility.ClearProgressBar();
