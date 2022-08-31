@@ -1,11 +1,7 @@
 using UnityEditor;
-using UnityEngine;
 using naxokit.Helpers.Configs;
-using System;
-using System.Threading;
 using UnityEditor.SceneManagement;
 using naxokit.Helpers.Logger;
-using System.Linq;
 using UnityEngine.SceneManagement;
 
 namespace naxokit
