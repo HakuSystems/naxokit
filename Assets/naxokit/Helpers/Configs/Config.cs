@@ -29,6 +29,8 @@ namespace naxokit.Helpers.Configs
         public static bool BackupManager_DeleteOldBackups_Enabled { get; set; }
         public static string BackupManager_BackupFolder_Selected { get; set; }
         public static bool BackupManager_AutoBackup_Enabled { get; set; }
+        //NaxoPlayMode Tools
+        public static bool NaxoPlayModeTools_Enabled { get; set; }
 
         public static void InitializeConfig()
         {
@@ -96,6 +98,8 @@ namespace naxokit.Helpers.Configs
             BackupManager_DeleteOldBackups_Enabled = config.BackupManager.DeleteOldBackups;
             BackupManager_AutoBackup_Enabled = config.BackupManager.AutoBackup;
             BackupManager_SaveinProjectFolder_Enabled = config.BackupManager.SaveinProjectFolder;
+            //NaxoPlayMode Tools
+            NaxoPlayModeTools_Enabled = config.NaxoPlayModeTools.Enabled;
         }
 
         private static void WritetoConfig(ConfigData config)
@@ -120,6 +124,8 @@ namespace naxokit.Helpers.Configs
             config.BackupManager.DeleteOldBackups = BackupManager_DeleteOldBackups_Enabled;
             config.BackupManager.SaveinProjectFolder = BackupManager_SaveinProjectFolder_Enabled;
             config.BackupManager.AutoBackup = BackupManager_AutoBackup_Enabled;
+            //NaxoPlayMode Tools
+            config.NaxoPlayModeTools.Enabled = NaxoPlayModeTools_Enabled;
         }
         private static void WriteDefaults(ConfigData config) //When Config file was created
         {
@@ -146,6 +152,8 @@ namespace naxokit.Helpers.Configs
             config.BackupManager.DeleteOldBackups = false;
             config.BackupManager.BackupFolder = "";
             config.BackupManager.AutoBackup = false;
+            //NaxoPlayMode Tools
+            config.NaxoPlayModeTools.Enabled = false;
         }
     }
 }

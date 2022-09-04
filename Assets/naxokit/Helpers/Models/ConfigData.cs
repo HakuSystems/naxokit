@@ -13,12 +13,19 @@ namespace naxokit.Helpers.Models
             SceneSaver = new SceneSaverData();
             BackupManager = new BackupManagerData();
             PremiumCheck = new PremiumCheckData();
+            NaxoPlayModeTools = new NaxoPlayModeToolsData();
         }
         public NaxoAuthData NaxoAuth { get; set; }
+        public NaxoPlayModeToolsData NaxoPlayModeTools { get; set; }
         public PremiumCheckData PremiumCheck { get; set; }
         public SceneSaverData SceneSaver { get; set; }
         public DiscordData Discord { get; set; }
         public BackupManagerData BackupManager { get; set; }
+    }
+
+    public class NaxoPlayModeToolsData
+    {
+        public bool Enabled { get; set; }
     }
 
     public class NaxoAuthData

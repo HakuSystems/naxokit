@@ -1,4 +1,5 @@
-﻿using naxokit.Helpers.Auth;
+﻿using System.Timers;
+using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
 using naxokit.Helpers.Logger;
 using naxokit.Styles;
@@ -16,26 +17,47 @@ namespace naxokit.Screens
             EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical();
             {
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
                 EditorGUILayout.LabelField("Discord Rich Presence", EditorStyles.boldLabel);
                 EditorGUILayout.BeginHorizontal();
                 {
                     Config.Discordrpc_Enabled = EditorGUILayout.Toggle("Enabled", Config.Discordrpc_Enabled);
-                    EditorGUILayout.TextField("Enable/Disable Requries Restart!", EditorStyles.centeredGreyMiniLabel);
-                    Config.Discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.Discordrpc_Username);
+                    EditorGUILayout.TextField("Unity Requries Restart!", EditorStyles.centeredGreyMiniLabel);
                 }
                 EditorGUILayout.EndHorizontal();
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
                 EditorGUILayout.BeginHorizontal();
+                {
+                    Config.Discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.Discordrpc_Username);
+                    if (Config.Discordrpc_Username)
+                        EditorGUILayout.TextField("Shown", EditorStyles.centeredGreyMiniLabel);
+                    else
+                        EditorGUILayout.TextField("Hidden", EditorStyles.centeredGreyMiniLabel);
+                }
+                EditorGUILayout.EndHorizontal();
+
+
+                GUILayout.Space(5);
+
+                EditorGUILayout.BeginVertical();
                 {
                     EditorGUILayout.LabelField("Scene Autosaver ", EditorStyles.boldLabel);
                     EditorGUILayout.TextField("Only saves in Edit Mode!", EditorStyles.centeredGreyMiniLabel);
                     Config.SceneAutosaver_Enabled = EditorGUILayout.Toggle("Enabled", Config.SceneAutosaver_Enabled);
                 }
-                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndVertical();
+
                 GUILayout.Space(5);
 
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
+                EditorGUILayout.BeginVertical();
+                {
+                    EditorGUILayout.LabelField("NaxoPlayMode Tools", EditorStyles.boldLabel);
+                    EditorGUILayout.TextField("Additional Settings for Playmode", EditorStyles.centeredGreyMiniLabel);
+                    Config.NaxoPlayModeTools_Enabled = EditorGUILayout.Toggle("Enabled", Config.NaxoPlayModeTools_Enabled);
+                }
+                EditorGUILayout.EndVertical();
+
+                GUILayout.Space(5);
+
+
             }
             EditorGUILayout.EndVertical();
 

@@ -21,8 +21,11 @@ namespace naxokit
             var scenePath = "Assets/naxokit/Helpers/Scenes/naxokitPlayModeTools.unity";
             if (EditorApplication.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode)
             {
-                if (!EditorSceneManager.GetSceneByPath(scenePath).isLoaded)
-                    EditorSceneManager.LoadSceneInPlayMode(scenePath, new LoadSceneParameters(LoadSceneMode.Additive));
+                if (Config.NaxoPlayModeTools_Enabled)
+                {
+                    if (!EditorSceneManager.GetSceneByPath(scenePath).isLoaded)
+                        EditorSceneManager.LoadSceneInPlayMode(scenePath, new LoadSceneParameters(LoadSceneMode.Additive));
+                }
 
                 return true;
             }
