@@ -8,6 +8,9 @@ namespace naxokit.Helpers.Configs
 {
     public class Config
     {
+        //NaxoAuth
+        public static string AuthKey { get; set; }
+        public static string Password { get; set; }
 
         //PremiumCheck
         public static DateTime LastPremiumCheck { get; set; }
@@ -72,6 +75,10 @@ namespace naxokit.Helpers.Configs
 
         private static void UpdateData(ConfigData config) //when Config file Updates the values
         {
+            //NaxoAuth
+            AuthKey = config.NaxoAuth.AuthKey;
+            Password = config.NaxoAuth.Password;
+
             //PremiumCheck
             LastPremiumCheck = config.PremiumCheck.LastPremiumCheck;
             IsPremiumBoolSinceLastCheck = config.PremiumCheck.IsPremiumBoolSinceLastCheck;
@@ -93,6 +100,10 @@ namespace naxokit.Helpers.Configs
 
         private static void WritetoConfig(ConfigData config)
         {
+            //NaxoAuth
+            config.NaxoAuth.AuthKey = AuthKey;
+            config.NaxoAuth.Password = Password;
+
             //PremiumCheck
             config.PremiumCheck.LastPremiumCheck = LastPremiumCheck;
             config.PremiumCheck.IsPremiumBoolSinceLastCheck = IsPremiumBoolSinceLastCheck;
@@ -112,6 +123,11 @@ namespace naxokit.Helpers.Configs
         }
         private static void WriteDefaults(ConfigData config) //When Config file was created
         {
+            //NaxoAuth
+            config.NaxoAuth.AuthKey = "";
+            config.NaxoAuth.Password = "";
+
+
             //PremiumCheck
             config.PremiumCheck.LastPremiumCheck = DateTime.MinValue;
             config.PremiumCheck.IsPremiumBoolSinceLastCheck = false;
@@ -130,12 +146,6 @@ namespace naxokit.Helpers.Configs
             config.BackupManager.DeleteOldBackups = false;
             config.BackupManager.BackupFolder = "";
             config.BackupManager.AutoBackup = false;
-        }
-
-        private static void Debug_DumpValues()
-        {
-            naxoLog.Log("Debug", Convert.ToString(Discordrpc_Enabled));
-            naxoLog.Log("Debug", Convert.ToString(Discordrpc_Username));
         }
     }
 }

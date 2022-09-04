@@ -28,7 +28,7 @@ namespace naxokit.Helpers.Auth
 
         public static bool IsUserLoggedIn()
         {
-            if (User == null && !string.IsNullOrEmpty(auth_api.Config.AuthKey) && !running) CheckUserSelf();
+            if (User == null && !string.IsNullOrEmpty(Config.AuthKey) && !running) CheckUserSelf();
             return User != null;
         }
 
@@ -38,14 +38,14 @@ namespace naxokit.Helpers.Auth
             naxoLog.Log("naxoApiHelper", "Clearing Login Data");
             naxokitDashboard.finallyLoggedIn = false;
             User = null;
-            auth_api.Config.AuthKey = null;
-            auth_api.Save();
+            Config.AuthKey = null;
+            Config.UpdateConfig();
             DiscordRPC.naxokitRPC.UpdateRPC();
         }
         private static async Task<HttpResponseMessage> MakeApiCall(HttpRequestMessage request)
         {
-            if (!string.IsNullOrEmpty(auth_api.Config.AuthKey))
-                request.Headers.Add("Auth-Key", auth_api.Config.AuthKey);
+            if (!string.IsNullOrEmpty(Config.AuthKey))
+                request.Headers.Add("Auth-Key", Config.AuthKey);
 
             var response = await client.SendAsync(request);
             var data = JsonConvert.DeserializeObject<ApiData.ApiBaseResponse<object>>(await response.Content.ReadAsStringAsync());
@@ -106,8 +106,8 @@ namespace naxokit.Helpers.Auth
             naxoLog.Log("naxoApiHelper", "Login Successful");
             if (naxokitDashboard.savePasswordLocally)
                 SaveRecivedPassword(password);
-            auth_api.Config.AuthKey = data.Data.AuthKey;
-            auth_api.Save();
+            Config.AuthKey = data.Data.AuthKey;
+            Config.UpdateConfig();
             CheckUserSelf();
             naxokitDashboard.SetFinallyLoggedIn(true);
             naxokit.DiscordRPC.naxokitRPC.UpdateRPC();
@@ -116,15 +116,15 @@ namespace naxokit.Helpers.Auth
         private static void SaveRecivedPassword(string password)
         {
             naxoLog.Log("naxoApiHelper", "Saving Password");
-            auth_api.Config.Password = password;
-            auth_api.Save();
+            Config.Password = password;
+            Config.UpdateConfig();
         }
 
         public static string GetSavedPassword()
         {
-            if (string.IsNullOrEmpty(auth_api.Config.Password))
+            if (string.IsNullOrEmpty(Config.Password))
                 return "";
-            return auth_api.Config.Password;
+            return Config.Password;
         }
 
         public static void Logout() => ClearLogin();

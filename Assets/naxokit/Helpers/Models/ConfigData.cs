@@ -1,20 +1,30 @@
 using System;
 using System.Security;
+using JetBrains.Annotations;
+
 namespace naxokit.Helpers.Models
 {
     public class ConfigData
     {
         public ConfigData()
         {
+            NaxoAuth = new NaxoAuthData();
             Discord = new DiscordData();
             SceneSaver = new SceneSaverData();
             BackupManager = new BackupManagerData();
             PremiumCheck = new PremiumCheckData();
         }
+        public NaxoAuthData NaxoAuth { get; set; }
         public PremiumCheckData PremiumCheck { get; set; }
         public SceneSaverData SceneSaver { get; set; }
         public DiscordData Discord { get; set; }
         public BackupManagerData BackupManager { get; set; }
+    }
+
+    public class NaxoAuthData
+    {
+        [CanBeNull] public string AuthKey { get; set; }
+        [CanBeNull] public string Password { get; set; }
     }
 
     public class PremiumCheckData

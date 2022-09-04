@@ -121,17 +121,17 @@ namespace naxokit
                                     savePasswordLocally = EditorGUILayout.Toggle("Save Password Locally", savePasswordLocally);
                                     EditorGUILayout.LabelField(passStatus, EditorStyles.centeredGreyMiniLabel);
                                     passStatus = "no Password Saved";
-                                    if (auth_api.Config.Password != null)
+                                    if (Config.Password != null)
                                     {
                                         passStatus = "Password available";
                                         savePasswordLocally = true;
                                         passwordInput = naxoApiHelper.GetSavedPassword();
                                         if (GUILayout.Button("Clear Password"))
                                         {
-                                            auth_api.Config.Password = null;
+                                            Config.Password = null;
                                             passwordInput = null;
                                             usernameInput = null;
-                                            auth_api.Save();
+                                            Config.UpdateConfig();
                                         }
                                     }
                                 }
