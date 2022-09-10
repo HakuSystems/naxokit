@@ -9,6 +9,7 @@ namespace naxokit.Helpers.Models
         public ConfigData()
         {
             NaxoAuth = new NaxoAuthData();
+            TermsPolicy = new TermsPolicyData();
             Discord = new DiscordData();
             SceneSaver = new SceneSaverData();
             BackupManager = new BackupManagerData();
@@ -16,11 +17,17 @@ namespace naxokit.Helpers.Models
             NaxoPlayModeTools = new NaxoPlayModeToolsData();
         }
         public NaxoAuthData NaxoAuth { get; set; }
+        public TermsPolicyData TermsPolicy { get; set; }
         public NaxoPlayModeToolsData NaxoPlayModeTools { get; set; }
         public PremiumCheckData PremiumCheck { get; set; }
         public SceneSaverData SceneSaver { get; set; }
         public DiscordData Discord { get; set; }
         public BackupManagerData BackupManager { get; set; }
+    }
+
+    public class TermsPolicyData
+    {
+        public bool Accepted { get; set; }
     }
 
     public class NaxoPlayModeToolsData

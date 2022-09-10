@@ -28,7 +28,6 @@ namespace naxokit.Screens
                 {
                     MassImporter.ShowWindow();
                 }
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
             }
             EditorGUILayout.EndVertical();
 

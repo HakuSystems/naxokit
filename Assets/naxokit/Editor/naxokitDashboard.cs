@@ -1,6 +1,4 @@
-﻿using System.Runtime.Versioning;
-using System.Net.Http.Headers;
-using System.Diagnostics;
+﻿using System;
 using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
 using naxokit.Styles;
@@ -60,7 +58,6 @@ namespace naxokit
             await naxokitUpdater.UpdateVersionData();
             if (naxokitUpdater.CompareCurrentVersionWithLatest())
                 userIsUptoDate = true;
-
         }
         private void Update()
         {
@@ -107,7 +104,7 @@ namespace naxokit
                     #region Login and Signup
                     EditorGUILayout.BeginVertical();
                     {
-                        if (!naxoApiHelper.IsUserLoggedIn())
+                        if (!naxoApiHelper.IsUserLoggedIn() || naxoApiHelper.IsLoggedInAndVerified())
                         {
                             LoginOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("Login") as Texture2D, LoginOpen);
                             if (LoginOpen)
@@ -116,6 +113,7 @@ namespace naxokit
                                 EditorGUILayout.LabelField("Login");
                                 usernameInput = EditorGUILayout.TextField("Username", usernameInput);
                                 passwordInput = EditorGUILayout.PasswordField("Password", passwordInput);
+                                var termsOfService = new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.ScriptText.ToString());
                                 EditorGUILayout.BeginHorizontal();
                                 {
                                     savePasswordLocally = EditorGUILayout.Toggle("Save Password Locally", savePasswordLocally);
@@ -134,6 +132,13 @@ namespace naxokit
                                             Config.UpdateConfig();
                                         }
                                     }
+
+                                    if (termsOfService == null) throw new ArgumentNullException(nameof(termsOfService));
+                                    termsOfService.richText = true;
+                                    EditorGUILayout.LabelField("By logging in you agree to our ");
+                                    if (GUILayout.Button("Terms of Service", termsOfService))
+                                        Application.OpenURL("https://naxokit.com/terms-of-service.html");
+                                    
                                 }
                                 EditorGUILayout.EndHorizontal();
 
@@ -144,6 +149,26 @@ namespace naxokit
                                     else
                                         naxoApiHelper.Login(usernameInput, passwordInput);
                                 }
+                                DrawLine.DrawHorizontalLine();
+                                EditorGUILayout.BeginHorizontal();
+                                {
+                                    redeemCode = EditorGUILayout.TextField("License Key", redeemCode);
+                                    if (GUILayout.Button("?", GUILayout.Width(20)))
+                                    {
+                                        if (EditorUtility.DisplayDialog("Login", "To receive your License, you have to join our discord server!", "Lead me there"))
+                                        {
+                                            Application.OpenURL("https://naxokit.com/discord");
+                                        }
+                                    }
+                                }
+                                if (GUILayout.Button("Redeem"))
+                                {
+                                    if (string.IsNullOrEmpty(redeemCode))
+                                        EditorUtility.DisplayDialog("naxokitDashboard", "License Key cant be Empty", "Okay");
+                                    else
+                                        naxoApiHelper.RedeemLicense(redeemCode);
+                                }
+                                EditorGUILayout.EndHorizontal();
                                 DrawLine.DrawHorizontalLine();
                             }
                             SignUpOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("SignUp") as Texture2D, SignUpOpen);
@@ -171,31 +196,6 @@ namespace naxokit
 
                                 DrawLine.DrawHorizontalLine();
                             }
-                        }
-                        if (!naxoApiHelper.IsLoggedInAndVerified())
-                        {
-                            EditorGUILayout.LabelField("You are logged in but not verified", EditorStyles.centeredGreyMiniLabel);
-                            DrawLine.DrawHorizontalLine();
-                            EditorGUILayout.BeginHorizontal();
-                            {
-                                redeemCode = EditorGUILayout.TextField("License Key", redeemCode);
-                                if (GUILayout.Button("?", GUILayout.Width(20)))
-                                {
-                                    if (EditorUtility.DisplayDialog("Login", "To receive your License, you have to join our discord server!", "Lead me there"))
-                                    {
-                                        Application.OpenURL("https://naxokit.com/discord");
-                                    }
-                                }
-                            }
-                            if (GUILayout.Button("Redeem"))
-                            {
-                                if (string.IsNullOrEmpty(redeemCode))
-                                    EditorUtility.DisplayDialog("naxokitDashboard", "License Key cant be Empty", "Okay");
-                                else
-                                    naxoApiHelper.RedeemLicense(redeemCode);
-                            }
-                            EditorGUILayout.EndHorizontal();
-                            DrawLine.DrawHorizontalLine();
                         }
 
                     }

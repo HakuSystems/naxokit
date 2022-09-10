@@ -8,6 +8,9 @@ namespace naxokit.Helpers.Configs
 {
     public class Config
     {
+        //TermsPolicy
+        public static bool TermsPolicyAccepted { get; set; }
+
         //NaxoAuth
         public static string AuthKey { get; set; }
         public static string Password { get; set; }
@@ -77,6 +80,9 @@ namespace naxokit.Helpers.Configs
 
         private static void UpdateData(ConfigData config) //when Config file Updates the values
         {
+            //TermsPolicy
+            TermsPolicyAccepted = config.TermsPolicy.Accepted;
+
             //NaxoAuth
             AuthKey = config.NaxoAuth.AuthKey;
             Password = config.NaxoAuth.Password;
@@ -104,6 +110,10 @@ namespace naxokit.Helpers.Configs
 
         private static void WritetoConfig(ConfigData config)
         {
+            //TermsPolicy
+            config.TermsPolicy.Accepted = TermsPolicyAccepted;
+
+
             //NaxoAuth
             config.NaxoAuth.AuthKey = AuthKey;
             config.NaxoAuth.Password = Password;
@@ -129,6 +139,10 @@ namespace naxokit.Helpers.Configs
         }
         private static void WriteDefaults(ConfigData config) //When Config file was created
         {
+            //TermsPolicy
+            config.TermsPolicy.Accepted = false;
+
+
             //NaxoAuth
             config.NaxoAuth.AuthKey = "";
             config.NaxoAuth.Password = "";

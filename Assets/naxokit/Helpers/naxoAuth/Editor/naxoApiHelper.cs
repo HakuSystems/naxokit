@@ -6,6 +6,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using naxokit.Screens;
 using UnityEditor;
 using Random = System.Random;
 
@@ -111,6 +112,7 @@ namespace naxokit.Helpers.Auth
             CheckUserSelf();
             naxokitDashboard.SetFinallyLoggedIn(true);
             naxokit.DiscordRPC.naxokitRPC.UpdateRPC();
+            Config.TermsPolicyAccepted = true;
         }
 
         private static void SaveRecivedPassword(string password)
