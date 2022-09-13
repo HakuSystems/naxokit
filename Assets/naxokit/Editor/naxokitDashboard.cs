@@ -4,9 +4,11 @@ using naxokit.Helpers.Configs;
 using naxokit.Styles;
 using naxokit.Updater;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using naxokit.Helpers.Logger;
+using naxokit.Helpers.Models;
 using naxokit.Screens;
 
 namespace naxokit
@@ -47,7 +49,7 @@ namespace naxokit
 #endif
         }
 
-        private async void OnEnable()
+        private void OnEnable()
         {
             titleContent = new GUIContent("Dashboard");
             minSize = new Vector2(1000, 300);
@@ -55,9 +57,11 @@ namespace naxokit
             //check if user has the VRCSDK installed
             CheckSDK();
             //Loads the latest version from the server
+            /* TODO: Make this work
             await naxokitUpdater.UpdateVersionData();
             if (naxokitUpdater.CompareCurrentVersionWithLatest())
                 userIsUptoDate = true;
+                */
         }
         private void Update()
         {
@@ -94,6 +98,7 @@ namespace naxokit
             {
                 scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, false, GUILayout.Width(EditorGUIUtility.currentViewWidth));
                 {
+                    /* Todo: Make this work
                     if (naxokitUpdater.ServerVersionList == null
                                             && naxokitUpdater.LatestVersion == null
                                             && naxokitUpdater.LatestBetaVersion == null)
@@ -101,10 +106,11 @@ namespace naxokit
                         EditorGUILayout.LabelField("Please wait...", EditorStyles.boldLabel);
                         return;
                     }
+                    */
                     #region Login and Signup
                     EditorGUILayout.BeginVertical();
                     {
-                        if (!naxoApiHelper.IsUserLoggedIn() || naxoApiHelper.IsLoggedInAndVerified())
+                        if (!naxoApiHelper.IsUserLoggedIn())
                         {
                             LoginOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("Login") as Texture2D, LoginOpen);
                             if (LoginOpen)
@@ -149,27 +155,6 @@ namespace naxokit
                                     else
                                         naxoApiHelper.Login(usernameInput, passwordInput);
                                 }
-                                DrawLine.DrawHorizontalLine();
-                                EditorGUILayout.BeginHorizontal();
-                                {
-                                    redeemCode = EditorGUILayout.TextField("License Key", redeemCode);
-                                    if (GUILayout.Button("?", GUILayout.Width(20)))
-                                    {
-                                        if (EditorUtility.DisplayDialog("Login", "To receive your License, you have to join our discord server!", "Lead me there"))
-                                        {
-                                            Application.OpenURL("https://naxokit.com/discord");
-                                        }
-                                    }
-                                }
-                                if (GUILayout.Button("Redeem"))
-                                {
-                                    if (string.IsNullOrEmpty(redeemCode))
-                                        EditorUtility.DisplayDialog("naxokitDashboard", "License Key cant be Empty", "Okay");
-                                    else
-                                        naxoApiHelper.RedeemLicense(redeemCode);
-                                }
-                                EditorGUILayout.EndHorizontal();
-                                DrawLine.DrawHorizontalLine();
                             }
                             SignUpOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("SignUp") as Texture2D, SignUpOpen);
                             if (SignUpOpen)
@@ -197,6 +182,31 @@ namespace naxokit
                                 DrawLine.DrawHorizontalLine();
                             }
                         }
+                        if (!naxoApiHelper.IsLoggedInAndVerified())
+                        {
+                            EditorGUILayout.LabelField("You need to redeem a license key.", EditorStyles.centeredGreyMiniLabel);
+                            DrawLine.DrawHorizontalLine();
+                            EditorGUILayout.BeginHorizontal();
+                            {
+                                redeemCode = EditorGUILayout.TextField("License Key", redeemCode);
+                                if (GUILayout.Button("?", GUILayout.Width(20)))
+                                {
+                                    if (EditorUtility.DisplayDialog("Login", "To receive your License, you have to join our discord server!", "Lead me there"))
+                                    {
+                                        Application.OpenURL("https://naxokit.com/discord");
+                                    }
+                                }
+                            }
+                            if (GUILayout.Button("Redeem"))
+                            {
+                                if (string.IsNullOrEmpty(redeemCode))
+                                    EditorUtility.DisplayDialog("naxokitDashboard", "License Key cant be Empty", "Okay");
+                                else
+                                    naxoApiHelper.RedeemLicense(redeemCode);
+                            }
+                            EditorGUILayout.EndHorizontal();
+                            DrawLine.DrawHorizontalLine();
+                        }
 
                     }
                     EditorGUILayout.EndVertical();
@@ -205,7 +215,7 @@ namespace naxokit
                     #endregion
 
                     #region  All Tools aka Navigation
-                    if (finallyLoggedIn || naxoApiHelper.IsLoggedInAndVerified())
+                    if (finallyLoggedIn)
                     {
                         GUILayout.BeginHorizontal(GUI.skin.FindStyle(NaxoGUIStyleStyles.GUIStyleType.Toolbar.ToString()));
                         GUILayout.Button(naxoApiHelper.User.Username, GUI.skin.FindStyle(NaxoGUIStyleStyles.GUIStyleType.ProgressBarText.ToString()));
@@ -230,6 +240,11 @@ namespace naxokit
                             GetWindow<naxokitDashboard>().Close();
                             GetWindow<naxokitDashboard>().Show();
                             return;
+                        }
+
+                        if (GUILayout.Button("TEST UPDATE"))
+                        {
+                            naxokitUpdater.CheckForUpdates(NaxoVersionData.BranchType.Beta);
                         }
                         GUILayout.Button(naxoApiHelper.User.Permission.ToString(), GUI.skin.FindStyle(NaxoGUIStyleStyles.GUIStyleType.ProgressBarText.ToString()));
                         GUILayout.EndHorizontal();
@@ -326,12 +341,14 @@ namespace naxokit
                             EditorGUILayout.BeginHorizontal();
                             {
                                 EditorGUILayout.LabelField("Update Available", EditorStyles.boldLabel);
+                                /* TODO: Update Button
                                 if (GUILayout.Button("Update", EditorStyles.miniButtonMid, GUILayout.Width(250)))
                                     naxokitUpdater.DeleteAndDownloadAsync();
 
                                 if (naxokitUpdater.LatestVersion != null)
                                     EditorGUILayout.LabelField("Version: " + naxokitUpdater.LatestVersion.Version, EditorStyles.centeredGreyMiniLabel, GUILayout.Width(EditorGUIUtility.currentViewWidth));
 
+                                */
 
                             }
                             EditorGUILayout.EndHorizontal();
@@ -347,13 +364,13 @@ namespace naxokit
                                 EditorGUILayout.BeginVertical();
                                 {
                                     DrawLine.DrawHorizontalLine();
-                                    naxokit.Screens.Update.HandleUpdateOpend();
+                                    //naxokit.Screens.Update.HandleUpdateOpend(); //todo: update
                                     DrawLine.DrawHorizontalLine();
 
                                 }
                                 EditorGUILayout.EndVertical();
                             }
-                            EditorGUILayout.LabelField("V" + naxokitUpdater.CurrentVersion.Replace(';', ' '), EditorStyles.centeredGreyMiniLabel);
+                            EditorGUILayout.LabelField("V" + Config.Version, EditorStyles.centeredGreyMiniLabel);
                         }
                     }
                     #endregion

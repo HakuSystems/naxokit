@@ -147,8 +147,10 @@ public class BackupManager : EditorWindow
         if (!Directory.Exists(Config.BackupManager_BackupFolder_Selected))
             Directory.CreateDirectory(Config.BackupManager_BackupFolder_Selected);
 
+        var results = 0f;
         if (Directory.Exists(Config.BackupManager_BackupFolder_Selected))
         {
+            EditorUtility.DisplayProgressBar("BackupManager", "Creating Backup", results);
             var backupName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
             var backupPath = Config.BackupManager_BackupFolder_Selected + "/" + backupName;
             Directory.CreateDirectory(backupPath);
@@ -163,6 +165,8 @@ public class BackupManager : EditorWindow
                     if (!Directory.Exists(destinationDirectory))
                         Directory.CreateDirectory(destinationDirectory);
                     File.Copy(file, destination);
+                    results++;
+                    EditorUtility.DisplayProgressBar("BackupManager", "Creating Backup", results / files.Length);
                 }
             }
             else
@@ -179,6 +183,8 @@ public class BackupManager : EditorWindow
                     if (directory.Contains(backupName)) continue;
                     Directory.Delete(directory, true);
                     File.Delete(directory + ".meta");
+                    results++;
+                    EditorUtility.DisplayProgressBar("BackupManager", "Deleting Old Backups", results / directories.Length);
                 }
             }
 

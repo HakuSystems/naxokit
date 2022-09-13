@@ -8,6 +8,15 @@ namespace naxokit.Helpers.Configs
 {
     public class Config
     {
+        //NaxoVersion
+        public static string Url  { get; set; }
+        public static string Version {get; set;}
+        
+        public static NaxoVersionData.BranchType Branch { get; set; }
+        public static  string Commit {get; set;}
+        public  static  string CommitUrl {get; set;}
+        public static  string CommitDate {get; set;}
+
         //TermsPolicy
         public static bool TermsPolicyAccepted { get; set; }
 
@@ -80,6 +89,15 @@ namespace naxokit.Helpers.Configs
 
         private static void UpdateData(ConfigData config) //when Config file Updates the values
         {
+            //NaxoVersion
+            Url = config.NaxoVersion.Url;
+            Version = config.NaxoVersion.Version;
+            Branch = config.NaxoVersion.Branch;
+            Commit = config.NaxoVersion.Commit;
+            CommitUrl = config.NaxoVersion.CommitUrl;
+            CommitDate = config.NaxoVersion.CommitDate;
+            
+            
             //TermsPolicy
             TermsPolicyAccepted = config.TermsPolicy.Accepted;
 
@@ -110,6 +128,14 @@ namespace naxokit.Helpers.Configs
 
         private static void WritetoConfig(ConfigData config)
         {
+            //NaxoVersion
+            config.NaxoVersion.Url = Url;
+            config.NaxoVersion.Version = Version;
+            config.NaxoVersion.Branch = Branch;
+            config.NaxoVersion.Commit = Commit;
+            config.NaxoVersion.CommitUrl = CommitUrl;
+            config.NaxoVersion.CommitDate = CommitDate;
+            
             //TermsPolicy
             config.TermsPolicy.Accepted = TermsPolicyAccepted;
 
@@ -139,6 +165,14 @@ namespace naxokit.Helpers.Configs
         }
         private static void WriteDefaults(ConfigData config) //When Config file was created
         {
+            //NaxoVersion
+            config.NaxoVersion.Url = "";
+            config.NaxoVersion.Version = "0.0.0";
+            config.NaxoVersion.Branch = NaxoVersionData.BranchType.Release;
+            config.NaxoVersion.Commit = "Unknown";
+            config.NaxoVersion.CommitUrl = "Unknown";
+            config.NaxoVersion.CommitDate = "Unknown";
+            
             //TermsPolicy
             config.TermsPolicy.Accepted = false;
 

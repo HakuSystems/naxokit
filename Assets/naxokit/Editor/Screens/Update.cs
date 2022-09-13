@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using naxokit.Helpers.Models;
-
+/*
 namespace naxokit.Screens
 {
     public class Update : EditorWindow
     {
+        //todo: MAKE THIS WORK
         //Version selector
-        public static List<VersionData> versionList;
+        //private static List<NaxoVersionData> versionList;
         public static string currentVersion;
         private static Vector2 scrollView;
         private static bool runOnce;
@@ -28,8 +29,8 @@ namespace naxokit.Screens
             {
                 if (runOnce == false)
                 {
-                    versionList = naxokitUpdater.ServerVersionList;
-                    currentVersion = naxokitUpdater.LatestVersion.Version;
+                    //versionList = naxokitUpdater.versionList;
+                    //currentVersion = naxokitUpdater.LatestVersion.Version;
                     runOnce = true;
                 }
                 scrollView = EditorGUILayout.BeginScrollView(scrollView, false, false, GUILayout.Width(EditorGUIUtility.currentViewWidth));
@@ -54,6 +55,7 @@ namespace naxokit.Screens
 
 
 
+                        
                         foreach (var version in versionList)
                         {
                             if (_searchString == "")
@@ -65,7 +67,7 @@ namespace naxokit.Screens
                                         EditorGUILayout.LabelField(version.Version);
                                         if (GUILayout.Button("Install"))
                                         {
-                                            naxokitUpdater.DeleteAndDownloadAsync(version.Version);
+                                            //naxokitUpdater.DeleteAndDownloadAsync(version.Version);
                                         }
                                     }
                                     EditorGUILayout.EndHorizontal();
@@ -79,7 +81,7 @@ namespace naxokit.Screens
                                     EditorGUILayout.LabelField(version.Version);
                                     if (GUILayout.Button("Install"))
                                     {
-                                        naxokitUpdater.DeleteAndDownloadAsync(version.Version);
+                                       // naxokitUpdater.DeleteAndDownloadAsync(version.Version);
                                     }
                                 }
                                 EditorGUILayout.EndHorizontal();
@@ -112,3 +114,4 @@ namespace naxokit.Screens
         }
     }
 }
+*/

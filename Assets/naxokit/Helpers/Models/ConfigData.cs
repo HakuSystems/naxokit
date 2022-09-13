@@ -15,7 +15,9 @@ namespace naxokit.Helpers.Models
             BackupManager = new BackupManagerData();
             PremiumCheck = new PremiumCheckData();
             NaxoPlayModeTools = new NaxoPlayModeToolsData();
+            NaxoVersion = new NaxoVersionData();
         }
+        public NaxoVersionData NaxoVersion { get; set; }
         public NaxoAuthData NaxoAuth { get; set; }
         public TermsPolicyData TermsPolicy { get; set; }
         public NaxoPlayModeToolsData NaxoPlayModeTools { get; set; }
@@ -25,6 +27,20 @@ namespace naxokit.Helpers.Models
         public BackupManagerData BackupManager { get; set; }
     }
 
+    public class NaxoVersionData
+    {
+        public string Url { get; set; }
+        public string Version { get; set; }
+        public BranchType Branch { get; set; }
+        public string Commit { get; set; }
+        public string CommitUrl { get; set; }
+        public string CommitDate { get; set; }
+        public enum BranchType
+        {
+            Release = 0,
+            Beta = 1
+        }
+    }
     public class TermsPolicyData
     {
         public bool Accepted { get; set; }
