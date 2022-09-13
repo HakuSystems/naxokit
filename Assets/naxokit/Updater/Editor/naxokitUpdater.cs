@@ -4,14 +4,12 @@ using System;
 using UnityEditor;
 using System.Net.Http;
 using System.Net;
-using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using naxokit.Helpers.Configs;
 using naxokit.Helpers.Models;
-using naxokit.Helpers.Logger;
 
 namespace naxokit.Updater
 {
@@ -32,8 +30,10 @@ namespace naxokit.Updater
         
         private List<NaxoVersionData> _versionList;
         
-        public static async Task CheckForUpdates(Enum branch)
+        public static async Task CheckForUpdates(Enum branch = null)
         {
+            if(branch == null)
+                branch = Config.Branch;
             LatestVersion = await GetLatestVersion(branch);
             if (CurrentVersion != LatestVersion.Version)
             {
@@ -45,7 +45,9 @@ namespace naxokit.Updater
                         Config.BackupManager_DeleteOldBackups_Enabled);
                     await  DownloadLatestReleaseVersion();
                 }
+                naxokitDashboard.UserIsUptoDate = false;
             }
+            naxokitDashboard.UserIsUptoDate = true;
         }
 
         private static async Task<NaxoVersionData> GetLatestVersion(Enum branch)
@@ -89,6 +91,7 @@ namespace naxokit.Updater
                 WebClient.DownloadFileCompleted += (sender, args) =>
                 {
                     EditorUtility.ClearProgressBar();
+
                     EditorUtility.DisplayProgressBar(ScriptName, "Deleting old files", results);
                     var files = Directory.GetFiles(Application.dataPath + "/naxokit", "*.*", SearchOption.AllDirectories)
                         .Where(s => !s.EndsWith("naxokitUpdater.cs"));
@@ -108,6 +111,7 @@ namespace naxokit.Updater
                     
                     File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
                                 $"/naxokit V{LatestVersion?.Version}.unitypackage");
+                    UpdaterConfigChange();
                 };
             }
             catch (Exception e)
@@ -116,6 +120,17 @@ namespace naxokit.Updater
             }
 
             return Task.CompletedTask;
+        }
+
+        private static void UpdaterConfigChange()
+        {
+            Config.Url = LatestVersion?.Url;
+            Config.Version = LatestVersion?.Version;
+            Config.Branch = (NaxoVersionData.BranchType)LatestVersion?.Branch;
+            Config.Commit = LatestVersion?.Commit;
+            Config.CommitUrl = LatestVersion?.CommitUrl;
+            Config.CommitDate = LatestVersion?.CommitDate;
+            Config.UpdateConfig();
         }
     }
 }

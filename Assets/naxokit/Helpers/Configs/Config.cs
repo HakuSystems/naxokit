@@ -3,6 +3,7 @@ using naxokit.Helpers.Models;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using UnityEngine;
 
 namespace naxokit.Helpers.Configs
 {
@@ -49,11 +50,9 @@ namespace naxokit.Helpers.Configs
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string specificFolder = Path.Combine(folder, "naxokit");
             string configPath = Path.Combine(specificFolder, "config.json");
-            if (File.Exists(configPath))
-            {
-                var config = JsonConvert.DeserializeObject<ConfigData>(File.ReadAllText(configPath));
-                UpdateData(config);
-            }
+            if (!File.Exists(configPath)) return;
+            var config = JsonConvert.DeserializeObject<ConfigData>(File.ReadAllText(configPath));
+            UpdateData(config);
         }
         public static void UpdateConfig()
         {
@@ -167,7 +166,8 @@ namespace naxokit.Helpers.Configs
         {
             //NaxoVersion
             config.NaxoVersion.Url = "";
-            config.NaxoVersion.Version = "0.0.0";
+            var versionFile = File.ReadAllText("Assets/naxokit/version.txt");
+            config.NaxoVersion.Version = versionFile;
             config.NaxoVersion.Branch = NaxoVersionData.BranchType.Release;
             config.NaxoVersion.Commit = "Unknown";
             config.NaxoVersion.CommitUrl = "Unknown";

@@ -25,7 +25,7 @@ namespace naxokit
         private static bool SignUpOpen;
         private static bool PlayingOpen;
         private Vector2 scrollPosition;
-        private bool userIsUptoDate = false;
+        public static bool UserIsUptoDate = false;
         private bool hasSDK = true;
         public static bool finallyLoggedIn = false;
         public static bool savePasswordLocally = false;
@@ -34,6 +34,7 @@ namespace naxokit
         private static string passwordInput;
         private static string emailInput;
         private static string redeemCode;
+        private Task _task;
 
 
         [MenuItem("naxokit/Dashboard")]
@@ -56,12 +57,7 @@ namespace naxokit
 
             //check if user has the VRCSDK installed
             CheckSDK();
-            //Loads the latest version from the server
-            /* TODO: Make this work
-            await naxokitUpdater.UpdateVersionData();
-            if (naxokitUpdater.CompareCurrentVersionWithLatest())
-                userIsUptoDate = true;
-                */
+            _task = naxokitUpdater.CheckForUpdates();
         }
         private void Update()
         {
@@ -244,7 +240,7 @@ namespace naxokit
 
                         if (GUILayout.Button("TEST UPDATE"))
                         {
-                            naxokitUpdater.CheckForUpdates(NaxoVersionData.BranchType.Beta);
+                            naxokitUpdater.CheckForUpdates();
                         }
                         GUILayout.Button(naxoApiHelper.User.Permission.ToString(), GUI.skin.FindStyle(NaxoGUIStyleStyles.GUIStyleType.ProgressBarText.ToString()));
                         GUILayout.EndHorizontal();
@@ -335,28 +331,7 @@ namespace naxokit
                             }
 
                         }
-                        if (!userIsUptoDate)
-                        {
-                            DrawLine.DrawHorizontalLine();
-                            EditorGUILayout.BeginHorizontal();
-                            {
-                                EditorGUILayout.LabelField("Update Available", EditorStyles.boldLabel);
-                                /* TODO: Update Button
-                                if (GUILayout.Button("Update", EditorStyles.miniButtonMid, GUILayout.Width(250)))
-                                    naxokitUpdater.DeleteAndDownloadAsync();
-
-                                if (naxokitUpdater.LatestVersion != null)
-                                    EditorGUILayout.LabelField("Version: " + naxokitUpdater.LatestVersion.Version, EditorStyles.centeredGreyMiniLabel, GUILayout.Width(EditorGUIUtility.currentViewWidth));
-
-                                */
-
-                            }
-                            EditorGUILayout.EndHorizontal();
-                            DrawLine.DrawHorizontalLine();
-
-
-                        }
-                        else
+                        if (UserIsUptoDate)
                         {
                             UpdateOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("Update") as Texture2D, UpdateOpen);
                             if (UpdateOpen)

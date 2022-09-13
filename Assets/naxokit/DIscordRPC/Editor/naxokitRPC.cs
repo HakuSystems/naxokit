@@ -23,7 +23,6 @@ namespace naxokit.DiscordRPC
         {
             if(Config.Discordrpc_Enabled)
             {
-                var version = naxokitUpdater.CurrentVersion.Split(';');
                 naxoLog.Log("naxokitRPC", "Updating RichPresence");
                 if (naxoApiHelper.User != null)
                 {
@@ -44,7 +43,7 @@ namespace naxokit.DiscordRPC
                 richPresence.largeImageKey = "big";
                 richPresence.largeImageText = "In Unity with naxokit";
                 richPresence.smallImageKey = "edit";
-                richPresence.smallImageText = "ver " + version[0];
+                richPresence.smallImageText = "ver " + Config.Version;
                 DiscordRpc.UpdatePresence(richPresence);
             }
             
