@@ -144,6 +144,7 @@ public class BackupManager : EditorWindow
     {
         if (!Config.IsPremiumBoolSinceLastCheck)
             return;
+        naxoLog.Log("BackupManager", "Creating Backup");
         if (!Directory.Exists(Config.BackupManager_BackupFolder_Selected))
             Directory.CreateDirectory(Config.BackupManager_BackupFolder_Selected);
 

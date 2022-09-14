@@ -35,6 +35,7 @@ namespace naxokit.Helpers.Models
         public string Commit { get; set; }
         public string CommitUrl { get; set; }
         public string CommitDate { get; set; }
+        public  bool CheckForUpdates { get; set; }
         public enum BranchType
         {
             Release = 0,

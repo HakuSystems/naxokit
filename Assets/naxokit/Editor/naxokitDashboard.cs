@@ -18,7 +18,6 @@ namespace naxokit
         public bool VRCToolsOpen = false;
         bool SettingsOpen = false;
         bool CreditsOpen = false;
-        bool UpdateOpen = false;
         public bool ToolsOpen = false;
         bool PremiumOpen = false;
         private static bool LoginOpen = true;
@@ -237,11 +236,6 @@ namespace naxokit
                             GetWindow<naxokitDashboard>().Show();
                             return;
                         }
-
-                        if (GUILayout.Button("TEST UPDATE"))
-                        {
-                            naxokitUpdater.CheckForUpdates();
-                        }
                         GUILayout.Button(naxoApiHelper.User.Permission.ToString(), GUI.skin.FindStyle(NaxoGUIStyleStyles.GUIStyleType.ProgressBarText.ToString()));
                         GUILayout.EndHorizontal();
 
@@ -333,19 +327,9 @@ namespace naxokit
                         }
                         if (UserIsUptoDate)
                         {
-                            UpdateOpen = FoldoutTexture.MakeTextureFoldout(Resources.Load("Update") as Texture2D, UpdateOpen);
-                            if (UpdateOpen)
-                            {
-                                EditorGUILayout.BeginVertical();
-                                {
-                                    DrawLine.DrawHorizontalLine();
-                                    //naxokit.Screens.Update.HandleUpdateOpend(); //todo: update
-                                    DrawLine.DrawHorizontalLine();
-
-                                }
-                                EditorGUILayout.EndVertical();
-                            }
                             EditorGUILayout.LabelField("V" + Config.Version, EditorStyles.centeredGreyMiniLabel);
+                            if(GUILayout.Button("Switch Version", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString())))
+                                SwitchVersion.ShowWindow();
                         }
                     }
                     #endregion

@@ -56,6 +56,14 @@ namespace naxokit.Screens
                 EditorGUILayout.EndVertical();
 
                 GUILayout.Space(5);
+                EditorGUILayout.BeginVertical();
+                {
+                    EditorGUILayout.LabelField("Check for Updates", EditorStyles.boldLabel);
+                    Config.CheckForUpdates = EditorGUILayout.Toggle("Enabled", Config.CheckForUpdates);
+                }
+                EditorGUILayout.EndVertical();
+
+                GUILayout.Space(5);
 
 
             }

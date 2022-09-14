@@ -17,6 +17,7 @@ namespace naxokit.Helpers.Configs
         public static  string Commit {get; set;}
         public  static  string CommitUrl {get; set;}
         public static  string CommitDate {get; set;}
+        public static bool CheckForUpdates { get; set; }
 
         //TermsPolicy
         public static bool TermsPolicyAccepted { get; set; }
@@ -95,6 +96,7 @@ namespace naxokit.Helpers.Configs
             Commit = config.NaxoVersion.Commit;
             CommitUrl = config.NaxoVersion.CommitUrl;
             CommitDate = config.NaxoVersion.CommitDate;
+            CheckForUpdates = config.NaxoVersion.CheckForUpdates;
             
             
             //TermsPolicy
@@ -134,6 +136,7 @@ namespace naxokit.Helpers.Configs
             config.NaxoVersion.Commit = Commit;
             config.NaxoVersion.CommitUrl = CommitUrl;
             config.NaxoVersion.CommitDate = CommitDate;
+            config.NaxoVersion.CheckForUpdates = CheckForUpdates;
             
             //TermsPolicy
             config.TermsPolicy.Accepted = TermsPolicyAccepted;
@@ -172,6 +175,7 @@ namespace naxokit.Helpers.Configs
             config.NaxoVersion.Commit = "Unknown";
             config.NaxoVersion.CommitUrl = "Unknown";
             config.NaxoVersion.CommitDate = "Unknown";
+            config.NaxoVersion.CheckForUpdates = true;
             
             //TermsPolicy
             config.TermsPolicy.Accepted = false;
@@ -198,7 +202,7 @@ namespace naxokit.Helpers.Configs
             config.BackupManager.SaveAsUnitypackage = false;
             config.BackupManager.SaveinProjectFolder = false;
             config.BackupManager.DeleteOldBackups = false;
-            config.BackupManager.BackupFolder = "";
+            config.BackupManager.BackupFolder = Application.dataPath + "/naxokit/Backups";
             config.BackupManager.AutoBackup = false;
             //NaxoPlayMode Tools
             config.NaxoPlayModeTools.Enabled = false;
