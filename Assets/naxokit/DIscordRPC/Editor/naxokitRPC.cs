@@ -21,32 +21,30 @@ namespace naxokit.DiscordRPC
 
         public static void UpdateRPC()
         {
-            if(Config.Discordrpc_Enabled)
+            if (!Config.Discordrpc_Enabled) return;
+            naxoLog.Log("naxokitRPC", "Updating RichPresence");
+            if (naxoApiHelper.IsLoggedInAndVerified())
             {
-                naxoLog.Log("naxokitRPC", "Updating RichPresence");
-                if (naxoApiHelper.User != null)
-                {
-                    //check if username is enabled in config file
-                    if (Config.Discordrpc_Username)
-                        richPresence.details = "Username: " + naxoApiHelper.User.Username;
-                    else
-                        richPresence.details = "Username Hidden";
-                    //richPresence.details = $"Username: {naxoApiHelper.User.Username}";
-                    richPresence.state = "Permission: " + naxoApiHelper.User.Permission.ToString();
-                }
+                //check if username is enabled in config file
+                if (Config.Discordrpc_Username)
+                    richPresence.details = "Username: " + naxoApiHelper.User.Username;
                 else
-                {
-                    richPresence.details = "Not logged in"; 
-                    richPresence.state = "";
-                }
-                
-                richPresence.largeImageKey = "big";
-                richPresence.largeImageText = "In Unity with naxokit";
-                richPresence.smallImageKey = "edit";
-                richPresence.smallImageText = "ver " + Config.Version;
-                DiscordRpc.UpdatePresence(richPresence);
+                    richPresence.details = "Username Hidden";
+                //richPresence.details = $"Username: {naxoApiHelper.User.Username}";
+                richPresence.state = "Permission: " + naxoApiHelper.User.Permission.ToString();
             }
-            
+            else
+            {
+                richPresence.details = "Not logged in"; 
+                richPresence.state = "";
+            }
+                
+            richPresence.largeImageKey = "big";
+            richPresence.largeImageText = "In Unity with naxokit";
+            richPresence.smallImageKey = "edit";
+            richPresence.smallImageText = "ver " + Config.Version;
+            DiscordRpc.UpdatePresence(richPresence);
+
         }
     }
 }
