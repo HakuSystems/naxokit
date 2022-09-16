@@ -124,11 +124,13 @@ namespace naxokit.Updater
                     var alleles = files as string[] ?? files.ToArray();
                     foreach (var file in alleles)
                     {
-                        //File.Delete(file);
+                        if (file.EndsWith(".dll") || file.EndsWith(".meta") || file.EndsWith(".tmp"))
+                            continue;
+                        File.Delete(file);
                     }
                     AssetDatabase.Refresh();
                     
-                    //AssetDatabase.ImportPackage(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+$"/naxokit V{LatestVersion?.Version}.unitypackage", false);
+                    AssetDatabase.ImportPackage(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+$"/naxokit V{LatestVersion?.Version}.unitypackage", false);
                     
                     File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
                                 $"/naxokit V{LatestVersion?.Version ?? version}.unitypackage");
