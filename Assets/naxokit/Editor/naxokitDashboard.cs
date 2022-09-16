@@ -49,11 +49,16 @@ namespace naxokit
 #endif
         }
 
+        private void OnLostFocus()
+        {
+            Settings.UpdateConfigsAndChangeRPC();
+        }
+
         private void OnEnable()
         {
             titleContent = new GUIContent("Dashboard");
             minSize = new Vector2(1000, 300);
-
+            Focus();
             //check if user has the VRCSDK installed
             CheckSDK();
             _task = naxokitUpdater.CheckForUpdates();
@@ -65,7 +70,6 @@ namespace naxokit
         private void OnDestroy()
         {
             Settings.UpdateConfigsAndChangeRPC();
-            AssetDatabase.Refresh();
         }
         public static void SetFinallyLoggedIn(bool isLoggedIn)
         {
@@ -93,15 +97,6 @@ namespace naxokit
             {
                 scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, false, GUILayout.Width(EditorGUIUtility.currentViewWidth));
                 {
-                    /* Todo: Make this work
-                    if (naxokitUpdater.ServerVersionList == null
-                                            && naxokitUpdater.LatestVersion == null
-                                            && naxokitUpdater.LatestBetaVersion == null)
-                    {
-                        EditorGUILayout.LabelField("Please wait...", EditorStyles.boldLabel);
-                        return;
-                    }
-                    */
                     #region Login and Signup
                     EditorGUILayout.BeginVertical();
                     {
