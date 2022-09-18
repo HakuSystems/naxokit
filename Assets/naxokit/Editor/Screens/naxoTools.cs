@@ -11,27 +11,27 @@ namespace naxokit.Screens
     {
         public static void HandleToolsOpend()
         {
-            DrawLine.DrawHorizontalLine();
-            EditorGUILayout.LabelField("Tools", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal();
             {
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
-                EditorGUILayout.LabelField("AudioSourceVolumeControl", EditorStyles.boldLabel);
+                //https://www.youtube.com/watch?v=VGqsbhdmN6I
                 if (GUILayout.Button("AudioSourceVolumeControl"))
                 {
                     AudioSourceVolumeControl.ShowWindow();
                 }
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
-                EditorGUILayout.LabelField("MassImporter", EditorStyles.boldLabel);
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
                 if (GUILayout.Button("MassImporter"))
                 {
                     MassImporter.ShowWindow();
                 }
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
             }
-            EditorGUILayout.EndVertical();
-
-            DrawLine.DrawHorizontalLine();
+            EditorGUILayout.EndHorizontal();
 
         }
     }

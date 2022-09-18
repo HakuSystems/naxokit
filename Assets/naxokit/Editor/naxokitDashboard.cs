@@ -323,9 +323,15 @@ namespace naxokit
                         }
                         if (UserIsUptoDate)
                         {
-                            EditorGUILayout.LabelField("V" + Config.Version, EditorStyles.centeredGreyMiniLabel);
-                            if(GUILayout.Button("Switch Version", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString())))
-                                SwitchVersion.ShowWindow();
+                                DrawLine.DrawHorizontalLine();
+                            EditorGUILayout.BeginHorizontal();
+                            {
+                                EditorGUILayout.LabelField("V" + Config.Version, EditorStyles.centeredGreyMiniLabel);
+                                if(GUILayout.Button("Switch Version", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString())))
+                                    SwitchVersion.ShowWindow();
+                            }
+                            EditorGUILayout.EndHorizontal();
+                            
                         }
                     }
                     #endregion

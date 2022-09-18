@@ -13,21 +13,36 @@ namespace naxokit.Screens
     {
         public static void HandlePremiumOpend()
         {
-            DrawLine.DrawHorizontalLine();
-            EditorGUILayout.LabelField("Premium", EditorStyles.boldLabel);
-            if (GUILayout.Button("EasySearch"))
+            GUILayout.Label("Thanks for the Support on Patreon!", EditorStyles.largeLabel);
+            EditorGUILayout.BeginHorizontal();
             {
-                GetWindow<EasySearch>().Show();
+                if (GUILayout.Button("EasySearch"))
+                {
+                    GetWindow<EasySearch>().Show();
+                }
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
+                if (GUILayout.Button("NaxoLoader"))
+                {
+                    GetWindow<NaxoLoader>().Show();
+                }
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
+                if (GUILayout.Button("BackupManager"))
+                {
+                    GetWindow<BackupManager>().Show();
+                }
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
+                
             }
-            if (GUILayout.Button("NaxoLoader"))
-            {
-                GetWindow<NaxoLoader>().Show();
-            }
-            if (GUILayout.Button("BackupManager"))
-            {
-                GetWindow<BackupManager>().Show();
-            }
-            DrawLine.DrawHorizontalLine();
+            EditorGUILayout.EndHorizontal();
         }
     }
 }
