@@ -16,7 +16,11 @@ namespace naxokit.Helpers.Models
             PremiumCheck = new PremiumCheckData();
             NaxoPlayModeTools = new NaxoPlayModeToolsData();
             NaxoVersion = new NaxoVersionData();
+            DefaultPath = new DefaultPathData();
         }
+
+        public DefaultPathData DefaultPath { get; set; }
+
         public NaxoVersionData NaxoVersion { get; set; }
         public NaxoAuthData NaxoAuth { get; set; }
         public TermsPolicyData TermsPolicy { get; set; }
@@ -25,6 +29,11 @@ namespace naxokit.Helpers.Models
         public SceneSaverData SceneSaver { get; set; }
         public DiscordData Discord { get; set; }
         public BackupManagerData BackupManager { get; set; }
+    }
+
+    public class DefaultPathData
+    {
+        public string  DefPath { get; set; }
     }
 
     public class NaxoVersionData
@@ -67,10 +76,8 @@ namespace naxokit.Helpers.Models
     public class BackupManagerData
     {
         public bool SaveAsUnitypackage { get; set; }
-        public bool SaveinProjectFolder { get; set; }
         public bool DeleteOldBackups { get; set; }
         public bool AutoBackup { get; set; }
-        public string BackupFolder { get; set; }
     }
 
     public class SceneSaverData

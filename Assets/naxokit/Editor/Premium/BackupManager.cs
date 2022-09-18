@@ -7,6 +7,7 @@ using naxokit.Styles;
 using naxokit.Helpers.Logger;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using naxokit.Helpers.Configs;
 using naxokit.Screens;
 
@@ -14,6 +15,7 @@ public class BackupManager : EditorWindow
 {
     private Vector2 scrollPosition;
     static List<string> assets = new List<string>(); //list of assets to backup its always empty until AssetDatabase.ExportPackage is called
+    private static string backupPath = Config.DefPath + "/Backups/";
 
     //[MenuItem("naxokitDevelopment/BackupManager")]
     public static void ShowWindow()
@@ -25,6 +27,9 @@ public class BackupManager : EditorWindow
     private void OnEnable()
     {
         minSize = new Vector2(500, 200);
+        if (!Directory.Exists(backupPath))
+            Directory.CreateDirectory(backupPath);
+        
     }
     private void OnDestroy()
     {
@@ -38,30 +43,11 @@ public class BackupManager : EditorWindow
         GUILayout.Button("Backup Your UnityProject", EditorStyles.toolbarButton);
         DrawLine.DrawHorizontalLine();
         EditorGUILayout.LabelField("Backup", EditorStyles.boldLabel);
-
-        EditorGUILayout.LabelField("Backup Destination", EditorStyles.boldLabel);
-        Config.BackupManager_BackupFolder_Selected = EditorGUILayout.TextField(Config.BackupManager_BackupFolder_Selected);
-        EditorGUILayout.BeginHorizontal();
-        {
-            Config.BackupManager_SaveinProjectFolder_Enabled = EditorGUILayout.Toggle("Save in Project Folder", Config.BackupManager_SaveinProjectFolder_Enabled);
-            if (!Directory.Exists(Config.BackupManager_BackupFolder_Selected))
-                Directory.CreateDirectory(Config.BackupManager_BackupFolder_Selected);
-
-            if (!Config.BackupManager_SaveinProjectFolder_Enabled)
-            {
-                if (GUILayout.Button("Select Folder on Computer"))
-                    Config.BackupManager_BackupFolder_Selected = EditorUtility.OpenFolderPanel("Select Folder on Computer", "", "");
-            }
-        }
-        EditorGUILayout.EndHorizontal();
         Config.BackupManager_SaveAsUnitypackage_Enabled = EditorGUILayout.Toggle("Save as Unitypackage", Config.BackupManager_SaveAsUnitypackage_Enabled);
         Config.BackupManager_DeleteOldBackups_Enabled = EditorGUILayout.Toggle("Clean Disk Space", Config.BackupManager_DeleteOldBackups_Enabled);
         Config.BackupManager_AutoBackup_Enabled = EditorGUILayout.Toggle("Auto Backup", Config.BackupManager_AutoBackup_Enabled);
 
-
-        if (Config.BackupManager_SaveinProjectFolder_Enabled)
-            Config.BackupManager_BackupFolder_Selected = Application.dataPath + "/naxokit/backups";
-        if (Config.BackupManager_BackupFolder_Selected == "" || !Directory.Exists(Config.BackupManager_BackupFolder_Selected)) return;
+        
 
         GUILayout.Space(10);
         EditorGUILayout.BeginHorizontal();
@@ -72,16 +58,11 @@ public class BackupManager : EditorWindow
             {
                 if (EditorUtility.DisplayDialog("BackupManager", "Are you sure you want to delete all backups?", "Yes", "No"))
                 {
-                    if (Directory.Exists(Config.BackupManager_BackupFolder_Selected))
+                    foreach (var file in Directory.GetFiles(backupPath))
                     {
-                        var directories = Directory.GetDirectories(Config.BackupManager_BackupFolder_Selected);
-                        foreach (var directory in directories)
-                        {
-                            Directory.Delete(directory, true);
-                            File.Delete(directory + ".meta");
-                        }
-                        naxoLog.Log("BackupManager", "All backups deleted");
+                        File.Delete(file);
                     }
+                    naxoLog.Log("BackupManager", "All backups deleted");
                     AssetDatabase.Refresh();
                 }
 
@@ -93,10 +74,11 @@ public class BackupManager : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             GUILayout.Label("Last Backup: " + GetLastBackupDate(), EditorStyles.boldLabel);
-            if (GUILayout.Button("Open Backup Folder", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString())))
+            if(GUILayout.Button("Open Backup Folder", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString())))
             {
-                if (Directory.Exists(Config.BackupManager_BackupFolder_Selected))
-                    Process.Start(Config.BackupManager_BackupFolder_Selected);
+                if (!Directory.Exists(backupPath))
+                    Directory.CreateDirectory(backupPath);
+                Process.Start(backupPath);
             }
         }
         EditorGUILayout.EndHorizontal();
@@ -107,30 +89,30 @@ public class BackupManager : EditorWindow
         {
             EditorGUILayout.BeginVertical();
             {
-                foreach (var folder in Directory.GetDirectories(Config.BackupManager_BackupFolder_Selected))
+                foreach (var file in Directory.GetFiles(backupPath))
                 {
-                    if (folder.Contains("naxokit"))
+                    EditorGUILayout.BeginHorizontal();
                     {
-                        EditorGUILayout.BeginHorizontal();
+                        GUILayout.Label(Path.GetFileName(file));
+                        if (Config.BackupManager_DeleteOldBackups_Enabled)
                         {
-                            if (Config.BackupManager_DeleteOldBackups_Enabled)
+                            GUI.color = Color.red;
+                            GUILayout.Label("Deletion Pending", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString()));
+                            GUI.color = Color.white;
+                        }
+                        if (GUILayout.Button("Delete", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString())))
+                        {
+                            if (EditorUtility.DisplayDialog("BackupManager", "Are you sure you want to delete this backup?", "Yes", "No"))
                             {
-                                GUI.color = Color.red;
-                                GUILayout.Label("Deletion Pending", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString()));
-                                GUI.color = Color.white;
-                            }
-                            EditorGUILayout.LabelField(folder.Split('/').Last(), EditorStyles.boldLabel);
-                            if (GUILayout.Button("Open", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString())))
-                            {
-
-                                if (Directory.Exists(folder))
-                                    Process.Start(folder);
+                                File.Delete(file);
+                                naxoLog.Log("BackupManager", "Backup deleted");
+                                AssetDatabase.Refresh();
                             }
                         }
-                        EditorGUILayout.EndHorizontal();
                     }
-
+                    EditorGUILayout.EndHorizontal();
                 }
+                
             }
             EditorGUILayout.EndVertical();
         }
@@ -145,71 +127,84 @@ public class BackupManager : EditorWindow
         if (!Config.IsPremiumBoolSinceLastCheck)
             return;
         naxoLog.Log("BackupManager", "Creating Backup");
-        if (!Directory.Exists(Config.BackupManager_BackupFolder_Selected))
-            Directory.CreateDirectory(Config.BackupManager_BackupFolder_Selected);
 
         var results = 0f;
-        if (Directory.Exists(Config.BackupManager_BackupFolder_Selected))
-        {
-            EditorUtility.DisplayProgressBar("BackupManager", "Creating Backup", results);
-            var backupName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-            var backupPath = Config.BackupManager_BackupFolder_Selected + "/" + backupName;
+        EditorUtility.DisplayProgressBar("BackupManager", "Creating Backup", results);
+            var backupName = "naxokit "+ DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
             Directory.CreateDirectory(backupPath);
             var files = Directory.GetFiles(Application.dataPath, "*", SearchOption.AllDirectories);
             if (!_saveAsUnitypackage)
             {
                 foreach (var file in files)
                 {
+                    if (file.Contains(".meta")) continue;
                     var relativePath = file.Replace(Application.dataPath, "");
-                    var destination = backupPath + relativePath.Replace("\\", "/");
-                    var destinationDirectory = Path.GetDirectoryName(destination);
-                    if (!Directory.Exists(destinationDirectory))
-                        Directory.CreateDirectory(destinationDirectory);
-                    File.Copy(file, destination);
-                    results++;
-                    EditorUtility.DisplayProgressBar("BackupManager", "Creating Backup", results / files.Length);
+                    var destination = backupPath + backupName + "/" + relativePath;
+                    var destinationDir = Path.GetDirectoryName(destination);
+                    if (!Directory.Exists(destinationDir))
+                        Directory.CreateDirectory(destinationDir);
+                    File.Copy(file, destination, true);
+                    results += 1f / files.Length;
+                    EditorUtility.DisplayProgressBar("BackupManager", "Creating Backup", results);
+                    
+                    
                 }
             }
             else
             {
-                var packagePath = backupPath + "/" + backupName + ".unitypackage";
-                AssetDatabase.ExportPackage(assets.ToArray(), packagePath, ExportPackageOptions.Recurse);
+                EditorUtility.DisplayProgressBar("BackupManager", "Creating Unitypackage", results);
+                AssetDatabase.ExportPackage(assets.ToArray(), backupPath + backupName + ".unitypackage", ExportPackageOptions.Recurse);
+                
             }
 
             if (_deleteOldBackups)
             {
-                var directories = Directory.GetDirectories(Config.BackupManager_BackupFolder_Selected, "*", SearchOption.TopDirectoryOnly);
-                foreach (var directory in directories)
+                var backupFolders = Directory.GetDirectories(backupPath);
+                var backupFiles = Directory.GetFiles(backupPath);
+                var backupFoldersSorted = backupFolders.OrderBy(Directory.GetCreationTime).ToArray();
+                var backupFilesSorted = backupFiles.OrderBy(File.GetCreationTime).ToArray();
+                if (backupFoldersSorted.Length > 1)
                 {
-                    if (directory.Contains(backupName)) continue;
-                    Directory.Delete(directory, true);
-                    File.Delete(directory + ".meta");
-                    results++;
-                    EditorUtility.DisplayProgressBar("BackupManager", "Deleting Old Backups", results / directories.Length);
+                    for (var i = 0; i < backupFoldersSorted.Length - 1; i++)
+                    {
+                        Directory.Delete(backupFoldersSorted[i], true);
+                    }
+                }
+                if (backupFilesSorted.Length > 1)
+                {
+                    for (var i = 0; i < backupFilesSorted.Length - 1; i++)
+                    {
+                        if (backupFilesSorted[i].Contains(".unitypackage"))
+                            File.Delete(backupFilesSorted[i]);
+                    }
                 }
             }
 
 
             naxoLog.Log("BackupManager", "Backup created");
-        }
         EditorUtility.ClearProgressBar();
         AssetDatabase.Refresh();
 
     }
 
-    private string GetLastBackupDate()
+    private static string GetLastBackupDate()
     {
-        if (Directory.Exists(Config.BackupManager_BackupFolder_Selected))
+        //get last backup folder by date or unitypackage by date
+        var backupFolders = Directory.GetDirectories(backupPath);
+        var backupFiles = Directory.GetFiles(backupPath);
+        var backupFoldersSorted = backupFolders.OrderBy(Directory.GetCreationTime).ToArray();
+        var backupFilesSorted = backupFiles.OrderBy(File.GetCreationTime).ToArray();
+        if (backupFoldersSorted.Length > 0)
         {
-            var directories = Directory.GetDirectories(Config.BackupManager_BackupFolder_Selected);
-            if (directories.Length > 0)
-            {
-                var lastBackup = directories[directories.Length - 1];
-                var lastBackupDate = Directory.GetCreationTime(lastBackup);
-                if (lastBackup.Contains("naxokit"))
-                    return lastBackupDate.ToString("yyyy-MM-dd HH:mm:ss");
-            }
+            return Directory.GetCreationTime(backupFoldersSorted.Last()).ToString("yyyy-MM-dd-HH-mm-ss");
         }
-        return "Never";
+        else if (backupFilesSorted.Length > 0)
+        {
+            return File.GetCreationTime(backupFilesSorted.Last()).ToString("yyyy-MM-dd-HH-mm-ss");
+        }
+        else
+        {
+            return "No Backups";
+        }
     }
 }

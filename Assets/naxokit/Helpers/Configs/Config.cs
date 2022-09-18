@@ -9,6 +9,8 @@ namespace naxokit.Helpers.Configs
 {
     public class Config
     {
+         //Default Path
+        public static string DefPath {get; set;}
         //NaxoVersion
         public static string Url  { get; set; }
         public static string Version {get; set;}
@@ -39,9 +41,7 @@ namespace naxokit.Helpers.Configs
 
         //BackupManager
         public static bool BackupManager_SaveAsUnitypackage_Enabled { get; set; }
-        public static bool BackupManager_SaveinProjectFolder_Enabled { get; set; }
         public static bool BackupManager_DeleteOldBackups_Enabled { get; set; }
-        public static string BackupManager_BackupFolder_Selected { get; set; }
         public static bool BackupManager_AutoBackup_Enabled { get; set; }
         //NaxoPlayMode Tools
         public static bool NaxoPlayModeTools_Enabled { get; set; }
@@ -89,6 +89,9 @@ namespace naxokit.Helpers.Configs
 
         private static void UpdateData(ConfigData config) //when Config file Updates the values
         {
+            //Default Path
+            DefPath = config.DefaultPath.DefPath;
+            
             //NaxoVersion
             Url = config.NaxoVersion.Url;
             Version = config.NaxoVersion.Version;
@@ -119,16 +122,17 @@ namespace naxokit.Helpers.Configs
 
             //BackupManager
             BackupManager_SaveAsUnitypackage_Enabled = config.BackupManager.SaveAsUnitypackage;
-            BackupManager_BackupFolder_Selected = config.BackupManager.BackupFolder;
             BackupManager_DeleteOldBackups_Enabled = config.BackupManager.DeleteOldBackups;
             BackupManager_AutoBackup_Enabled = config.BackupManager.AutoBackup;
-            BackupManager_SaveinProjectFolder_Enabled = config.BackupManager.SaveinProjectFolder;
             //NaxoPlayMode Tools
             NaxoPlayModeTools_Enabled = config.NaxoPlayModeTools.Enabled;
         }
 
         private static void WritetoConfig(ConfigData config)
         {
+            //Default Path
+            config.DefaultPath.DefPath = DefPath;
+            
             //NaxoVersion
             config.NaxoVersion.Url = Url;
             config.NaxoVersion.Version = Version;
@@ -158,19 +162,25 @@ namespace naxokit.Helpers.Configs
 
             //BackupManager
             config.BackupManager.SaveAsUnitypackage = BackupManager_SaveAsUnitypackage_Enabled;
-            config.BackupManager.BackupFolder = BackupManager_BackupFolder_Selected;
             config.BackupManager.DeleteOldBackups = BackupManager_DeleteOldBackups_Enabled;
-            config.BackupManager.SaveinProjectFolder = BackupManager_SaveinProjectFolder_Enabled;
             config.BackupManager.AutoBackup = BackupManager_AutoBackup_Enabled;
             //NaxoPlayMode Tools
             config.NaxoPlayModeTools.Enabled = NaxoPlayModeTools_Enabled;
         }
         private static void WriteDefaults(ConfigData config) //When Config file was created
         {
+            //Default Path
+            config.DefaultPath.DefPath = null;
+            
             //NaxoVersion
             config.NaxoVersion.Url = "";
-            var versionFile = File.ReadAllText("Assets/naxokit/version.txt");
-            config.NaxoVersion.Version = versionFile;
+            var version = File.ReadAllText("Assets/naxokit/Version.txt");
+            if (!File.Exists(DefPath + "Version.txt"))
+            {
+                File.Create(DefPath + "Version.txt");
+                File.WriteAllText(DefPath + "Version.txt", version);
+            }
+            config.NaxoVersion.Version = string.IsNullOrEmpty(File.ReadAllText(DefPath+"Version.txt")) ? version : File.ReadAllText(DefPath+"Version.txt");
             config.NaxoVersion.Branch = NaxoVersionData.BranchType.Release;
             config.NaxoVersion.Commit = "Unknown";
             config.NaxoVersion.CommitUrl = "Unknown";
@@ -200,9 +210,7 @@ namespace naxokit.Helpers.Configs
 
             //BackupManager
             config.BackupManager.SaveAsUnitypackage = false;
-            config.BackupManager.SaveinProjectFolder = false;
             config.BackupManager.DeleteOldBackups = false;
-            config.BackupManager.BackupFolder = Application.dataPath + "/naxokit/Backups";
             config.BackupManager.AutoBackup = false;
             //NaxoPlayMode Tools
             config.NaxoPlayModeTools.Enabled = false;

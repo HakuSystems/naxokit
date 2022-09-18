@@ -62,22 +62,23 @@ namespace naxokit
             //check if user has the VRCSDK installed
             CheckSDK();
             _task = naxokitUpdater.CheckForUpdates();
+            
+            //keep always down in OnEnable never move it up
+            if (Config.DefPath != null) return;
+            NaxoDefaultPath.ShowWindow();
+            Close();
+            //keep always down in OnEnable never move it up
+            
         }
         private void Update()
         {
             LoginOpen = true; //Prefending the user from closing the Foldout while logging in.
+            if (Config.DefPath != null) return;
+            NaxoDefaultPath.ShowWindow();
+            Close();
         }
-        private void OnDestroy()
-        {
-            Settings.UpdateConfigsAndChangeRPC();
-        }
-        public static void SetFinallyLoggedIn(bool isLoggedIn)
-        {
-            if (!naxoApiHelper.IsLoggedInAndVerified())
-                finallyLoggedIn = false;
-            else
-                finallyLoggedIn = isLoggedIn;
-        }
+        public static void SetFinallyLoggedIn(bool isLoggedIn) => finallyLoggedIn = naxoApiHelper.IsLoggedInAndVerified() && isLoggedIn;
+        
         private static Hashtable ToolNames()
         {
             Hashtable toolsName = new Hashtable(){
@@ -115,7 +116,7 @@ namespace naxokit
                                     savePasswordLocally = EditorGUILayout.Toggle("Save Password Locally", savePasswordLocally);
                                     EditorGUILayout.LabelField(passStatus, EditorStyles.centeredGreyMiniLabel);
                                     passStatus = "no Password Saved";
-                                    if (Config.Password != null)
+                                    if (Config.Password != "")
                                     {
                                         passStatus = "Password available";
                                         savePasswordLocally = true;

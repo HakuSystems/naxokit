@@ -1,9 +1,14 @@
-﻿using System.Timers;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Timers;
 using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
 using naxokit.Helpers.Logger;
 using naxokit.Styles;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -20,7 +25,23 @@ namespace naxokit.Screens
             GUILayout.Space(10);
             PlaymodeSettings();
             GUILayout.Space(10);
+            DefaultPathSettings();
+            GUILayout.Space(10);
             UpdatesSettings();
+        }
+
+        private static void DefaultPathSettings()
+        {
+            EditorGUILayout.BeginHorizontal();
+            {
+                if (GUILayout.Button("Change Default Path"))
+                    Config.DefPath = null;
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
+            }
+            EditorGUILayout.EndHorizontal();
         }
 
         private static void UpdatesSettings()
@@ -43,7 +64,6 @@ namespace naxokit.Screens
             {
                 Config.NaxoPlayModeTools_Enabled = EditorGUILayout.Toggle("NaxoPlayMode Tools", Config.NaxoPlayModeTools_Enabled);
                 EditorGUILayout.LabelField("Additional Settings for Playmode", new GUIStyle(EditorStyles.textField) {normal = {textColor = Color.yellow}});
-                //LabelField with Color red
                 if (GUILayout.Button("?", GUILayout.Width(20)))
                 {
                     //TODO: Add Link to the Documentation on Youtube
