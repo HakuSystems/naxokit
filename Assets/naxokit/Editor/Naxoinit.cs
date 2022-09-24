@@ -14,7 +14,8 @@ namespace naxokit
             Config.InitializeConfig();
             SceneSaver();
             if (Config.BackupManager_AutoBackup_Enabled)
-                BackupManager.CreateBackup(Config.BackupManager_SaveAsUnitypackage_Enabled, Config.BackupManager_DeleteOldBackups_Enabled);
+                BackupManager.CreateBackup(Config.BackupManager_SaveAsUnitypackage_Enabled,
+                    Config.BackupManager_DeleteOldBackups_Enabled);
         }
         public static bool IsPlayMode()
         {

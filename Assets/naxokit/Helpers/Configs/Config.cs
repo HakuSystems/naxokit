@@ -2,6 +2,7 @@
 using naxokit.Helpers.Models;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace naxokit.Helpers.Configs
 {
     public class Config
     {
+        //PresetManager
+        public static Dictionary<int, PresetData> Presets { get; set; }
          //Default Path
         public static string DefPath {get; set;}
         //NaxoVersion
@@ -89,6 +92,9 @@ namespace naxokit.Helpers.Configs
 
         private static void UpdateData(ConfigData config) //when Config file Updates the values
         {
+            //PresetManager
+            Presets = config.PresetManager.Presets;
+
             //Default Path
             DefPath = config.DefaultPath.DefPath;
             
@@ -130,6 +136,9 @@ namespace naxokit.Helpers.Configs
 
         private static void WritetoConfig(ConfigData config)
         {
+            //PresetManager
+            config.PresetManager.Presets = Presets;
+            
             //Default Path
             config.DefaultPath.DefPath = DefPath;
             
@@ -169,6 +178,9 @@ namespace naxokit.Helpers.Configs
         }
         private static void WriteDefaults(ConfigData config) //When Config file was created
         {
+            //PresetManager
+            config.PresetManager.Presets = null;
+            
             //Default Path
             config.DefaultPath.DefPath = null;
             

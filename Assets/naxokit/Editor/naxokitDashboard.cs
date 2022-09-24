@@ -62,7 +62,6 @@ namespace naxokit
             //check if user has the VRCSDK installed
             CheckSDK();
             _task = naxokitUpdater.CheckForUpdates();
-            
             //keep always down in OnEnable never move it up
             if (Config.DefPath != null) return;
             NaxoDefaultPath.ShowWindow();

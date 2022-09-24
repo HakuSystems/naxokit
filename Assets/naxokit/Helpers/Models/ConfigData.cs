@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Security;
 using JetBrains.Annotations;
 
@@ -17,8 +19,10 @@ namespace naxokit.Helpers.Models
             NaxoPlayModeTools = new NaxoPlayModeToolsData();
             NaxoVersion = new NaxoVersionData();
             DefaultPath = new DefaultPathData();
+            PresetManager = new PresetManagerData();
         }
 
+        public  PresetManagerData PresetManager { get; set; }
         public DefaultPathData DefaultPath { get; set; }
 
         public NaxoVersionData NaxoVersion { get; set; }
@@ -29,6 +33,21 @@ namespace naxokit.Helpers.Models
         public SceneSaverData SceneSaver { get; set; }
         public DiscordData Discord { get; set; }
         public BackupManagerData BackupManager { get; set; }
+    }
+
+    public class PresetManagerData
+    {
+        [CanBeNull] public Dictionary<int, PresetData> Presets { get; set; }
+    }
+
+    public class PresetData
+    {
+        public string Name { get; set; }
+        public List<string> Paths { get; set; }
+        public string Description { get; set; }
+        
+        public DateTime CreatedAt { get; set; }
+        
     }
 
     public class DefaultPathData

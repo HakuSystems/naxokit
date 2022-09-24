@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Timers;
@@ -36,6 +37,8 @@ namespace naxokit.Screens
             {
                 if (GUILayout.Button("Change Default Path"))
                     Config.DefPath = null;
+                if(GUILayout.Button("Open"))
+                    Process.Start(Config.DefPath);
                 if (GUILayout.Button("?", GUILayout.Width(20)))
                 {
                     //TODO: Add Link to the Documentation on Youtube

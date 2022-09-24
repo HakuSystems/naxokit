@@ -29,7 +29,7 @@ namespace naxokit.DiscordRPC
                 if (Config.Discordrpc_Username)
                     richPresence.details = "Username: " + naxoApiHelper.User.Username;
                 else
-                    richPresence.details = "Username Hidden";
+                    richPresence.details = "Username Hidden"; 
                 //richPresence.details = $"Username: {naxoApiHelper.User.Username}";
                 richPresence.state = "Permission: " + naxoApiHelper.User.Permission.ToString();
             }
