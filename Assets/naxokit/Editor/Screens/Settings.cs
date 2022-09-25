@@ -38,7 +38,8 @@ namespace naxokit.Screens
                 if (GUILayout.Button("Change Default Path"))
                     Config.DefPath = null;
                 if(GUILayout.Button("Open"))
-                    Process.Start(Config.DefPath);
+                    if (Config.DefPath != null)
+                        Process.Start(Config.DefPath);
                 if (GUILayout.Button("?", GUILayout.Width(20)))
                 {
                     //TODO: Add Link to the Documentation on Youtube

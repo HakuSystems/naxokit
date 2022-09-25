@@ -14,8 +14,6 @@ namespace naxokit.Screens
             EditorGUILayout.LabelField("SupportTeam", EditorStyles.centeredGreyMiniLabel);
             EditorGUILayout.LabelField("ZKWolf", EditorStyles.foldout);
             EditorGUILayout.LabelField("SlySnake96", EditorStyles.foldout);
-            EditorGUILayout.LabelField("enemy of the state(ukeid)", EditorStyles.foldout);
-
         }
     }
 }

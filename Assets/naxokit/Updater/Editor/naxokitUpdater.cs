@@ -26,7 +26,7 @@ namespace naxokit.Updater
         private static readonly Uri ReleaseVersionUri = new Uri(BaseURL + "/public/naxokit/version"); //Only for Branch: release
         private static readonly Uri VersionListUri = new Uri(BaseURL + "/public/naxokit/version/list"); //Lists all Branches
 
-        public static readonly string CurrentVersion = Config.Version;
+        private static readonly string CurrentVersion = Config.Version;
         private  static NaxoVersionData LatestVersion { get; set; }
         
         private List<NaxoVersionData> _versionList;
@@ -41,7 +41,7 @@ namespace naxokit.Updater
             if (LatestVersion == null)
             {
                 naxoLog.Log(ScriptName,"No updates found.");
-                naxokitDashboard.UserIsUptoDate = true;
+                naxokitDashboard.userIsUptoDate = true;
                 return;
             }
             if (CurrentVersion != LatestVersion.Version)
@@ -57,11 +57,11 @@ namespace naxokit.Updater
                         Config.BackupManager_DeleteOldBackups_Enabled);
                     await  DownloadVersion();
                 }
-                naxokitDashboard.UserIsUptoDate = false;
+                naxokitDashboard.userIsUptoDate = false;
                 return;
             }
             naxoLog.Log(ScriptName,"You are up to date!");
-            naxokitDashboard.UserIsUptoDate = true;
+            naxokitDashboard.userIsUptoDate = true;
         }
 
         private static async Task<NaxoVersionData> GetLatestVersion(Enum branch)
@@ -136,7 +136,7 @@ namespace naxokit.Updater
                                 $"/naxokit V{LatestVersion?.Version ?? version}.unitypackage");
                     EditorUtility.DisplayDialog(ScriptName, "Update complete!", "Ok");
                     UpdaterConfigChange(branch);
-                    naxokitDashboard.UserIsUptoDate = true;
+                    naxokitDashboard.userIsUptoDate = true;
                 };
             }
             catch (Exception e)

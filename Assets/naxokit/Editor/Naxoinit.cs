@@ -20,28 +20,21 @@ namespace naxokit
         public static bool IsPlayMode()
         {
             var scenePath = "Assets/naxokit/Helpers/Scenes/naxokitPlayModeTools.unity";
-            if (EditorApplication.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode)
-            {
-                if (Config.NaxoPlayModeTools_Enabled)
-                {
-                    if (!EditorSceneManager.GetSceneByPath(scenePath).isLoaded)
-                        EditorSceneManager.LoadSceneInPlayMode(scenePath, new LoadSceneParameters(LoadSceneMode.Additive));
-                }
+            if (!EditorApplication.isPlaying && !EditorApplication.isPlayingOrWillChangePlaymode) return false;
+            if (!Config.NaxoPlayModeTools_Enabled) return true;
+            if (!SceneManager.GetSceneByPath(scenePath).isLoaded)
+                EditorSceneManager.LoadSceneInPlayMode(scenePath, new LoadSceneParameters(LoadSceneMode.Additive));
 
-                return true;
-            }
-            return false;
+            return true;
         }
 
         private static void SceneSaver()
         {
             EditorApplication.hierarchyChanged += () =>
             {
-                if (Config.SceneAutosaver_Enabled && !IsPlayMode()) //only works in Edit Mode
-                {
-                    EditorSceneManager.SaveOpenScenes();
-                    naxoLog.Log("SceneSaver", "Open Scenes saved");
-                }
+                if (!Config.SceneAutosaver_Enabled || IsPlayMode()) return; //only works in Edit Mode
+                EditorSceneManager.SaveOpenScenes();
+                naxoLog.Log("SceneSaver", "Open Scenes saved");
             };
         }
     }

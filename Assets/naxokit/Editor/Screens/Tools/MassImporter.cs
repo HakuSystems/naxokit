@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using naxokit.Styles;
 using System.IO;
 using System;
+using System.Linq;
 using naxokit.Helpers.Auth;
 
 public class MassImporter : EditorWindow
 {
-    private List<string> paths = new List<string>();
-    private Vector2 scrollPosition;
+    private readonly List<string> _paths = new List<string>();
+    private Vector2 _scrollPosition;
 
     //[MenuItem("naxokitDevelopment/MassImporter")]
     public static void ShowWindow()
@@ -22,23 +23,20 @@ public class MassImporter : EditorWindow
     private void OnEnable()
     {
         minSize = new Vector2(300, 300);
-        paths.Clear();
+        _paths.Clear();
     }
     private void Update()
     {
-        foreach (var path in paths)
+        foreach (var path in _paths.Where(path => !File.Exists(path)))
         {
-            if (!File.Exists(path))
-            {
-                paths.Remove(path);
-                naxoLog.Log("MassImporter", "File does not exist anymore: " + path);
-                break;
-            }
+            _paths.Remove(path);
+            naxoLog.Log("MassImporter", "File does not exist anymore: " + path);
+            break;
         }
     }
     private void OnGUI()
     {
-        Event evt = Event.current;
+        var evt = Event.current;
         if (evt.type == EventType.DragUpdated)
         {
             DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
@@ -47,9 +45,9 @@ public class MassImporter : EditorWindow
         if (evt.type == EventType.DragPerform)
         {
             DragAndDrop.AcceptDrag();
-            foreach (string draggedObject in DragAndDrop.paths)
+            foreach (var draggedObject in DragAndDrop.paths)
             {
-                paths.Add(draggedObject);
+                _paths.Add(draggedObject);
                 naxoLog.Log("MassImporter", "Added " + draggedObject);
             }
             evt.Use();
@@ -65,20 +63,20 @@ public class MassImporter : EditorWindow
                 var filePanelPath = EditorUtility.OpenFilePanel("Select UnityPackage", "", "unitypackage");
                 if (filePanelPath.EndsWith(".unitypackage"))
                 {
-                    paths.Add(filePanelPath);
+                    _paths.Add(filePanelPath);
                     naxoLog.Log("MassImporter", "Added " + filePanelPath);
                 }
             }
             DrawLine.DrawHorizontalLine();
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
             {
-                foreach (var path in paths)
+                foreach (var path in _paths)
                 {
                     EditorGUILayout.BeginHorizontal();
                     {
                         if (GUILayout.Button("Remove", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.ButtonMid.ToString())))
                         {
-                            paths.Remove(path);
+                            _paths.Remove(path);
                             naxoLog.Log("MassImporter", "Removed " + path);
                             break;
                         }
@@ -90,16 +88,16 @@ public class MassImporter : EditorWindow
             EditorGUILayout.EndScrollView();
             EditorGUILayout.BeginHorizontal();
             {
-                if (paths.Count != 0 && GUILayout.Button("Import All"))
+                if (_paths.Count != 0 && GUILayout.Button("Import All"))
                 {
-                    foreach (var path in paths)
+                    foreach (var path in _paths)
                     {
                         AssetDatabase.ImportPackage(path, false);
                     }
-                    paths.Clear();
+                    _paths.Clear();
                     naxoLog.Log("MassImporter", "Imported all packages");
                 }
-                if (paths.Count != 0 && GUILayout.Button("Remove All")) paths.Clear();
+                if (_paths.Count != 0 && GUILayout.Button("Remove All")) _paths.Clear();
             }
             EditorGUILayout.EndHorizontal();
 
@@ -110,6 +108,6 @@ public class MassImporter : EditorWindow
     internal static void AddToMassImporter(string path)
     {
         var window = GetWindow<MassImporter>();
-        window.paths.Add(path);
+        window._paths.Add(path);
     }
 }

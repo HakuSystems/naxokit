@@ -13,32 +13,32 @@ public class SaveHierachryOnClick : MonoBehaviour
 {
     public void SaveHierachry()
     {
-        string path = "Assets/naxokit/SavedHierachry/";
-        Scene sceneToIgnore = SceneManager.GetSceneByName("naxokitPlayModeTools");
+        const string path = "Assets/naxokit/SavedHierachry/";
+        var sceneToIgnore = SceneManager.GetSceneByName("naxokitPlayModeTools");
 
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
 
-        GameObject InfoText = GameObject.Find("InfoText");
-        Text InfoTextText = InfoText.GetComponent<Text>();
-        InfoTextText.text = "Saving Hierachry";
+        var infoText = GameObject.Find("InfoText");
+        var infoTextText = infoText.GetComponent<Text>();
+        infoTextText.text = "Saving Hierachry";
         naxoLog.Log("SaveHierachryButton", "Saving Hierachry");
 
-        string folder = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+        var folder = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         Directory.CreateDirectory(path + folder);
 
-        GameObject SavedHierachry = new GameObject("SavedHierachry");
-        foreach (GameObject go in FindObjectsOfType(typeof(GameObject)) as GameObject[])
+        var savedHierachry = new GameObject("SavedHierachry");
+        foreach (var go in (GameObject[])FindObjectsOfType(typeof(GameObject)))
         {
             if (go.transform.parent == null && go.scene != sceneToIgnore)
             {
-                go.transform.SetParent(SavedHierachry.transform);
+                go.transform.SetParent(savedHierachry.transform);
             }
         }
 
-        PrefabUtility.SaveAsPrefabAsset(SavedHierachry, path + folder + "/SavedHierachry.prefab");
-        InfoTextText.text = "Saved Hierachry";
+        PrefabUtility.SaveAsPrefabAsset(savedHierachry, path + folder + "/SavedHierachry.prefab");
+        infoTextText.text = "Saved Hierachry";
         naxoLog.Log("SaveHierachryButton", "Saved Hierachry to " + path + folder + "/SavedHierachry.prefab");
-        InfoTextText.color = Color.green;
+        infoTextText.color = Color.green;
     }
 }

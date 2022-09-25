@@ -8,9 +8,8 @@ namespace naxokit.Screens
 {
     public class NaxoLoader : EditorWindow
     {
-
-        public static AssetBundle assetBundle;
-        public static GameObject prefab;
+        private static AssetBundle _assetBundle;
+        private static GameObject _prefab;
         private static void ShowWindow()
         {
             var window = GetWindow<NaxoLoader>();
@@ -40,7 +39,7 @@ namespace naxokit.Screens
                     EditorUtility.DisplayDialog("Error", path.ToString() + " is Not a valid VRCA file", "OK");
                 }
             }
-            Event evt = Event.current;
+            var evt = Event.current;
             if (evt.type == EventType.DragUpdated)
             {
                 DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
@@ -69,15 +68,15 @@ namespace naxokit.Screens
             EditorUtility.DisplayProgressBar("Working", "Please Wait", 0f); // its not loading but fuck it :dance:
             try
             {
-                if (assetBundle)
+                if (_assetBundle)
                 {
-                    assetBundle.Unload(false);
-                    DestroyImmediate(prefab);
+                    _assetBundle.Unload(false);
+                    DestroyImmediate(_prefab);
                 }
-                assetBundle = AssetBundle.LoadFromFile(path);
-                foreach (var obj in assetBundle.LoadAllAssets<GameObject>())
+                _assetBundle = AssetBundle.LoadFromFile(path);
+                foreach (var obj in _assetBundle.LoadAllAssets<GameObject>())
                 {
-                    prefab = (GameObject)Instantiate(obj);
+                    _prefab = (GameObject)Instantiate(obj);
                 }
             }
             catch (Exception e)
