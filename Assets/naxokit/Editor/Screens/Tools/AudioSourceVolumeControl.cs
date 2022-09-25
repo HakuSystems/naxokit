@@ -9,11 +9,10 @@ using System.Linq;
 
 public class AudioSourceVolumeControl : EditorWindow
 {
-
-    public static List<AudioSource> audioSources = new List<AudioSource>();
-    private Vector2 scrollPosition;
-    private int showindex = 10;
-    private string searchBar = "";
+    private static readonly List<AudioSource> AudioSources = new List<AudioSource>();
+    private Vector2 _scrollPosition;
+    private int _showindex = 10;
+    private string _searchBar = "";
 
     public static void ShowWindow()
     {
@@ -26,15 +25,15 @@ public class AudioSourceVolumeControl : EditorWindow
     {
         minSize = new Vector2(1000, 300);
         maxSize = new Vector2(1000, 300);
-        audioSources.Clear();
+        AudioSources.Clear();
         foreach (var audioSource in GameObject.FindObjectsOfType<AudioSource>())
         {
-            audioSources.Add(audioSource);
+            AudioSources.Add(audioSource);
         }
     }
     private void OnDestroy()
     {
-        foreach (var audioSource in audioSources)
+        foreach (var audioSource in AudioSources)
         {
             audioSource.Pause();
         }
@@ -42,30 +41,20 @@ public class AudioSourceVolumeControl : EditorWindow
     private void Update()
     {
         Repaint();
-        if (audioSources.Count != GameObject.FindObjectsOfType<AudioSource>().Length)
+        if (AudioSources.Count != GameObject.FindObjectsOfType<AudioSource>().Length)
         {
-            audioSources.Clear();
+            AudioSources.Clear();
             foreach (var audioSource in GameObject.FindObjectsOfType<AudioSource>())
             {
-                audioSources.Add(audioSource);
+                AudioSources.Add(audioSource);
             }
         }
-        int currentlyPlaying = 0;
-        foreach (var audioSource in audioSources)
+        var currentlyPlaying = AudioSources.Count(audioSource => audioSource.isPlaying);
+        if (currentlyPlaying <= 1) return;
         {
-            if (audioSource.isPlaying)
+            foreach (var audioSource in AudioSources.Where(audioSource => audioSource.isPlaying))
             {
-                currentlyPlaying++;
-            }
-        }
-        if (currentlyPlaying > 1)
-        {
-            foreach (var audioSource in audioSources)
-            {
-                if (audioSource.isPlaying)
-                {
-                    audioSource.Pause();
-                }
+                audioSource.Pause();
             }
         }
     }
@@ -75,27 +64,27 @@ public class AudioSourceVolumeControl : EditorWindow
         {
             EditorGUILayout.BeginHorizontal();
             {
-                if (audioSources.Count == 0) EditorGUILayout.LabelField("No AudioSources found", EditorStyles.toolbarButton);
-                else EditorGUILayout.LabelField("AudioSources found: " + audioSources.Count, EditorStyles.toolbarButton);
+                if (AudioSources.Count == 0) EditorGUILayout.LabelField("No AudioSources found", EditorStyles.toolbarButton);
+                else EditorGUILayout.LabelField("AudioSources found: " + AudioSources.Count, EditorStyles.toolbarButton);
 
                 EditorGUILayout.LabelField("AudioSources in Hierarchy", EditorStyles.toolbarButton);
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
             {
-                showindex = EditorGUILayout.IntSlider("Show Amount: ", showindex, 0, audioSources.Count - 1);
-                searchBar = EditorGUILayout.TextField(searchBar, EditorStyles.toolbarSearchField);
+                _showindex = EditorGUILayout.IntSlider("Show Amount: ", _showindex, 0, AudioSources.Count - 1);
+                _searchBar = EditorGUILayout.TextField(_searchBar, EditorStyles.toolbarSearchField);
             }
             EditorGUILayout.EndHorizontal();
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, false, GUILayout.Width(EditorGUIUtility.currentViewWidth));
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition, false, false, GUILayout.Width(EditorGUIUtility.currentViewWidth));
             {
                 EditorGUILayout.BeginVertical();
                 {
                     var resultCount = 0;
-                    foreach (var audioSource in audioSources)
+                    foreach (var audioSource in AudioSources)
                     {
                         resultCount++;
-                        if (audioSource.name.ToLower().Contains(searchBar.ToLower()) && showindex > resultCount - 1)
+                        if (audioSource.name.ToLower().Contains(_searchBar.ToLower()) && _showindex > resultCount - 1)
                         {
                             EditorGUILayout.BeginHorizontal();
                             {

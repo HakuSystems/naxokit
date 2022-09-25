@@ -1,9 +1,17 @@
-﻿using naxokit.Helpers.Auth;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Timers;
+using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
 using naxokit.Helpers.Logger;
 using naxokit.Styles;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace naxokit.Screens
 {
@@ -12,34 +20,105 @@ namespace naxokit.Screens
 
         public static void HandleSettingsOpend()
         {
-            DrawLine.DrawHorizontalLine();
-            EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical();
+            DiscordSettings();
+            GUILayout.Space(10);
+            AutoSaverSettings();
+            GUILayout.Space(10);
+            PlaymodeSettings();
+            GUILayout.Space(10);
+            DefaultPathSettings();
+            GUILayout.Space(10);
+            UpdatesSettings();
+        }
+
+        private static void DefaultPathSettings()
+        {
+            EditorGUILayout.BeginHorizontal();
             {
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
-                EditorGUILayout.LabelField("Discord Rich Presence", EditorStyles.boldLabel);
-                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Change Default Path"))
+                    Config.DefPath = null;
+                if(GUILayout.Button("Open"))
+                    if (Config.DefPath != null)
+                        Process.Start(Config.DefPath);
+                if (GUILayout.Button("?", GUILayout.Width(20)))
                 {
-                    Config.Discordrpc_Enabled = EditorGUILayout.Toggle("Enabled", Config.Discordrpc_Enabled);
-                    EditorGUILayout.TextField("Enable/Disable Requries Restart!", EditorStyles.centeredGreyMiniLabel);
-                    Config.Discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.Discordrpc_Username);
+                    //TODO: Add Link to the Documentation on Youtube
                 }
-                EditorGUILayout.EndHorizontal();
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
-                EditorGUILayout.BeginHorizontal();
-                {
-                    EditorGUILayout.LabelField("Scene Autosaver ", EditorStyles.boldLabel);
-                    Config.SceneAutosaver_Enabled = EditorGUILayout.Toggle("Enabled", Config.SceneAutosaver_Enabled);
-                }
-                EditorGUILayout.EndHorizontal();
-                GUILayout.Space(5);
-
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
             }
-            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndHorizontal();
+        }
 
-            DrawLine.DrawHorizontalLine();
+        private static void UpdatesSettings()
+        {
+            EditorGUILayout.BeginHorizontal();
+            {
+                Config.CheckForUpdates = EditorGUILayout.Toggle("Check for Updates", Config.CheckForUpdates);
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+            
+        }
 
+        private static void PlaymodeSettings()
+        {
+            EditorGUILayout.BeginHorizontal();
+            {
+                Config.NaxoPlayModeTools_Enabled = EditorGUILayout.Toggle("NaxoPlayMode Tools", Config.NaxoPlayModeTools_Enabled);
+                EditorGUILayout.LabelField("Additional Settings for Playmode", new GUIStyle(EditorStyles.textField) {normal = {textColor = Color.yellow}});
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
+                
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private static void AutoSaverSettings()
+        {
+            EditorGUILayout.BeginHorizontal();
+            {
+                Config.SceneAutosaver_Enabled = EditorGUILayout.Toggle("Scene Autosaver", Config.SceneAutosaver_Enabled);
+                EditorGUILayout.LabelField("Only saves in Edit Mode!", new GUIStyle(EditorStyles.textField) {normal = {textColor = Color.yellow}});
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
+                
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private static void DiscordSettings()
+        {
+            EditorGUILayout.LabelField("Discord Rich Presence", EditorStyles.boldLabel);
+            EditorGUILayout.BeginHorizontal();
+            {
+                Config.Discordrpc_Enabled = EditorGUILayout.Toggle("Enabled", Config.Discordrpc_Enabled);
+                EditorGUILayout.LabelField("Unity Requries Restart!", new GUIStyle(EditorStyles.textField) {normal = {textColor = Color.yellow}});
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            {
+                Config.Discordrpc_Username = EditorGUILayout.Toggle("Username Shown", Config.Discordrpc_Username);
+                if (Config.Discordrpc_Username)
+                    EditorGUILayout.LabelField("Shown", new GUIStyle(EditorStyles.textField) {normal = {textColor = Color.green}});
+                else
+                    EditorGUILayout.LabelField("Hidden", new GUIStyle(EditorStyles.textField) {normal = {textColor = Color.red}});
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+            
         }
 
 

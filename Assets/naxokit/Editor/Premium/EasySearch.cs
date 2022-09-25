@@ -13,12 +13,12 @@ namespace naxokit.Screens
     public class EasySearch : EditorWindow
     {
 
-        private string searchString = "";
-        private string endsWithString = "unitypackage";
-        private static int sliderLeftValue = 10;
+        private string _searchString = "";
+        private string _endsWithString = "unitypackage";
+        private static int _sliderLeftValue = 10;
 
 
-        private static Vector2 scrollPosition;
+        private static Vector2 _scrollPosition;
 
         private static void ShowWindow()
         {
@@ -42,11 +42,11 @@ namespace naxokit.Screens
             GUILayout.BeginHorizontal(GUI.skin.FindStyle("Toolbar"));
             GUILayout.Button("naxokit", EditorStyles.toolbarButton);
             GUILayout.Button("EasySearch", EditorStyles.toolbarButton);
-            searchString = GUILayout.TextField(searchString, GUI.skin.FindStyle("ToolbarSeachTextField"),
+            _searchString = GUILayout.TextField(_searchString, GUI.skin.FindStyle("ToolbarSeachTextField"),
                 GUILayout.Width(450));
             if (GUILayout.Button("X", EditorStyles.toolbarButton))
             {
-                searchString = string.Empty;
+                _searchString = string.Empty;
                 GUI.FocusControl(null);
             }
 
@@ -56,16 +56,16 @@ namespace naxokit.Screens
 
             GUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("EndsWith:", EditorStyles.centeredGreyMiniLabel);
-            endsWithString = EditorGUILayout.TextField(endsWithString, EditorStyles.toolbarButton);
-            sliderLeftValue = EditorGUILayout.IntSlider(sliderLeftValue, 1, 1000);
+            _endsWithString = EditorGUILayout.TextField(_endsWithString, EditorStyles.toolbarButton);
+            _sliderLeftValue = EditorGUILayout.IntSlider(_sliderLeftValue, 1, 1000);
             EditorGUILayout.EndHorizontal();
             GUILayout.Space(4);
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Search", EditorStyles.toolbarButton))
             {
-                if (endsWithString.StartsWith("."))
-                    endsWithString = endsWithString.Replace(".", "");
+                if (_endsWithString.StartsWith("."))
+                    _endsWithString = _endsWithString.Replace(".", "");
                 if (Process.GetProcessesByName("Everything").Length != 0) FillList();
                 else
                 {
@@ -80,7 +80,7 @@ namespace naxokit.Screens
 
             if (_results == null) return;
 
-            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(600));
+            _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, GUILayout.Width(600));
             var resultCount = 0;
             var hash = new HashSet<string>();
             foreach (var result in _results)
@@ -117,6 +117,7 @@ namespace naxokit.Screens
             }
 
             GUILayout.EndScrollView();
+            GUILayout.Label("Thanks for the Support on Patreon!", EditorStyles.centeredGreyMiniLabel);
 
         }
         private readonly List<Everything.Result> _results = new List<Everything.Result>();
@@ -131,7 +132,7 @@ namespace naxokit.Screens
         private void FillList()
         {
             _results.Clear();
-            _results.AddRange(Everything.Search($"{searchString} endwith:.{endsWithString}", sliderLeftValue));
+            _results.AddRange(Everything.Search($"{_searchString} endwith:.{_endsWithString}", _sliderLeftValue));
         }
     }
 }

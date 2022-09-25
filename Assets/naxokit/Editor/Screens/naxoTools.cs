@@ -1,38 +1,51 @@
+using System;
+using System.Net;
+using System.Security.Permissions;
+using JetBrains.Annotations;
 using naxokit.Helpers.Auth;
 using naxokit.Helpers.Configs;
 using naxokit.Helpers.Logger;
+using naxokit.Screens.Tools;
 using naxokit.Styles;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace naxokit.Screens
 {
     public class naxoTools : EditorWindow
     {
+        private static VideoPlayer _movie;
         public static void HandleToolsOpend()
         {
-            DrawLine.DrawHorizontalLine();
-            EditorGUILayout.LabelField("Tools", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal();
             {
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
-                EditorGUILayout.LabelField("AudioSourceVolumeControl", EditorStyles.boldLabel);
                 if (GUILayout.Button("AudioSourceVolumeControl"))
                 {
                     AudioSourceVolumeControl.ShowWindow();
                 }
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
-                EditorGUILayout.LabelField("MassImporter", EditorStyles.boldLabel);
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
                 if (GUILayout.Button("MassImporter"))
                 {
                     MassImporter.ShowWindow();
                 }
-                DrawLine.DrawHorizontalLine(1, Color.magenta);
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
+                if (GUILayout.Button("PresetManager"))
+                {
+                    PresetManager.ShowWindow();
+                }
+                if (GUILayout.Button("?", GUILayout.Width(20)))
+                {
+                    //TODO: Add Link to the Documentation on Youtube
+                }
             }
-            EditorGUILayout.EndVertical();
-
-            DrawLine.DrawHorizontalLine();
+            EditorGUILayout.EndHorizontal();
 
         }
     }

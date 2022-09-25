@@ -6,6 +6,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using naxokit.Screens;
 using UnityEditor;
 using Random = System.Random;
 
@@ -13,23 +14,23 @@ namespace naxokit.Helpers.Auth
 {
     public class naxoApiHelper
     {
-        private static readonly HttpClient client = new HttpClient();
-        public static ApiData.ApiUser User;
+        private static readonly HttpClient Client = new HttpClient();
+        public static ApiData.ApiUser user;
 
-        private const string BASE_URL = "https://api.naxokit.com";
-        private static readonly Uri UserSelfUri = new Uri(BASE_URL + "/user/self");
-        private static readonly Uri RedeemUri = new Uri(BASE_URL + "/user/redeemables/redeem");
-        private static readonly Uri LoginUri = new Uri(BASE_URL + "/user/login");
-        private static readonly Uri SignupUri = new Uri(BASE_URL + "/user/signup");
-        private static bool running = false;
+        private const string BaseURL = "https://api.naxokit.com";
+        private static readonly Uri UserSelfUri = new Uri(BaseURL + "/user/self");
+        private static readonly Uri RedeemUri = new Uri(BaseURL + "/user/redeemables/redeem");
+        private static readonly Uri LoginUri = new Uri(BaseURL + "/user/login");
+        private static readonly Uri SignupUri = new Uri(BaseURL + "/user/signup");
+        private static bool _running = false;
         private const string AppJson = "application/json";
 
-        public static bool IsLoggedInAndVerified() => IsUserLoggedIn() && User.IsVerified;
+        public static bool IsLoggedInAndVerified() => IsUserLoggedIn() && user.IsVerified;
 
         public static bool IsUserLoggedIn()
         {
-            if (User == null && !string.IsNullOrEmpty(auth_api.Config.AuthKey) && !running) CheckUserSelf();
-            return User != null;
+            if (user == null && !string.IsNullOrEmpty(Config.AuthKey) && !_running) CheckUserSelf();
+            return user != null;
         }
 
 
@@ -37,38 +38,39 @@ namespace naxokit.Helpers.Auth
         {
             naxoLog.Log("naxoApiHelper", "Clearing Login Data");
             naxokitDashboard.finallyLoggedIn = false;
-            User = null;
-            auth_api.Config.AuthKey = null;
-            auth_api.Save();
+            user = null;
+            Config.AuthKey = null;
+            Config.UpdateConfig();
             DiscordRPC.naxokitRPC.UpdateRPC();
         }
         private static async Task<HttpResponseMessage> MakeApiCall(HttpRequestMessage request)
         {
-            if (!string.IsNullOrEmpty(auth_api.Config.AuthKey))
-                request.Headers.Add("Auth-Key", auth_api.Config.AuthKey);
+            if (!string.IsNullOrEmpty(Config.AuthKey))
+                request.Headers.Add("Auth-Key", Config.AuthKey);
 
-            var response = await client.SendAsync(request);
+            var response = await Client.SendAsync(request);
             var data = JsonConvert.DeserializeObject<ApiData.ApiBaseResponse<object>>(await response.Content.ReadAsStringAsync());
-            if (!response.IsSuccessStatusCode)
-            {
-                naxoLog.LogWarning("naxoApiHelper", "Failed to make Api Call: " + data.Message);
-                ClearLogin();
-            }
+            if (response.IsSuccessStatusCode) return response;
+            naxoLog.LogWarning("naxoApiHelper", "Failed to make Api Call: " + data.Message);
+            ClearLogin();
             return response;
 
         }
         private static async void CheckUserSelf()
         {
-            running = true;
+            _running = true;
             naxoLog.Log("naxoApiHelper", "Checking User");
             var request = new HttpRequestMessage(HttpMethod.Get, UserSelfUri);
             var response = await MakeApiCall(request);
-            string json = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<ApiData.ApiBaseResponse<ApiData.ApiUser>>(json);
-            User = data.Data;
-            naxoLog.Log("naxoApiHelper", "Sucsessfully got User: " + User.Username);
+            if (data != null) user = data.Data;
+            naxoLog.Log("naxoApiHelper", "Sucsessfully got User: " + user.Username);
             naxokitDashboard.SetFinallyLoggedIn(true);
-            running = false;
+            Config.IsPremiumBoolSinceLastCheck = user.IsPremium;
+            Config.LastPremiumCheck = DateTime.Now;
+            Config.UpdateConfig();
+            _running = false;
         }
         public static async void RedeemLicense(string code)
         {
@@ -103,25 +105,26 @@ namespace naxokit.Helpers.Auth
             naxoLog.Log("naxoApiHelper", "Login Successful");
             if (naxokitDashboard.savePasswordLocally)
                 SaveRecivedPassword(password);
-            auth_api.Config.AuthKey = data.Data.AuthKey;
-            auth_api.Save();
+            Config.AuthKey = data.Data.AuthKey;
+            Config.UpdateConfig();
             CheckUserSelf();
             naxokitDashboard.SetFinallyLoggedIn(true);
             naxokit.DiscordRPC.naxokitRPC.UpdateRPC();
+            Config.TermsPolicyAccepted = true;
         }
 
         private static void SaveRecivedPassword(string password)
         {
             naxoLog.Log("naxoApiHelper", "Saving Password");
-            auth_api.Config.Password = password;
-            auth_api.Save();
+            Config.Password = password;
+            Config.UpdateConfig();
         }
 
         public static string GetSavedPassword()
         {
-            if (string.IsNullOrEmpty(auth_api.Config.Password))
+            if (string.IsNullOrEmpty(Config.Password))
                 return "";
-            return auth_api.Config.Password;
+            return Config.Password;
         }
 
         public static void Logout() => ClearLogin();
@@ -131,7 +134,7 @@ namespace naxokit.Helpers.Auth
             var request = new HttpRequestMessage(HttpMethod.Post, SignupUri) { Content = content };
             var response = await MakeApiCall(request);
             var data = JsonConvert.DeserializeObject<ApiData.ApiBaseResponse<ApiData.ApiSanityCheckResponse>>(await response.Content.ReadAsStringAsync());
-            if (data.Message.Contains("Sanity checks"))
+            if (data != null && data.Message.Contains("Sanity checks"))
             {
                 var sb = new StringBuilder();
                 string usernameArray = null;
@@ -176,49 +179,46 @@ namespace naxokit.Helpers.Auth
             }
             naxoLog.Log("naxoApiHelper", "Signup Successful");
             EditorUtility.DisplayDialog("naxoApiHelper", "Signup Successful", "OK");
-            return;
         }
 
         public static string ApiGenerateStrongPassword()
         {
-            int minLenght = 8;
-            int maxLenght = 128;
-            int minLowerCase = 1;
-            int minNumber = 1;
-            int minSpecialChar = 1;
-            string allowedSpecials = "@#$%/.!'_-";
-            string allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789";
+            const int minLenght = 8;
+            const int maxLenght = 128;
+            const int minLowerCase = 1;
+            const int minNumber = 1;
+            const int minSpecialChar = 1;
+            const string allowedSpecials = "@#$%/.!'_-";
+            const string allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789";
 
-            string password = "";
+            var password = "";
 
-            int allowedCharsLenght = allowedChars.Length;
-            int allowedSpecialsLenght = allowedSpecials.Length;
-            int passwordLenght = UnityEngine.Random.Range(minLenght, maxLenght);
-            int lowerCaseLetters = UnityEngine.Random.Range(minLowerCase, passwordLenght);
-            int numbers = UnityEngine.Random.Range(minNumber, passwordLenght);
-            int specialChars = UnityEngine.Random.Range(minSpecialChar, passwordLenght);
-            for (int i = 0; i < lowerCaseLetters; i++)
+            var allowedCharsLenght = allowedChars.Length;
+            var allowedSpecialsLenght = allowedSpecials.Length;
+            var passwordLenght = UnityEngine.Random.Range(minLenght, maxLenght);
+            var lowerCaseLetters = UnityEngine.Random.Range(minLowerCase, passwordLenght);
+            var numbers = UnityEngine.Random.Range(minNumber, passwordLenght);
+            var specialChars = UnityEngine.Random.Range(minSpecialChar, passwordLenght);
+            for (var i = 0; i < lowerCaseLetters; i++)
             {
                 password += allowedChars[UnityEngine.Random.Range(0, allowedCharsLenght)];
             }
-            for (int i = 0; i < numbers; i++)
+            for (var i = 0; i < numbers; i++)
             {
                 password += allowedChars[UnityEngine.Random.Range(0, allowedCharsLenght)];
             }
-            for (int i = 0; i < specialChars; i++)
+            for (var i = 0; i < specialChars; i++)
             {
                 password += allowedSpecials[UnityEngine.Random.Range(0, allowedSpecialsLenght)];
             }
-            char[] passwordArray = password.ToCharArray();
-            Random rng = new Random();
-            int n = passwordArray.Length;
+            var passwordArray = password.ToCharArray();
+            var rng = new Random();
+            var n = passwordArray.Length;
             while (n > 1)
             {
                 n--;
-                int k = rng.Next(n + 1);
-                var value = passwordArray[k];
-                passwordArray[k] = passwordArray[n];
-                passwordArray[n] = value;
+                var k = rng.Next(n + 1);
+                (passwordArray[k], passwordArray[n]) = (passwordArray[n], passwordArray[k]);
             }
             naxoLog.Log("naxoApiHelper", "Generated Strong Password!");
             return new string(passwordArray);
