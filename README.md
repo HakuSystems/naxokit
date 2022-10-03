@@ -1,5 +1,5 @@
 **naxokit**
-naxokit is a overall extension kit for unity!
+naxokit is a unitypackage to help content creation for VR Social Media platforms like VRChat and ChilloutVR and has alot of useful tools for unity in general
 
 naxokit is being constently updated and worked on (we always try to be as fast as possible with updates)
 
