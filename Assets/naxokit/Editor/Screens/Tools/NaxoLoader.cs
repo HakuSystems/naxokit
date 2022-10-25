@@ -59,7 +59,6 @@ namespace naxokit.Screens
                 evt.Use();
             }
             GUILayout.EndHorizontal();
-            GUILayout.Label("Thanks for the Support on Patreon!", EditorStyles.centeredGreyMiniLabel);
 
         }
 

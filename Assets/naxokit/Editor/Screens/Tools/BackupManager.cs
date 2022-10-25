@@ -119,14 +119,10 @@ public class BackupManager : EditorWindow
         }
         EditorGUILayout.EndScrollView();
 
-        GUILayout.Label("Thanks for the Support on Patreon!", EditorStyles.centeredGreyMiniLabel);
-
     }
 
     public static void CreateBackup(bool _saveAsUnitypackage, bool _deleteOldBackups)
     {
-        if (!Config.IsPremiumBoolSinceLastCheck)
-            return;
         naxoLog.Log("BackupManager", "Creating Backup");
 
         var results = 0f;

@@ -25,8 +25,7 @@ namespace naxokit.Updater
 
         private static readonly Uri ReleaseVersionUri = new Uri(BaseURL + "/public/naxokit/version"); //Only for Branch: release
         private static readonly Uri VersionListUri = new Uri(BaseURL + "/public/naxokit/version/list"); //Lists all Branches
-
-        private static readonly string CurrentVersion = Config.Version;
+        
         private  static NaxoVersionData LatestVersion { get; set; }
         
         private List<NaxoVersionData> _versionList;
@@ -44,7 +43,7 @@ namespace naxokit.Updater
                 naxokitDashboard.userIsUptoDate = true;
                 return;
             }
-            if (CurrentVersion != LatestVersion.Version)
+            if (Config.Version != LatestVersion.Version)
             {
                 naxoLog.Log(ScriptName,"Update available!");
                 if (!Config.CheckForUpdates)

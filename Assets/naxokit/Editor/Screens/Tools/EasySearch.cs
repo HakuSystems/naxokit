@@ -4,8 +4,8 @@ using System;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using naxokit.Premium;
 using naxokit.Helpers.Logger;
+using naxokit.Premium;
 using UnityEditor.UIElements;
 
 namespace naxokit.Screens
@@ -117,7 +117,6 @@ namespace naxokit.Screens
             }
 
             GUILayout.EndScrollView();
-            GUILayout.Label("Thanks for the Support on Patreon!", EditorStyles.centeredGreyMiniLabel);
 
         }
         private readonly List<Everything.Result> _results = new List<Everything.Result>();

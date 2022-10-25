@@ -14,35 +14,17 @@ namespace naxokit.Screens
         public static void HandlePremiumOpend()
         {
             GUILayout.Label("Thanks for the Support on Patreon!", EditorStyles.largeLabel);
-            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical();
             {
-                if (GUILayout.Button("EasySearch"))
-                {
-                    GetWindow<EasySearch>().Show();
-                }
-                if (GUILayout.Button("?", GUILayout.Width(20)))
-                {
-                    //TODO: Add Link to the Documentation on Youtube
-                }
-                if (GUILayout.Button("NaxoLoader"))
-                {
-                    GetWindow<NaxoLoader>().Show();
-                }
-                if (GUILayout.Button("?", GUILayout.Width(20)))
-                {
-                    //TODO: Add Link to the Documentation on Youtube
-                }
-                if (GUILayout.Button("BackupManager"))
-                {
-                    GetWindow<BackupManager>().Show();
-                }
-                if (GUILayout.Button("?", GUILayout.Width(20)))
-                {
-                    //TODO: Add Link to the Documentation on Youtube
-                }
+                GUILayout.Box("You can now use the following features:", EditorStyles.boldLabel);
+                GUILayout.Label("PLACEHOLDER", EditorStyles.helpBox);
+                // GUILayout.Box("1. Customizable UI", EditorStyles.helpBox);
+                // GUILayout.Box("2. Customizable Colors", EditorStyles.helpBox);
+                // GUILayout.Box("3. Customizable Sounds", EditorStyles.helpBox);
+                GUILayout.Label("PLACEHOLDER", EditorStyles.helpBox);
                 
             }
-            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
         }
     }
 }

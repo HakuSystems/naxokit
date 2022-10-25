@@ -179,7 +179,7 @@ namespace naxokit.Helpers.Configs
         private static void WriteDefaults(ConfigData config) //When Config file was created
         {
             //PresetManager
-            config.PresetManager.Presets = null;
+            //nothing to do here
             
             //Default Path
             config.DefaultPath.DefPath = null;
