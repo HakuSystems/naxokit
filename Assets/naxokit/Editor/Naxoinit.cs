@@ -2,6 +2,7 @@ using UnityEditor;
 using naxokit.Helpers.Configs;
 using UnityEditor.SceneManagement;
 using naxokit.Helpers.Logger;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace naxokit
@@ -30,12 +31,21 @@ namespace naxokit
 
         private static void SceneSaver()
         {
+            float lastSaveTime = 0;
+
             EditorApplication.hierarchyChanged += () =>
-            {
+            { 
                 if (!Config.SceneAutosaver_Enabled || IsPlayMode()) return; //only works in Edit Mode
-                EditorSceneManager.SaveOpenScenes();
-                naxoLog.Log("SceneSaver", "Open Scenes saved");
+
+                // only save if at least 5 seconds have passed since the last save
+                if (Time.realtimeSinceStartup - lastSaveTime >= 5)
+                {
+                    EditorSceneManager.SaveOpenScenes();
+                    naxoLog.Log("SceneSaver", "Open Scenes saved");
+                    lastSaveTime = Time.realtimeSinceStartup;
+                }
             };
         }
+
     }
 }
