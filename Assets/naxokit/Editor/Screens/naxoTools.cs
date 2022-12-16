@@ -54,10 +54,6 @@ namespace naxokit.Screens
                 {
                     //TODO: Add Link to the Documentation on Youtube
                 }
-                if (GUILayout.Button("NaxoLoader"))
-                {
-                    GetWindow<NaxoLoader>().Show();
-                }
                 if (GUILayout.Button("?", GUILayout.Width(20)))
                 {
                     //TODO: Add Link to the Documentation on Youtube
