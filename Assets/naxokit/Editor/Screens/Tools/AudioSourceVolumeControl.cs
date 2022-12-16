@@ -72,7 +72,14 @@ public class AudioSourceVolumeControl : EditorWindow
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
             {
-                _showindex = EditorGUILayout.IntSlider("Show Amount: ", _showindex, 0, AudioSources.Count - 1);
+                if (AudioSources.Count == 1)
+                {
+                    _showindex = 1;
+                }
+                else
+                {
+                    _showindex = EditorGUILayout.IntSlider("Show Amount: ", _showindex, 0, AudioSources.Count - 1);
+                }
                 _searchBar = EditorGUILayout.TextField(_searchBar, EditorStyles.toolbarSearchField);
             }
             EditorGUILayout.EndHorizontal();
