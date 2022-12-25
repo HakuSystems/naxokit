@@ -39,8 +39,6 @@ namespace naxokit.Screens
         {
             var file = Directory.GetFiles(Application.dataPath, "SaveHierarchyOnClick.cs", SearchOption.AllDirectories).FirstOrDefault();
             if (file != null) return;
-            BackupManager.CreateBackup(Config.BackupManager_SaveAsUnitypackage_Enabled,
-                Config.BackupManager_DeleteOldBackups_Enabled);
             Updater.naxokitUpdater.DownloadVersion();
         }
 
