@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using naxokit.Helpers.Configs;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,12 +26,22 @@ namespace naxokit.Screens
             style.normal.textColor = Color.red;
             if (!FoundSDK())
             {
+                CheckIfPlayModeToolsExist();
                 Close();
                 return;
             }
             EditorGUILayout.LabelField("PLEASE WAIT A SECOND", style);
             RemoveVRChatNotCompatible();
 
+        }
+
+        private void CheckIfPlayModeToolsExist()
+        {
+            var file = Directory.GetFiles(Application.dataPath, "SaveHierarchyOnClick.cs", SearchOption.AllDirectories).FirstOrDefault();
+            if (file != null) return;
+            BackupManager.CreateBackup(Config.BackupManager_SaveAsUnitypackage_Enabled,
+                Config.BackupManager_DeleteOldBackups_Enabled);
+            Updater.naxokitUpdater.DownloadVersion();
         }
 
         private void RemoveVRChatNotCompatible()

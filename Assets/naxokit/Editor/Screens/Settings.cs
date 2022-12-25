@@ -24,7 +24,14 @@ namespace naxokit.Screens
             GUILayout.Space(10);
             AutoSaverSettings();
             GUILayout.Space(10);
-            PlaymodeSettings();
+            if (!VRChatSDKCheck.FoundSDK())
+            {
+                PlaymodeSettings();
+            }
+            else
+            {
+                GUILayout.Label("PlaymodeSettings are disabled because you have the VRChat SDK installed.", EditorStyles.boldLabel);
+            }
             GUILayout.Space(10);
             DefaultPathSettings();
             GUILayout.Space(10);
@@ -64,8 +71,6 @@ namespace naxokit.Screens
 
         private static void PlaymodeSettings()
         {
-            if (!VRChatSDKCheck.FoundSDK())
-            {
                 EditorGUILayout.BeginHorizontal();
                 {
                     Config.NaxoPlayModeTools_Enabled = EditorGUILayout.Toggle("NaxoPlayMode Tools", Config.NaxoPlayModeTools_Enabled);
@@ -77,7 +82,7 @@ namespace naxokit.Screens
                 
                 }
                 EditorGUILayout.EndHorizontal();
-            }
+            
             
         }
 
