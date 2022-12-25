@@ -64,17 +64,21 @@ namespace naxokit.Screens
 
         private static void PlaymodeSettings()
         {
-            EditorGUILayout.BeginHorizontal();
+            if (!VRChatSDKCheck.FoundSDK())
             {
-                Config.NaxoPlayModeTools_Enabled = EditorGUILayout.Toggle("NaxoPlayMode Tools", Config.NaxoPlayModeTools_Enabled);
-                EditorGUILayout.LabelField("Additional Settings for Playmode", new GUIStyle(EditorStyles.textField) {normal = {textColor = Color.yellow}});
-                if (GUILayout.Button("?", GUILayout.Width(20)))
+                EditorGUILayout.BeginHorizontal();
                 {
-                    //TODO: Add Link to the Documentation on Youtube
-                }
+                    Config.NaxoPlayModeTools_Enabled = EditorGUILayout.Toggle("NaxoPlayMode Tools", Config.NaxoPlayModeTools_Enabled);
+                    EditorGUILayout.LabelField("Additional Settings for Playmode", new GUIStyle(EditorStyles.textField) {normal = {textColor = Color.yellow}});
+                    if (GUILayout.Button("?", GUILayout.Width(20)))
+                    {
+                        //TODO: Add Link to the Documentation on Youtube
+                    }
                 
+                }
+                EditorGUILayout.EndHorizontal();
             }
-            EditorGUILayout.EndHorizontal();
+            
         }
 
         private static void AutoSaverSettings()
@@ -126,7 +130,6 @@ namespace naxokit.Screens
         {
             DiscordRPC.naxokitRPC.UpdateRPC();
             Config.UpdateConfig();
-            naxoLog.Log("Settings", "Configs updated!");
         }
     }
 }

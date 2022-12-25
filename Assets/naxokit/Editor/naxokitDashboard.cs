@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using naxokit.Screens;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 
 namespace naxokit
 {
@@ -49,13 +50,20 @@ namespace naxokit
             minSize = new Vector2(1000, 300);
             Focus();
             _task = naxokitUpdater.CheckForUpdates();
-            //keep always down in OnEnable never move it up
-            if (Config.DefPath != null) return;
-            NaxoDefaultPath.ShowWindow();
-            Close();
-            //keep always down in OnEnable never move it up
+            
+            if (Config.DefPath != null)
+            {
+                VRChatSDKCheck.ShowWindow();
+            }
+            else
+            {
+                NaxoDefaultPath.ShowWindow();
+                Close();
+                
+            }
             
         }
+
         private void Update()
         {
             _loginOpen = true; //Prefending the user from closing the Foldout while logging in.
@@ -197,15 +205,18 @@ namespace naxokit
                         if(GUILayout.Button("Switch Version", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString())))
                             SwitchVersion.ShowWindow();
                         //check if user is in playmode
-                        if (Naxoinit.IsPlayMode())
+                        if (!VRChatSDKCheck.FoundSDK())
                         {
-                            if (GUILayout.Button("Stop PlayMode", EditorStyles.toolbarButton))
-                                EditorApplication.isPlaying = false;
-                        }
-                        else
-                        {
-                            if (GUILayout.Button("Start PlayMode", EditorStyles.toolbarButton))
-                                EditorApplication.isPlaying = true;
+                            if (Naxoinit.IsPlayMode())
+                            {
+                                if (GUILayout.Button("Stop PlayMode", EditorStyles.toolbarButton))
+                                    EditorApplication.isPlaying = false;
+                            }
+                            else
+                            {
+                                if (GUILayout.Button("Start PlayMode", EditorStyles.toolbarButton))
+                                    EditorApplication.isPlaying = true;
+                            }
                         }
                         GUILayout.FlexibleSpace();
                         if (GUILayout.Button("Logout", EditorStyles.toolbarButton))
@@ -252,6 +263,7 @@ namespace naxokit
                     #endregion
                 }
                 EditorGUILayout.EndScrollView();
+                
             }
         }
 
