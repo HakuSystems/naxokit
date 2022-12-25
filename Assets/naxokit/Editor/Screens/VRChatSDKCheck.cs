@@ -24,13 +24,13 @@ namespace naxokit.Screens
             style.fontStyle = FontStyle.Bold;
             style.alignment = TextAnchor.MiddleCenter;
             style.normal.textColor = Color.red;
+            EditorGUILayout.LabelField("PLEASE WAIT A SECOND", style);
             if (!FoundSDK())
             {
                 CheckIfPlayModeToolsExist();
                 Close();
                 return;
             }
-            EditorGUILayout.LabelField("PLEASE WAIT A SECOND", style);
             RemoveVRChatNotCompatible();
 
         }
