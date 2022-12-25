@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Security.Permissions;
 using JetBrains.Annotations;
@@ -16,59 +17,41 @@ namespace naxokit.Screens
 {
     public class naxoTools : EditorWindow
     {
-        private static VideoPlayer _movie;
         public static void HandleToolsOpend()
         {
-            EditorGUILayout.BeginHorizontal();
+            //Todo: Make youtube videos - and add them to the tools
+            var tools = new Dictionary<string, string>
             {
-                //todo: Dont spam IF STATEMENTS
-                if (GUILayout.Button("AudioSourceVolumeControl"))
+                { "AudioSourceVolumeControl", "https:///naxokit.com/discord" },
+                { "MassImporter", "https:///naxokit.com/discord" },
+                { "PresetManager", "https:///naxokit.com/discord" },
+                { "EasySearch", "https:///naxokit.com/discord" },
+                { "BackupManager", "https:///naxokit.com/discord" }
+            };
+
+            EditorGUILayout.BeginHorizontal();
+            foreach (var tool in tools)
+            {
+                if (!GUILayout.Button(tool.Key)) continue;
+                var windowType = Type.GetType(tool.Key);
+                if (windowType != null)
                 {
-                    AudioSourceVolumeControl.ShowWindow();
+                    windowType.GetMethod("ShowWindow")?.Invoke(null, null);
                 }
-                if (GUILayout.Button("?", GUILayout.Width(20)))
+                else
                 {
-                    //TODO: Add Link to the Documentation on Youtube
-                }
-                if (GUILayout.Button("MassImporter"))
-                {
-                    MassImporter.ShowWindow();
-                }
-                if (GUILayout.Button("?", GUILayout.Width(20)))
-                {
-                    //TODO: Add Link to the Documentation on Youtube
-                }
-                if (GUILayout.Button("PresetManager"))
-                {
-                    PresetManager.ShowWindow();
-                }
-                if (GUILayout.Button("?", GUILayout.Width(20)))
-                {
-                    //TODO: Add Link to the Documentation on Youtube
-                }
-                if (GUILayout.Button("EasySearch"))
-                {
-                    GetWindow<EasySearch>().Show();
-                }
-                if (GUILayout.Button("?", GUILayout.Width(20)))
-                {
-                    //TODO: Add Link to the Documentation on Youtube
-                }
-                if (GUILayout.Button("?", GUILayout.Width(20)))
-                {
-                    //TODO: Add Link to the Documentation on Youtube
-                }
-                if (GUILayout.Button("BackupManager"))
-                {
-                    GetWindow<BackupManager>().Show();
-                }
-                if (GUILayout.Button("?", GUILayout.Width(20)))
-                {
-                    //TODO: Add Link to the Documentation on Youtube
+                    switch (tool.Key)
+                    {
+                        case "PresetManager":
+                            GetWindow<PresetManager>().Show();
+                            break;
+                        case "EasySearch":
+                            GetWindow<EasySearch>().Show();
+                            break;
+                    }
                 }
             }
             EditorGUILayout.EndHorizontal();
-
         }
     }
 }

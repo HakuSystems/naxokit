@@ -20,9 +20,10 @@ namespace naxokit.Screens
 
         private static Vector2 _scrollPosition;
 
-        private static void ShowWindow()
+        public static void ShowWindow()
         {
             var window = GetWindow<EasySearch>();
+            window.titleContent = new GUIContent("EasySearch");
             window.Show();
         }
         private void OnEnable()
