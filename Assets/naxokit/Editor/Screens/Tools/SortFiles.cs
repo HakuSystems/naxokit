@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace naxokit.Editor.Screens.Tools
 {
     public class SortFiles : EditorWindow
     {
-        private static readonly Dictionary<string, Type> assetTypes = AssetDictionary.AssetTypes;
-        private static Vector2 scrollPos;
-        private static bool[] foldouts;
-        private static string[] assetTypeNames;
+        private static readonly Dictionary<string, Type> AssetTypes = AssetDictionary.AssetTypes;
+        private static Vector2 _scrollPos;
+
+        [FormerlySerializedAs("_foldouts")] [SerializeField]
+        private bool[] foldouts;
+
+        private static string[] _assetTypeNames;
+
+        private static Dictionary<string, int> _assetTypeCounts;
 
         //[MenuItem("MENUITEM/MENUITEMCOMMAND")]
         private static void ShowWindow()
@@ -24,112 +30,86 @@ namespace naxokit.Editor.Screens.Tools
         private void OnEnable()
         {
             minSize = new Vector2(700, 400);
+            maxSize = new Vector2(700, 400);
         }
 
         private void OnGUI()
         {
-            if (foldouts == null)
+            if (_assetTypeCounts == null)
             {
-                foldouts = new bool[assetTypes.Count];
-                assetTypeNames = new string[assetTypes.Count];
+                _assetTypeCounts = new Dictionary<string, int>();
+                _assetTypeNames = new string[AssetTypes.Count];
+                foldouts = new bool[AssetTypes.Count];
                 var i = 0;
-                foreach (var assetType in assetTypes)
+                foreach (var assetType in AssetTypes)
                 {
-                    assetTypeNames[i] = assetType.Key;
+                    _assetTypeNames[i] = assetType.Key;
                     i++;
+                }
+
+                foreach (var assetTypeName in _assetTypeNames)
+                {
+                    var assetType = AssetTypes[assetTypeName];
+                    var assets = AssetDatabase.FindAssets("t:" + assetType.Name);
+                    _assetTypeCounts[assetTypeName] = 0;
+                    foreach (var asset in assets)
+                    {
+                        var path = AssetDatabase.GUIDToAssetPath(asset);
+                        if (path.StartsWith("Assets")) _assetTypeCounts[assetTypeName]++;
+                    }
                 }
             }
 
+            EditorGUILayout.BeginVertical();
             EditorGUILayout.LabelField("This window allows you to sort files in your Unity project by asset type.");
             EditorGUILayout.HelpBox("Use this feature with caution. Sorting files may cause your project to break.",
                 MessageType.Warning);
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
-            for (var i = 0; i < assetTypes.Count; i++)
+            _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
+            foreach (var f in _assetTypeNames)
             {
-                foldouts[i] = EditorGUILayout.Foldout(foldouts[i], assetTypeNames[i], true);
-                if (!foldouts[i]) continue;
-                // Display a button for sorting files of the current asset type
-                if (GUILayout.Button("Sort " + assetTypeNames[i] + " Files"))
-                    FilesSortner(assetTypes[assetTypeNames[i]]);
+                var index = Array.IndexOf(_assetTypeNames, f);
+                foldouts[index] =
+                    EditorGUILayout.Foldout(foldouts[index], new GUIContent(f + " - " + _assetTypeCounts[f]));
+                if (foldouts[index])
+                {
+                    var assetType = AssetTypes[f];
+                    var assets = AssetDatabase.FindAssets("t:" + assetType.Name);
+
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField("Asset Name", EditorStyles.boldLabel);
+                    EditorGUILayout.LabelField("Asset Path", EditorStyles.boldLabel);
+                    EditorGUILayout.EndHorizontal();
+                    foreach (var asset in assets)
+                    {
+                        var path = AssetDatabase.GUIDToAssetPath(asset);
+                        if (path.StartsWith("Assets"))
+                        {
+                            EditorGUILayout.BeginHorizontal();
+                            EditorGUILayout.LabelField(Path.GetFileNameWithoutExtension(path));
+                            EditorGUILayout.LabelField(path);
+                            EditorGUILayout.EndHorizontal();
+                        }
+                    }
+
+                    if (_assetTypeCounts[f] > 0)
+                        if (GUILayout.Button("Move All"))
+                            foreach (var asset in assets)
+                            {
+                                var path = AssetDatabase.GUIDToAssetPath(asset);
+                                if (path.StartsWith("Assets"))
+                                {
+                                    var newPath = Path.Combine("Assets", f);
+                                    if (!Directory.Exists(newPath)) Directory.CreateDirectory(newPath);
+                                    AssetDatabase.Refresh();
+                                    newPath = Path.Combine(newPath, Path.GetFileName(path));
+                                    AssetDatabase.MoveAsset(path, newPath);
+                                }
+                            }
+                }
             }
 
             EditorGUILayout.EndScrollView();
-        }
-
-        private static void FilesSortner(Type assetType)
-        {
-            var filePaths = Directory.GetFiles(Application.dataPath, "*.*", SearchOption.AllDirectories);
-
-            
-            foreach (var filePath in filePaths)
-            {
-                
-                var fileExtension = Path.GetExtension(filePath);
-                var fileName = Path.GetFileName(filePath);
-
-                
-                var targetFolder = "";
-                switch (fileExtension)
-                {
-                    case ".anim":
-                        targetFolder = "Animations";
-                        break;
-                    case ".controller":
-                        targetFolder = "Controllers";
-                        break;
-                    case ".overrideController":
-                        targetFolder = "Controllers";
-                        break;
-                    case ".audio":
-                        targetFolder = "Audio";
-                        break;
-                    case ".avatar":
-                        targetFolder = "Avatars";
-                        break;
-                    case ".cubemap":
-                        targetFolder = "Cubemaps";
-                        break;
-                    case ".mat":
-                        targetFolder = "Materials";
-                        break;
-                    case ".mesh":
-                        targetFolder = "Meshes";
-                        break;
-                    case ".prefab":
-                        targetFolder = "Prefabs";
-                        break;
-                    case ".shader":
-                        targetFolder = "Shaders";
-                        break;
-                    case ".tga":
-                        targetFolder = "Textures";
-                        break;
-                    case ".png":
-                        targetFolder = "Textures";
-                        break;
-                    case ".jpg":
-                        targetFolder = "Textures";
-                        break;
-                    case ".bmp":
-                        targetFolder = "Textures";
-                        break;
-                    case ".gif":
-                        targetFolder = "Textures";
-                        break;
-                }
-
-                if (!string.IsNullOrEmpty(targetFolder))
-                {
-                    var targetDirectory = Path.Combine(Application.dataPath, $"Assets/{targetFolder}");
-                    if (!Directory.Exists(targetDirectory))
-                    {
-                        Directory.CreateDirectory(targetDirectory);
-                    }
-
-                    var targetPath = Path.Combine(Application.dataPath, $"Assets/{targetFolder}/{fileName}");
-                    File.Move(filePath, targetPath);
-                }
-            }
+            EditorGUILayout.EndVertical();
         }
     }
 }
