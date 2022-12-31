@@ -51,15 +51,10 @@ namespace naxokit
             Focus();
             _task = naxokitUpdater.CheckForUpdates();
             
-            if (Config.DefPath != null)
-            {
-                VRChatSDKCheck.ShowWindow();
-            }
-            else
+            if (Config.DefPath == null)
             {
                 NaxoDefaultPath.ShowWindow();
                 Close();
-                
             }
             
         }
@@ -205,18 +200,15 @@ namespace naxokit
                         if(GUILayout.Button("Switch Version", new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.toolbarbutton.ToString())))
                             SwitchVersion.ShowWindow();
                         //check if user is in playmode
-                        if (!VRChatSDKCheck.FoundSDK())
+                        if (Naxoinit.IsPlayMode())
                         {
-                            if (Naxoinit.IsPlayMode())
-                            {
-                                if (GUILayout.Button("Stop PlayMode", EditorStyles.toolbarButton))
-                                    EditorApplication.isPlaying = false;
-                            }
-                            else
-                            {
-                                if (GUILayout.Button("Start PlayMode", EditorStyles.toolbarButton))
-                                    EditorApplication.isPlaying = true;
-                            }
+                            if (GUILayout.Button("Stop PlayMode", EditorStyles.toolbarButton))
+                                EditorApplication.isPlaying = false;
+                        }
+                        else
+                        {
+                            if (GUILayout.Button("Start PlayMode", EditorStyles.toolbarButton))
+                                EditorApplication.isPlaying = true;
                         }
                         GUILayout.FlexibleSpace();
                         if (GUILayout.Button("Logout", EditorStyles.toolbarButton))

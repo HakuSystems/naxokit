@@ -24,15 +24,8 @@ namespace naxokit.Screens
             GUILayout.Space(10);
             AutoSaverSettings();
             GUILayout.Space(10);
-            if (!VRChatSDKCheck.FoundSDK())
-            {
                 PlaymodeSettings();
-            }
-            else
-            {
-                GUILayout.Label("PlaymodeSettings are disabled because you have the VRChat SDK installed.", EditorStyles.boldLabel);
-            }
-            GUILayout.Space(10);
+                GUILayout.Space(10);
             DefaultPathSettings();
             GUILayout.Space(10);
             UpdatesSettings();

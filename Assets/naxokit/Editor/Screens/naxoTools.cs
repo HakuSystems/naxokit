@@ -1,17 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net;
-using System.Security.Permissions;
-using JetBrains.Annotations;
-using naxokit.Helpers.Auth;
-using naxokit.Helpers.Configs;
-using naxokit.Helpers.Logger;
+using naxokit.Editor.Screens.Tools;
 using naxokit.Screens.Tools;
-using naxokit.Styles;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Video;
 
 namespace naxokit.Screens
 {
@@ -26,7 +18,8 @@ namespace naxokit.Screens
                 { "MassImporter", "https:///naxokit.com/discord" },
                 { "PresetManager", "https:///naxokit.com/discord" },
                 { "EasySearch", "https:///naxokit.com/discord" },
-                { "BackupManager", "https:///naxokit.com/discord" }
+                { "BackupManager", "https:///naxokit.com/discord" },
+                { "SortFiles", "https:///naxokit.com/discord" }
             };
 
             EditorGUILayout.BeginHorizontal();
@@ -35,11 +28,8 @@ namespace naxokit.Screens
                 if (!GUILayout.Button(tool.Key)) continue;
                 var windowType = Type.GetType(tool.Key);
                 if (windowType != null)
-                {
                     windowType.GetMethod("ShowWindow")?.Invoke(null, null);
-                }
                 else
-                {
                     switch (tool.Key)
                     {
                         case "PresetManager":
@@ -48,13 +38,13 @@ namespace naxokit.Screens
                         case "EasySearch":
                             GetWindow<EasySearch>().Show();
                             break;
+                        case "SortFiles":
+                            GetWindow<SortFiles>().Show();
+                            break;
                     }
-                }
             }
+
             EditorGUILayout.EndHorizontal();
         }
     }
 }
-
-
-
