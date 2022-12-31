@@ -23,12 +23,12 @@ namespace naxokit.Editor.Screens.Tools
         private static void ShowWindow()
         {
             var window = GetWindow<SortFiles>();
-            window.titleContent = new GUIContent("SortFiles");
             window.Show();
         }
 
         private void OnEnable()
         {
+            titleContent = new GUIContent("SortFiles");
             minSize = new Vector2(700, 400);
             maxSize = new Vector2(700, 400);
         }
@@ -61,7 +61,7 @@ namespace naxokit.Editor.Screens.Tools
             }
 
             EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("This window allows you to sort files in your Unity project by asset type.");
+            EditorGUILayout.LabelField("This window allows you to sort files in your Unity project by asset type. And when sorted, Files will be Stored in a new Folder something like AudioClip/yourAudioName.mp3", EditorStyles.wordWrappedLabel);
             EditorGUILayout.HelpBox("Use this feature with caution. Sorting files may cause your project to break.",
                 MessageType.Warning);
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
