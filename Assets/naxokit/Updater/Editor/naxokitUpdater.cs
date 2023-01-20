@@ -152,7 +152,7 @@ namespace naxokit.Updater
             Config.Branch = (NaxoVersionData.BranchType)(LatestVersion?.Branch ?? branch);
             Config.Commit = LatestVersion?.Commit;
             Config.CommitUrl = LatestVersion?.CommitUrl;
-            Config.CommitDate = LatestVersion?.CommitDate;
+            Config.CommitDate = LatestVersion?.CreatedOn;
             Config.UpdateConfig();
         }
     }

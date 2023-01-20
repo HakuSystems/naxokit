@@ -36,7 +36,7 @@ namespace naxokit
                 EditorGUILayout.BeginHorizontal();
                 {
                     EditorGUILayout.LabelField("V"+version.Version, new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.PreLabel.ToString()));
-                    EditorGUILayout.LabelField("Release Date: "+version.CommitDate, new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.ErrorLabel.ToString()));
+                    EditorGUILayout.LabelField("Release Date: "+version.CreatedOn, new GUIStyle(NaxoGUIStyleStyles.GUIStyleType.ErrorLabel.ToString()));
                     switch (version.Branch)
                     {
                         case NaxoVersionData.BranchType.Release:

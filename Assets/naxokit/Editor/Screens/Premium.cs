@@ -8,6 +8,7 @@ namespace naxokit.Screens
         public static void HandlePremiumOpend()
         {
             GUILayout.Label("Thanks for the Support on Patreon!", EditorStyles.largeLabel);
+            GUILayout.Label("Currently we dont have anything for Premium..", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical();
             {
             }

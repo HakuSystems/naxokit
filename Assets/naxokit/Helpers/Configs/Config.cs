@@ -104,7 +104,7 @@ namespace naxokit.Helpers.Configs
             Branch = config.NaxoVersion.Branch;
             Commit = config.NaxoVersion.Commit;
             CommitUrl = config.NaxoVersion.CommitUrl;
-            CommitDate = config.NaxoVersion.CommitDate;
+            CommitDate = config.NaxoVersion.CreatedOn;
             CheckForUpdates = config.NaxoVersion.CheckForUpdates;
             
             
@@ -148,7 +148,7 @@ namespace naxokit.Helpers.Configs
             config.NaxoVersion.Branch = Branch;
             config.NaxoVersion.Commit = Commit;
             config.NaxoVersion.CommitUrl = CommitUrl;
-            config.NaxoVersion.CommitDate = CommitDate;
+            config.NaxoVersion.CreatedOn = CommitDate;
             config.NaxoVersion.CheckForUpdates = CheckForUpdates;
             
             //TermsPolicy
@@ -196,7 +196,7 @@ namespace naxokit.Helpers.Configs
             config.NaxoVersion.Branch = NaxoVersionData.BranchType.Release;
             config.NaxoVersion.Commit = "Unknown";
             config.NaxoVersion.CommitUrl = "Unknown";
-            config.NaxoVersion.CommitDate = "Unknown";
+            config.NaxoVersion.CreatedOn = "Unknown";
             config.NaxoVersion.CheckForUpdates = true;
             
             //TermsPolicy

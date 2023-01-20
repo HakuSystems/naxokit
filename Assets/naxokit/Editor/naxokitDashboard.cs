@@ -17,7 +17,6 @@ namespace naxokit
     public class naxokitDashboard : EditorWindow
     {
         private bool _settingsOpen;
-        private bool _creditsOpen;
         [FormerlySerializedAs("ToolsOpen")] public bool toolsOpen;
         private bool _premiumOpen;
         private static bool _loginOpen = true;
@@ -73,8 +72,7 @@ namespace naxokit
             var toolsName = new Hashtable(){
                 {"Tools", Resources.Load("Tools")as Texture2D},
                 {"Settings", Resources.Load("Settings") as Texture2D},
-                {"Premium", Resources.Load("Premium") as Texture2D},
-                {"Credits", Resources.Load("Credits") as Texture2D}
+                {"Premium", Resources.Load("Premium") as Texture2D}
             };
             return toolsName;
         }
@@ -226,10 +224,6 @@ namespace naxokit
                         {
                             switch (tool.Key.ToString())
                             {
-                                
-                                case "Credits":
-                                    CreditsFoldoutOpen(tool);
-                                    break;
                                 case "Settings":
                                     SettingsFoldoutOpen(tool);
                                     break;
@@ -289,17 +283,6 @@ namespace naxokit
             EditorGUILayout.BeginVertical();
             {
                 Settings.HandleSettingsOpend();
-            }
-            EditorGUILayout.EndVertical();
-        }
-
-        private void CreditsFoldoutOpen(DictionaryEntry tool)
-        {
-            _creditsOpen = FoldoutTexture.MakeTextureFoldout((Texture2D)tool.Value, _creditsOpen);
-            if (!_creditsOpen) return;
-            EditorGUILayout.BeginVertical();
-            {
-                Credits.HandleCreditsOpend();
             }
             EditorGUILayout.EndVertical();
         }

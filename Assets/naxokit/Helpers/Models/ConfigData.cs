@@ -62,7 +62,7 @@ namespace naxokit.Helpers.Models
         public BranchType Branch { get; set; }
         public string Commit { get; set; }
         public string CommitUrl { get; set; }
-        public string CommitDate { get; set; }
+        public string CreatedOn { get; set; }
         public  bool CheckForUpdates { get; set; }
         public enum BranchType
         {
